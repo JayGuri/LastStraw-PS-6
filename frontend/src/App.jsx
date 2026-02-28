@@ -32,8 +32,8 @@ function Notification() {
           initial={{ opacity: 0, y: -12, scale: 0.96 }}
           animate={{ opacity: 1, y: 0,   scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.96 }}
-          className={`fixed top-20 right-5 z-[200] px-4 py-3 rounded-xl
-                      border text-sm font-medium max-w-xs shadow-card
+          className={`fixed top-16 sm:top-20 right-3 sm:right-5 z-[200] px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl
+                      border text-xs sm:text-sm font-medium max-w-[calc(100vw-24px)] sm:max-w-xs shadow-card
                       backdrop-blur-md ${c.bg} ${c.border} ${c.text}`}
         >
           {notification.msg}
