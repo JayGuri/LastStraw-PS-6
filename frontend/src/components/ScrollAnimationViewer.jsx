@@ -323,27 +323,6 @@ export default function ScrollAnimationViewer({
           />
         </div>
       )}
-
-      {/* ── BOTTOM-RIGHT: Frame counter badge ─────────────────────────── */}
-      {ready && (
-        <div className="absolute bottom-8 right-8 pointer-events-none z-20">
-          <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border backdrop-blur-sm tabular-nums text-[10px] tracking-[0.2em]"
-            style={{
-              fontFamily: "monospace",
-              color: "rgba(232,224,212,0.50)",
-              background: "rgba(255,255,255,0.04)",
-              borderColor: "rgba(255,255,255,0.08)",
-            }}
-          >
-            <span
-              className="inline-block w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ background: "#c9a96e" }}
-            />
-            FRAME_{String(currentFrame + 1).padStart(4, "0")}
-          </span>
-        </div>
-      )}
     </div>
   );
 }

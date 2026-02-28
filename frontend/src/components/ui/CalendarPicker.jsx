@@ -1,95 +1,106 @@
-import React, { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 /**
  * Google Calendar–style date picker: month grid, today highlight, clean typography.
  * Returns date as YYYY-MM-DD via onChange.
  */
-export default function CalendarPicker({ value, onChange, label = 'Date' }) {
-  const [open, setOpen] = useState(false)
+export default function CalendarPicker({ value, onChange, label = "Date" }) {
+  const [open, setOpen] = useState(false);
   const [viewDate, setViewDate] = useState(() => {
     if (value) {
-      const [y, m] = value.split('-').map(Number)
-      return new Date(y, m - 1, 1)
+      const [y, m] = value.split("-").map(Number);
+      return new Date(y, m - 1, 1);
     }
-    return new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-  })
+    return new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  });
 
-  const displayLabel = value
-    ? (() => {
-        const d = new Date(value)
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const displayLabel =
+    value ?
+      (() => {
+        const d = new Date(value);
+        return d.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
       })()
-    : 'Select date'
+    : "Select date";
 
   const { year, month, weeks } = useMemo(() => {
-    const y = viewDate.getFullYear()
-    const m = viewDate.getMonth()
-    const first = new Date(y, m, 1)
-    const last = new Date(y, m + 1, 0)
-    const startPad = first.getDay()
-    const daysInMonth = last.getDate()
-    const totalCells = startPad + daysInMonth
-    const rows = Math.ceil(totalCells / 7)
-    const weeks = []
-    let day = 1
+    const y = viewDate.getFullYear();
+    const m = viewDate.getMonth();
+    const first = new Date(y, m, 1);
+    const last = new Date(y, m + 1, 0);
+    const startPad = first.getDay();
+    const daysInMonth = last.getDate();
+    const totalCells = startPad + daysInMonth;
+    const rows = Math.ceil(totalCells / 7);
+    const weeks = [];
+    let day = 1;
     for (let r = 0; r < rows; r++) {
-      const week = []
+      const week = [];
       for (let c = 0; c < 7; c++) {
-        const i = r * 7 + c
+        const i = r * 7 + c;
         if (i < startPad || day > daysInMonth) {
-          week.push(null)
+          week.push(null);
         } else {
-          week.push(day++)
+          week.push(day++);
         }
       }
-      weeks.push(week)
+      weeks.push(week);
     }
     return {
       year: y,
       month: m,
-      monthName: viewDate.toLocaleDateString('en-US', { month: 'long' }),
+      monthName: viewDate.toLocaleDateString("en-US", { month: "long" }),
       weeks,
-    }
-  }, [viewDate])
+    };
+  }, [viewDate]);
 
   const today = useMemo(() => {
-    const t = new Date()
-    return t.getFullYear() === year && t.getMonth() === month ? t.getDate() : null
-  }, [year, month])
+    const t = new Date();
+    return t.getFullYear() === year && t.getMonth() === month ?
+        t.getDate()
+      : null;
+  }, [year, month]);
 
   const selectDay = (day) => {
-    if (!day) return
-    const yyyy = year
-    const mm = String(month + 1).padStart(2, '0')
-    const dd = String(day).padStart(2, '0')
-    onChange(`${yyyy}-${mm}-${dd}`)
-    setOpen(false)
-  }
+    if (!day) return;
+    const yyyy = year;
+    const mm = String(month + 1).padStart(2, "0");
+    const dd = String(day).padStart(2, "0");
+    onChange(`${yyyy}-${mm}-${dd}`);
+    setOpen(false);
+  };
 
-  const prevMonth = () => setViewDate(new Date(year, month - 1, 1))
-  const nextMonth = () => setViewDate(new Date(year, month + 1, 1))
+  const prevMonth = () => setViewDate(new Date(year, month - 1, 1));
+  const nextMonth = () => setViewDate(new Date(year, month + 1, 1));
 
   return (
     <div className="relative">
       {label && (
-        <label className="text-[10px] font-mono text-text-3 mb-1.5 block uppercase tracking-wider">
+        <label
+          className="text-[10px] uppercase font-mono tracking-[0.2em] mb-2 block"
+          style={{ color: "rgba(236,232,223,0.5)" }}
+        >
           {label}
         </label>
       )}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-2
-                   bg-bg-2 border border-white/10 rounded-xl px-3.5 py-2.5
-                   text-sm text-text font-body
-                   focus:border-gold/40 focus:ring-1 focus:ring-gold/10 focus:outline-none
-                   transition-all hover:border-white/15"
+        className="w-full flex items-center justify-between gap-2 px-3 py-2.5 transition-all outline-none text-xs font-mono tracking-wide"
+        style={{
+          background: "rgba(236,232,223,0.03)",
+          border: `1px solid ${open ? "#c9a96e" : "rgba(201,169,110,0.15)"}`,
+          color: value ? "#ece8df" : "rgba(236,232,223,0.4)",
+        }}
       >
-        <span className={value ? 'text-text' : 'text-text-3'}>{displayLabel}</span>
-        <span className="text-text-3">▾</span>
+        <span>{displayLabel}</span>
+        <span style={{ color: "rgba(201,169,110,0.5)" }}>▾</span>
       </button>
 
       <AnimatePresence>
@@ -105,30 +116,44 @@ export default function CalendarPicker({ value, onChange, label = 'Date' }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="absolute z-50 top-full left-0 mt-1.5 w-[280px]
-                         bg-[#1a1d26] border border-white/10 rounded-xl shadow-xl
-                         overflow-hidden"
+              className="absolute z-50 top-full left-0 mt-1 w-[280px]"
+              style={{
+                background: "#0a0907",
+                border: "1px solid rgba(201,169,110,0.3)",
+                borderTop: "none",
+              }}
             >
               {/* Month header */}
-              <div className="flex items-center justify-between px-3 py-2.5 border-b border-white/8">
+              <div
+                className="flex items-center justify-between px-3 py-2.5 border-b"
+                style={{ borderColor: "rgba(201,169,110,0.15)" }}
+              >
                 <button
                   type="button"
                   onClick={prevMonth}
-                  className="p-1.5 rounded-lg text-text-2 hover:text-text hover:bg-white/8 transition-colors"
+                  className="p-1 px-2 hover:bg-[rgba(201,169,110,0.1)] transition-colors text-[10px]"
+                  style={{ color: "#c9a96e", fontFamily: "monospace" }}
                   aria-label="Previous month"
                 >
-                  ‹
+                  [‹]
                 </button>
-                <span className="text-sm font-medium text-text">
-                  {viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                <span
+                  className="text-[10px] uppercase font-mono tracking-widest"
+                  style={{ color: "#ece8df" }}
+                >
+                  {viewDate.toLocaleDateString("en-US", {
+                    month: "long",
+                    year: "numeric",
+                  })}
                 </span>
                 <button
                   type="button"
                   onClick={nextMonth}
-                  className="p-1.5 rounded-lg text-text-2 hover:text-text hover:bg-white/8 transition-colors"
+                  className="p-1 px-2 hover:bg-[rgba(201,169,110,0.1)] transition-colors text-[10px]"
+                  style={{ color: "#c9a96e", fontFamily: "monospace" }}
                   aria-label="Next month"
                 >
-                  ›
+                  [›]
                 </button>
               </div>
 
@@ -137,7 +162,8 @@ export default function CalendarPicker({ value, onChange, label = 'Date' }) {
                 {WEEKDAYS.map((d) => (
                   <div
                     key={d}
-                    className="text-center text-[10px] font-medium text-text-3 py-1"
+                    className="text-center text-[8px] uppercase tracking-wider font-mono py-1"
+                    style={{ color: "rgba(236,232,223,0.3)" }}
                   >
                     {d}
                   </div>
@@ -148,9 +174,13 @@ export default function CalendarPicker({ value, onChange, label = 'Date' }) {
               <div className="grid grid-cols-7 gap-0.5 px-2 pb-3">
                 {weeks.flatMap((week, wi) =>
                   week.map((day, di) => {
-                    const key = `${wi}-${di}-${day ?? 'e'}`
-                    const isToday = day === today
-                    const selected = value && day !== null && value === `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                    const key = `${wi}-${di}-${day ?? "e"}`;
+                    const isToday = day === today;
+                    const selected =
+                      value &&
+                      day !== null &&
+                      value ===
+                        `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
                     return (
                       <button
                         key={key}
@@ -158,19 +188,49 @@ export default function CalendarPicker({ value, onChange, label = 'Date' }) {
                         onClick={() => selectDay(day)}
                         disabled={!day}
                         className={`
-                          w-8 h-8 rounded-lg text-[13px] font-normal transition-colors
-                          ${!day ? 'invisible' : ''}
-                          ${selected
-                            ? 'bg-gold/25 text-gold-lt font-medium'
-                            : isToday
-                              ? 'bg-white/10 text-text hover:bg-white/15'
-                              : 'text-text-2 hover:bg-white/8 hover:text-text'}
+                          w-8 h-8 text-[11px] font-mono transition-colors
+                          ${!day ? "invisible" : ""}
                         `}
+                        style={{
+                          ...(selected ?
+                            {
+                              background: "rgba(201,169,110,0.2)",
+                              color: "#c9a96e",
+                              border: "1px solid #c9a96e",
+                            }
+                          : isToday ?
+                            {
+                              background: "rgba(236,232,223,0.05)",
+                              color: "#ece8df",
+                              border: "1px solid rgba(236,232,223,0.2)",
+                            }
+                          : {
+                              color: "rgba(236,232,223,0.5)",
+                              border: "1px solid transparent",
+                            }),
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!selected && day) {
+                            e.currentTarget.style.background =
+                              "rgba(201,169,110,0.1)";
+                            e.currentTarget.style.color = "#ece8df";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!selected && day) {
+                            e.currentTarget.style.background =
+                              isToday ?
+                                "rgba(236,232,223,0.05)"
+                              : "transparent";
+                            e.currentTarget.style.color =
+                              isToday ? "#ece8df" : "rgba(236,232,223,0.5)";
+                          }
+                        }}
                       >
-                        {day ?? ''}
+                        {day ?? ""}
                       </button>
-                    )
-                  })
+                    );
+                  }),
                 )}
               </div>
             </motion.div>
@@ -178,5 +238,5 @@ export default function CalendarPicker({ value, onChange, label = 'Date' }) {
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }

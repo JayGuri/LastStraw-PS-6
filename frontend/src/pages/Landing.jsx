@@ -204,10 +204,9 @@ export default function Landing() {
               currentFrame={currentFrame}
               totalFrames={TOTAL_FRAMES}
               scrollProgress={scrollProgress}
-              showOverlay={true}
+              showOverlay={false}
             />
           </div>
-
           {/* Edge vignette — pulls focus inward */}
           <div
             className="absolute inset-0 pointer-events-none z-10"
@@ -216,53 +215,7 @@ export default function Landing() {
                 "radial-gradient(ellipse at center, transparent 40%, rgba(6,5,4,0.50) 100%)",
             }}
           />
-
-          {/* ════════════════════════════════════════════════════════════════════
-            RIGHT-SIDE HUD — scroll rail + section counter
-        ════════════════════════════════════════════════════════════════════════ */}
-          <div
-            className="absolute right-7 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 pointer-events-none z-30"
-            aria-hidden="true"
-          >
-            {/* Section counter */}
-            <span
-              className="tabular-nums text-[9px] tracking-[0.25em]"
-              style={{
-                color: "rgba(201,169,110,0.55)",
-                fontFamily: "monospace",
-              }}
-            >
-              {sectionNumber} / {totalSections}
-            </span>
-
-            {/* Scroll rail */}
-            <div
-              className="relative w-px h-32 rounded-full"
-              style={{ background: "rgba(201,169,110,0.18)" }}
-            >
-              <div
-                className="absolute left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full"
-                style={{
-                  top: `${progressPct}%`,
-                  background: "#c9a96e",
-                  boxShadow: "0 0 6px 1px rgba(201,169,110,0.55)",
-                  transition: "top 80ms linear",
-                }}
-              />
-            </div>
-
-            {/* Progress percentage */}
-            <span
-              className="tabular-nums text-[9px] tracking-widest"
-              style={{
-                color: "rgba(201,169,110,0.40)",
-                fontFamily: "monospace",
-              }}
-            >
-              {progressPct.toString().padStart(3, "0")}
-            </span>
-          </div>
-
+          {/* HUD removed as per request */}\n
           {/* ════════════════════════════════════════════════════════════════════
             HERO SECTION — Full-screen centered, no bottom strip
         ════════════════════════════════════════════════════════════════════════ */}
@@ -274,7 +227,7 @@ export default function Landing() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-[12vh] text-center px-6 pointer-events-none"
               >
                 {/* Pre-title rule */}
                 <div
@@ -347,7 +300,6 @@ export default function Landing() {
               </motion.div>
             )}
           </AnimatePresence>
-
           {/* ════════════════════════════════════════════════════════════════════
             MIDDLE SECTIONS (1–4) — Direction-aware editorial panels
 
@@ -545,7 +497,6 @@ export default function Landing() {
                 );
               })()}
           </AnimatePresence>
-
           {/* ════════════════════════════════════════════════════════════════════
             CTA SECTION — Full-screen centered, minimal, no card
             Stitch design: stark typography + thin-border sharp button
@@ -607,7 +558,9 @@ export default function Landing() {
 
                 {/* CTA: Sign in or Go to Globe when logged in */}
                 <motion.button
-                  onClick={() => setActiveTab(isAuthenticated ? "globe" : "login")}
+                  onClick={() =>
+                    setActiveTab(isAuthenticated ? "globe" : "login")
+                  }
                   className="pointer-events-auto relative group overflow-hidden"
                   style={{ padding: "0.85rem 3rem" }}
                   whileHover={{ scale: 1.02 }}
@@ -622,7 +575,9 @@ export default function Landing() {
                   />
                   <span
                     className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-                    style={{ background: isAuthenticated ? "#c9a96e" : "#c0392b" }}
+                    style={{
+                      background: isAuthenticated ? "#c9a96e" : "#c0392b",
+                    }}
                   />
                   <span
                     className="relative z-10 font-light tracking-[0.3em] uppercase"
@@ -632,7 +587,9 @@ export default function Landing() {
                       transition: "color 0.3s",
                     }}
                   >
-                    {isAuthenticated ? "Go to Globe Analysis" : "Request Access"}
+                    {isAuthenticated ?
+                      "Go to Globe Analysis"
+                    : "Request Access"}
                   </span>
                 </motion.button>
               </motion.div>

@@ -7,53 +7,56 @@
 ═══════════════════════════════════════════════════════════════ */
 :root {
   /* Backgrounds */
-  --bg:          #07090e;
-  --bg-2:        #0c1018;
-  --bg-3:        #111820;
-  --bg-card:     #0e141f;
-  --bg-border:   rgba(255, 255, 255, 0.055);
+  --bg: #07090e;
+  --bg-2: #0c1018;
+  --bg-3: #111820;
+  --bg-card: #0e141f;
+  --bg-border: rgba(255, 255, 255, 0.055);
 
   /* Gold palette */
-  --gold:        #d4900a;
-  --gold-lt:     #e8ab30;
-  --gold-dim:    rgba(212, 144, 10, 0.12);
-  --gold-glow:   rgba(212, 144, 10, 0.25);
+  --gold: #d4900a;
+  --gold-lt: #e8ab30;
+  --gold-dim: rgba(212, 144, 10, 0.12);
+  --gold-glow: rgba(212, 144, 10, 0.25);
 
   /* Ice palette */
-  --ice:         #4ab0d8;
-  --ice-lt:      #7dd3f0;
-  --ice-dim:     rgba(74, 176, 216, 0.10);
-  --ice-glow:    rgba(74, 176, 216, 0.20);
+  --ice: #4ab0d8;
+  --ice-lt: #7dd3f0;
+  --ice-dim: rgba(74, 176, 216, 0.1);
+  --ice-glow: rgba(74, 176, 216, 0.2);
 
   /* Risk colours */
-  --critical:    #d84040;
-  --high:        #d06828;
-  --medium:      #c8a018;
-  --low:         #38a058;
-  --none:        #2a3f58;
+  --critical: #d84040;
+  --high: #d06828;
+  --medium: #c8a018;
+  --low: #38a058;
+  --none: #2a3f58;
 
   /* Text */
-  --text:        #bfcfd8;
-  --text-2:      rgba(170, 190, 205, 0.55);
-  --text-3:      rgba(140, 165, 180, 0.30);
+  --text: #bfcfd8;
+  --text-2: rgba(170, 190, 205, 0.55);
+  --text-3: rgba(140, 165, 180, 0.3);
 
   /* Typography */
-  --font-display: 'Syne', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-body:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", Courier, monospace;
 
   /* Spacing (fluid) */
-  --page-px:     clamp(16px, 4vw, 48px);
-  --section-py:  clamp(40px, 6vw, 96px);
+  --page-px: clamp(16px, 4vw, 48px);
+  --section-py: clamp(40px, 6vw, 96px);
 
   /* Transitions */
-  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════════════════════════════ */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   --bg: #07090e;
   --bg-2: #0c1018;
   --bg-3: #111820;
@@ -127,7 +130,10 @@ body {
   text-transform: uppercase;
 }
 
-img, svg, video, canvas {
+img,
+svg,
+video,
+canvas {
   display: block;
   max-width: 100%;
 }
@@ -190,12 +196,20 @@ img, svg, video, canvas {
     linear-gradient(90deg, rgba(74, 176, 216, 0.035) 1px, transparent 1px),
     linear-gradient(rgba(212, 144, 10, 0.015) 1px, transparent 1px),
     linear-gradient(90deg, rgba(212, 144, 10, 0.015) 1px, transparent 1px);
-  background-size: 60px 60px, 60px 60px, 12px 12px, 12px 12px;
+  background-size:
+    60px 60px,
+    60px 60px,
+    12px 12px,
+    12px 12px;
 }
 
 /* Radial dark vignette */
 .vignette {
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(7, 9, 14, 0.85) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(7, 9, 14, 0.85) 100%
+  );
   pointer-events: none;
 }
 
@@ -203,18 +217,27 @@ img, svg, video, canvas {
    SCANLINE OVERLAY
 ═══════════════════════════════════════════════════════════════ */
 @keyframes scanline {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
 }
 
 .scanline-effect::after {
-  content: '';
+  content: "";
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 120px;
-  background: linear-gradient(to bottom, transparent, rgba(74, 176, 216, 0.018), transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(74, 176, 216, 0.018),
+    transparent
+  );
   animation: scanline 9s linear infinite;
   pointer-events: none;
   z-index: 9997;
@@ -435,7 +458,7 @@ img, svg, video, canvas {
 }
 
 .pulse-dot::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: -4px;
   border-radius: 50%;
@@ -456,18 +479,30 @@ img, svg, video, canvas {
   word-break: break-word;
 }
 
-.log-entry.INFO  { color: var(--ice); }
-.log-entry.WARN  { color: var(--medium); }
-.log-entry.ERROR { color: var(--critical); }
-.log-entry.OK    { color: var(--low); }
-.log-entry.DATA  { color: var(--gold-lt); }
+.log-entry.INFO {
+  color: var(--ice);
+}
+.log-entry.WARN {
+  color: var(--medium);
+}
+.log-entry.ERROR {
+  color: var(--critical);
+}
+.log-entry.OK {
+  color: var(--low);
+}
+.log-entry.DATA {
+  color: var(--gold-lt);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    HEX CELL
 ═══════════════════════════════════════════════════════════════ */
 .hex-cell {
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  transition: filter 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+  transition:
+    filter 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
   cursor: pointer;
 }
 
@@ -541,7 +576,9 @@ pre.code-block {
 .page-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  transition:
+    opacity 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -550,52 +587,87 @@ pre.code-block {
 
 /* Risk pulse ring */
 @keyframes ringPulse {
-  0%   { transform: scale(1);   opacity: 0.70; }
-  100% { transform: scale(2.2); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 /* Satellite orbit path draw */
 @keyframes orbitMove {
-  from { stroke-dashoffset: 1000; }
-  to   { stroke-dashoffset: 0; }
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Satellite traverse */
 @keyframes satTraverse {
-  from { offset-distance: 0%; }
-  to   { offset-distance: 100%; }
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
 }
 
 /* Pipeline flow dashes */
 @keyframes flowLine {
-  0%   { stroke-dashoffset: 40; }
-  100% { stroke-dashoffset: 0; }
+  0% {
+    stroke-dashoffset: 40;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Typewriter blink */
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Gold shimmer sweep */
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
 }
 
 /* Radar rotation */
 @keyframes radarScan {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION UTILITY CLASSES
 ═══════════════════════════════════════════════════════════════ */
 
-.ring-pulse       { animation: ringPulse 1.8s ease-out infinite; }
-.ring-pulse-delay { animation: ringPulse 1.8s ease-out 0.6s infinite; }
+.ring-pulse {
+  animation: ringPulse 1.8s ease-out infinite;
+}
+.ring-pulse-delay {
+  animation: ringPulse 1.8s ease-out 0.6s infinite;
+}
 
 .orbit-line {
   stroke-dasharray: 6 4;
@@ -613,7 +685,7 @@ pre.code-block {
 }
 
 .cursor::after {
-  content: '▋';
+  content: "▋";
   animation: blink 1s step-end infinite;
   color: var(--gold);
 }
