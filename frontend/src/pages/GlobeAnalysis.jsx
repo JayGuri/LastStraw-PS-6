@@ -63,9 +63,9 @@ export default function GlobeAnalysis() {
         <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-3 sm:gap-4"
              style={{ minHeight: 'min(500px, 65vh)' }}>
 
-          {/* Globe panel */}
+          {/* Globe panel — min-h ensures Cesium container has dimensions before init */}
           <div className="col-span-12 lg:col-span-7 xl:col-span-8 bg-bg-card rounded-2xl
-                          glow-border overflow-hidden relative min-h-[400px] lg:min-h-0">
+                          glow-border overflow-hidden relative min-h-[420px]">
             <CesiumGlobe />
             {isRunning && <ProgressOverlay />}
             {status === 'failed' && <ProgressOverlay />}

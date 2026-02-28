@@ -1,160 +1,402 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef } from 'react'
 import * as Cesium from 'cesium'
 import 'cesium/Build/Cesium/Widgets/widgets.css'
 import { useGlobeStore } from '../../stores/globeStore.js'
-import { FloodBarDataSource } from './FloodBarDataSource.js'
 
-const SEVERITY_COLORS = {
-  critical: 'rgba(216, 64, 64, 0.5)',
-  high:     'rgba(208, 104, 40, 0.5)',
-  medium:   'rgba(200, 160, 24, 0.4)',
-  low:      'rgba(56, 160, 88, 0.3)',
-}
-
-const SEVERITY_OUTLINE = {
-  critical: '#d84040',
-  high:     '#d06828',
-  medium:   '#c8a018',
-  low:      '#38a058',
+const SEVERITY_CFG = {
+  critical: {
+    fill:    new Cesium.Color(0.85, 0.25, 0.25, 0.55),
+    outline: new Cesium.Color(0.85, 0.25, 0.25, 1.0),
+    extrude: 3500,
+  },
+  high: {
+    fill:    new Cesium.Color(0.82, 0.41, 0.16, 0.50),
+    outline: new Cesium.Color(0.82, 0.41, 0.16, 1.0),
+    extrude: 2500,
+  },
+  medium: {
+    fill:    new Cesium.Color(0.78, 0.63, 0.09, 0.42),
+    outline: new Cesium.Color(0.78, 0.63, 0.09, 1.0),
+    extrude: 1500,
+  },
+  low: {
+    fill:    new Cesium.Color(0.22, 0.63, 0.35, 0.35),
+    outline: new Cesium.Color(0.22, 0.63, 0.35, 1.0),
+    extrude: 600,
+  },
 }
 
 export default function CesiumGlobe() {
-  const containerRef = useRef(null)
-  const viewerRef = useRef(null)
+  const containerRef   = useRef(null)
+  const viewerRef      = useRef(null)
+  const isRotatingRef  = useRef(true)
 
-  const geocoded = useGlobeStore(s => s.geocoded)
-  const result = useGlobeStore(s => s.result)
-  const overlayMode = useGlobeStore(s => s.overlayMode)
-  const barMetric = useGlobeStore(s => s.barMetric)
+  const geocoded     = useGlobeStore(s => s.geocoded)
+  const result       = useGlobeStore(s => s.result)
   const selectedZone = useGlobeStore(s => s.selectedZone)
 
-  // ── Initialize Viewer ──
+  // ──────────────────────────────────────────────────────────
+  // 1. INIT VIEWER
+  // ──────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!containerRef.current) return
+    const container = containerRef.current
+    if (!container || viewerRef.current) return
 
-    Cesium.Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_TOKEN || ''
+    let cancelled = false
+    let resizeObs = null
+    let stopSpin  = () => {}
 
-    const viewer = new Cesium.Viewer(containerRef.current, {
-      baseLayerPicker: false,
-      geocoder: false,
-      homeButton: false,
-      sceneModePicker: false,
-      navigationHelpButton: false,
-      animation: false,
-      timeline: false,
-      fullscreenButton: false,
-      creditContainer: document.createElement('div'),
-      scene3DOnly: true,
+    async function initViewer() {
+      if (viewerRef.current || cancelled) return
+      const rect = container.getBoundingClientRect()
+      if (rect.width < 1 || rect.height < 1) return
+
+      // ── Cesium Ion token (optional — enables Bing Maps satellite) ──
+      const token = import.meta.env.VITE_CESIUM_TOKEN || ''
+      const hasToken = token.length > 10 && token !== 'your_cesium_ion_token_here'
+      if (hasToken) Cesium.Ion.defaultAccessToken = token
+
+      // ── Build the base imagery layer ──
+      // Cesium 1.104+ uses ImageryLayer.fromWorldImagery / baseLayer instead
+      // of the deprecated createWorldImagery / imageryProvider constructor opts.
+      let baseLayer = false
+      if (hasToken) {
+        try {
+          baseLayer = Cesium.ImageryLayer.fromWorldImagery({
+            style: Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS,
+          })
+        } catch { baseLayer = false }
+      }
+
+      // If no Ion token or Ion failed, use the bundled NaturalEarthII tiles
+      if (!baseLayer) {
+        try {
+          const provider = await Cesium.TileMapServiceImageryProvider.fromUrl(
+            Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'),
+          )
+          if (cancelled) return
+          baseLayer = new Cesium.ImageryLayer(provider)
+        } catch {
+          baseLayer = false
+        }
+      }
+      if (cancelled) return
+
+      const viewer = new Cesium.Viewer(container, {
+        baseLayer,
+        baseLayerPicker:      false,
+        geocoder:             false,
+        homeButton:           false,
+        sceneModePicker:      false,
+        navigationHelpButton: false,
+        animation:            false,
+        timeline:             false,
+        fullscreenButton:     false,
+        selectionIndicator:   false,
+        infoBox:              false,
+        creditContainer:      (() => {
+          const el = document.createElement('div')
+          el.style.display = 'none'
+          return el
+        })(),
+        scene3DOnly: true,
+        orderIndependentTranslucency: false,
+      })
+
+      if (cancelled) { viewer.destroy(); return }
+
+      const scene = viewer.scene
+      const globe = scene.globe
+
+      // ── Space background ──
+      scene.backgroundColor = new Cesium.Color(0.027, 0.035, 0.055, 1.0)
+      scene.moon = new Cesium.Moon({ show: false })
+
+      // ── Globe appearance ──
+      globe.show                    = true
+      globe.showWaterEffect         = true
+      globe.enableLighting          = true
+      globe.dynamicAtmosphereLighting        = true
+      globe.dynamicAtmosphereLightingFromSun = true
+      globe.atmosphereLightIntensity         = 8.0
+      globe.atmosphereRayleighCoefficient    = new Cesium.Cartesian3(5.5e-6, 13.0e-6, 28.4e-6)
+      globe.atmosphereMieCoefficient         = new Cesium.Cartesian3(21e-6, 21e-6, 21e-6)
+      globe.nightFadeOutDistance   = 1e10
+      globe.nightFadeInDistance    = 5e8
+      globe.translucency.enabled   = false
+
+      // ── Atmosphere glow ──
+      scene.skyAtmosphere.show = true
+      scene.skyAtmosphere.atmosphereLightIntensity        = 25.0
+      scene.skyAtmosphere.atmosphereRayleighCoefficient   = new Cesium.Cartesian3(5.5e-6, 13.0e-6, 28.4e-6)
+      scene.skyAtmosphere.atmosphereMieCoefficient        = new Cesium.Cartesian3(21e-6, 21e-6, 21e-6)
+      scene.skyAtmosphere.atmosphereMieAnisotropy         = 0.9
+      scene.skyAtmosphere.hueShift        =  0.0
+      scene.skyAtmosphere.saturationShift =  0.0
+      scene.skyAtmosphere.brightnessShift = -0.05
+
+      // ── Star field ──
+      scene.skyBox = new Cesium.SkyBox({
+        sources: {
+          positiveX: Cesium.buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_px.jpg'),
+          negativeX: Cesium.buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_mx.jpg'),
+          positiveY: Cesium.buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_py.jpg'),
+          negativeY: Cesium.buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_my.jpg'),
+          positiveZ: Cesium.buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_pz.jpg'),
+          negativeZ: Cesium.buildModuleUrl('Assets/Textures/SkyBox/tycho2t3_80_mz.jpg'),
+        },
+      })
+
+      // ── Clock: freeze at noon UTC so the lit side faces camera ──
+      const now = new Date()
+      now.setUTCHours(12, 0, 0, 0)
+      viewer.clock.currentTime   = Cesium.JulianDate.fromDate(now)
+      viewer.clock.shouldAnimate = false
+
+      // ── Render quality ──
+      scene.postProcessStages.fxaa.enabled = true
+      viewer.resolutionScale = window.devicePixelRatio > 1 ? 1.5 : 1.0
+      scene.highDynamicRange = false
+
+      // ── Auto-rotation ──
+      scene.preRender.addEventListener(() => {
+        if (isRotatingRef.current) {
+          scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -0.00012)
+        }
+      })
+
+      // ── Initial camera ──
+      viewer.camera.setView({
+        destination: Cesium.Cartesian3.fromDegrees(30, 15, 22_000_000),
+        orientation: {
+          heading: Cesium.Math.toRadians(0),
+          pitch:   Cesium.Math.toRadians(-90),
+          roll:    0,
+        },
+      })
+
+      // ── Stop rotation on user interaction ──
+      stopSpin = () => { isRotatingRef.current = false }
+      scene.screenSpaceCameraController.inertiaSpin       = 0.9
+      scene.screenSpaceCameraController.inertiaZoom        = 0.8
+      scene.screenSpaceCameraController.inertiaTranslate   = 0.9
+      viewer.camera.moveStart.addEventListener(stopSpin)
+
+      viewerRef.current = viewer
+    }
+
+    // Defer one frame so the container is laid out, then use ResizeObserver as fallback
+    const rafId = requestAnimationFrame(() => { initViewer() })
+    resizeObs = new ResizeObserver(() => {
+      if (!viewerRef.current) {
+        initViewer()
+      } else if (!viewerRef.current.isDestroyed()) {
+        viewerRef.current.resize()
+      }
     })
-
-    viewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#07090e')
-    viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0e141f')
-    viewer.scene.globe.enableLighting = true
-    viewer.scene.skyAtmosphere = new Cesium.SkyAtmosphere()
-
-    viewerRef.current = viewer
+    resizeObs.observe(container)
 
     return () => {
-      if (viewerRef.current && !viewerRef.current.isDestroyed()) {
-        viewerRef.current.destroy()
+      cancelled = true
+      cancelAnimationFrame(rafId)
+      resizeObs?.disconnect()
+      const v = viewerRef.current
+      if (v) {
+        try { v.camera.moveStart.removeEventListener(stopSpin) } catch (_) {}
+        if (!v.isDestroyed()) v.destroy()
+        viewerRef.current = null
       }
     }
   }, [])
 
-  // ── Fly to geocoded region ──
+  // ──────────────────────────────────────────────────────────
+  // 2. FLY TO GEOCODED REGION
+  // ──────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!geocoded || !viewerRef.current) return
     const viewer = viewerRef.current
-    const { lat, lon, bbox } = geocoded
+    if (!viewer || viewer.isDestroyed()) return
 
-    if (bbox && bbox.length === 4) {
+    ;['region-boundary', 'region-pin'].forEach(name => {
+      viewer.dataSources.getByName(name).forEach(ds => viewer.dataSources.remove(ds))
+    })
+    viewer.entities.removeById('region-center-pin')
+
+    if (!geocoded) {
+      isRotatingRef.current = true
+      return
+    }
+
+    isRotatingRef.current = false
+
+    const { lat, lon, bbox } = geocoded
+    const flyOptions = {
+      duration: 2.2,
+      easingFunction: Cesium.EasingFunction.CUBIC_IN_OUT,
+    }
+
+    if (bbox?.length === 4) {
       viewer.camera.flyTo({
-        destination: Cesium.Rectangle.fromDegrees(bbox[0], bbox[1], bbox[2], bbox[3]),
-        duration: 2.0,
+        ...flyOptions,
+        destination: Cesium.Rectangle.fromDegrees(
+          bbox[0] - 0.5, bbox[1] - 0.5,
+          bbox[2] + 0.5, bbox[3] + 0.5,
+        ),
       })
     } else {
       viewer.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(lon, lat, 500000),
-        duration: 2.0,
+        ...flyOptions,
+        destination: Cesium.Cartesian3.fromDegrees(lon, lat, 800_000),
+        orientation: { heading: 0, pitch: Cesium.Math.toRadians(-45), roll: 0 },
       })
     }
-
-    // Draw boundary outline
-    const existingBoundary = viewer.dataSources.getByName('region-boundary')
-    existingBoundary.forEach(ds => viewer.dataSources.remove(ds))
 
     if (geocoded.boundary_geojson) {
       const boundaryDs = new Cesium.GeoJsonDataSource('region-boundary')
-      boundaryDs.load(geocoded.boundary_geojson, {
-        stroke: Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.7),
-        strokeWidth: 2,
-        fill: Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.05),
-        clampToGround: true,
-      }).then(() => {
-        viewer.dataSources.add(boundaryDs)
-      })
+      boundaryDs
+        .load(geocoded.boundary_geojson, {
+          stroke:        Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.9),
+          strokeWidth:   3,
+          fill:          Cesium.Color.TRANSPARENT,
+          clampToGround: true,
+        })
+        .then(() => {
+          boundaryDs.entities.values.forEach(entity => {
+            if (entity.polyline) {
+              entity.polyline.material = new Cesium.PolylineGlowMaterialProperty({
+                glowPower: 0.3, taperPower: 1.0,
+                color: Cesium.Color.fromCssColorString('#d4900a'),
+              })
+              entity.polyline.width             = 4
+              entity.polyline.clampToGround      = true
+              entity.polyline.classificationType = Cesium.ClassificationType.TERRAIN
+            }
+            if (entity.polygon) {
+              entity.polygon.material = Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.05)
+              entity.polygon.outline  = false
+            }
+          })
+          if (!viewer.isDestroyed()) viewer.dataSources.add(boundaryDs)
+        })
     }
+
+    viewer.entities.add({
+      id:       'region-center-pin',
+      position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
+      point: {
+        pixelSize:    10,
+        color:        Cesium.Color.fromCssColorString('#e8ab30'),
+        outlineColor: Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.5),
+        outlineWidth: 8,
+        heightReference:          Cesium.HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      },
+    })
   }, [geocoded])
 
-  // ── Load flood results ──
+  // ──────────────────────────────────────────────────────────
+  // 3. RENDER FLOOD RESULTS
+  // ──────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!viewerRef.current) return
     const viewer = viewerRef.current
+    if (!viewer || viewer.isDestroyed()) return
 
-    // Clear previous flood data
-    const existingZones = viewer.dataSources.getByName('flood-zones')
-    existingZones.forEach(ds => viewer.dataSources.remove(ds))
-    const existingBars = viewer.dataSources.getByName('flood-bars')
-    existingBars.forEach(ds => viewer.dataSources.remove(ds))
+    ;['flood-zones', 'zone-markers'].forEach(name => {
+      viewer.dataSources.getByName(name).forEach(ds => viewer.dataSources.remove(ds))
+    })
+    viewer.entities.values
+      .filter(e => e.id?.startsWith('zone-pin-'))
+      .forEach(e => viewer.entities.remove(e))
 
     if (!result) return
 
-    // 1. Polygon overlays
-    if (overlayMode === 'polygons' || overlayMode === 'both') {
-      const geoDs = new Cesium.GeoJsonDataSource('flood-zones')
-      geoDs.load(result.flood_zones, {
-        clampToGround: true,
-      }).then(() => {
-        geoDs.entities.values.forEach(entity => {
-          if (!entity.polygon) return
-          const severity = entity.properties?.severity?.getValue() ?? 'medium'
-          entity.polygon.material = Cesium.Color.fromCssColorString(
-            SEVERITY_COLORS[severity] ?? SEVERITY_COLORS.medium
-          )
-          entity.polygon.outline = true
-          entity.polygon.outlineColor = Cesium.Color.fromCssColorString(
-            SEVERITY_OUTLINE[severity] ?? SEVERITY_OUTLINE.medium
-          )
-          entity.polygon.outlineWidth = 1
-        })
-        viewer.dataSources.add(geoDs)
+    const features = result.flood_zones?.features ?? []
+
+    const geoDs = new Cesium.GeoJsonDataSource('flood-zones')
+    geoDs.load(result.flood_zones, { clampToGround: false }).then(() => {
+      geoDs.entities.values.forEach(entity => {
+        if (!entity.polygon) return
+        const sev     = entity.properties?.severity?.getValue() ?? 'medium'
+        const depth   = entity.properties?.avg_depth_m?.getValue() ?? 1
+        const cfg     = SEVERITY_CFG[sev] ?? SEVERITY_CFG.medium
+        const extrude = Math.round(depth * cfg.extrude)
+
+        entity.polygon.material            = cfg.fill
+        entity.polygon.outline             = true
+        entity.polygon.outlineColor        = cfg.outline
+        entity.polygon.outlineWidth        = 2
+        entity.polygon.extrudedHeight      = extrude
+        entity.polygon.height              = 0
+        entity.polygon.shadows             = Cesium.ShadowMode.DISABLED
+        entity.polygon.classificationType  = Cesium.ClassificationType.BOTH
       })
-    }
+      if (!viewer.isDestroyed()) viewer.dataSources.add(geoDs)
+    })
 
-    // 2. Vertical bars
-    if (overlayMode === 'bars' || overlayMode === 'both') {
-      const barDs = new FloodBarDataSource('flood-bars')
-      barDs.loadFromFloodResponse(result.grid_points, barMetric)
-      viewer.dataSources.add(barDs)
-    }
-  }, [result, overlayMode, barMetric])
+    features.forEach((feature, i) => {
+      const p   = feature.properties
+      const sev = p.severity ?? 'medium'
+      const cfg = SEVERITY_CFG[sev] ?? SEVERITY_CFG.medium
+      const centroid = p.centroid ?? {
+        lat: (p.bbox[1] + p.bbox[3]) / 2,
+        lon: (p.bbox[0] + p.bbox[2]) / 2,
+      }
 
-  // ── Fly to selected zone ──
+      viewer.entities.add({
+        id:       `zone-pin-${i}`,
+        position: Cesium.Cartesian3.fromDegrees(centroid.lon, centroid.lat, 0),
+        point: {
+          pixelSize:    8,
+          color:        cfg.outline,
+          outlineColor: cfg.outline.withAlpha(0.3),
+          outlineWidth: 10,
+          heightReference:          Cesium.HeightReference.CLAMP_TO_GROUND,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+        label: {
+          text:           p.admin_name ?? `Zone ${i + 1}`,
+          font:           '11px "JetBrains Mono", monospace',
+          fillColor:      Cesium.Color.WHITE.withAlpha(0.9),
+          outlineColor:   Cesium.Color.BLACK.withAlpha(0.7),
+          outlineWidth:   2,
+          style:          Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset:    new Cesium.Cartesian2(0, -18),
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          translucencyByDistance: new Cesium.NearFarScalar(100_000, 1, 3_000_000, 0),
+        },
+      })
+    })
+  }, [result])
+
+  // ──────────────────────────────────────────────────────────
+  // 4. SELECTED ZONE — fly + highlight
+  // ──────────────────────────────────────────────────────────
   useEffect(() => {
-    if (selectedZone === null || !result || !viewerRef.current) return
-    const feature = result.flood_zones.features[selectedZone]
+    const viewer = viewerRef.current
+    if (selectedZone === null || !result || !viewer || viewer.isDestroyed()) return
+
+    const feature = result.flood_zones?.features?.[selectedZone]
     if (!feature) return
 
-    const bbox = feature.properties.bbox
-    if (bbox && bbox.length === 4) {
-      viewerRef.current.camera.flyTo({
-        destination: Cesium.Rectangle.fromDegrees(bbox[0], bbox[1], bbox[2], bbox[3]),
+    const bbox = feature.properties?.bbox
+    if (bbox?.length === 4) {
+      viewer.camera.flyTo({
+        destination: Cesium.Rectangle.fromDegrees(
+          bbox[0] - 0.05, bbox[1] - 0.05,
+          bbox[2] + 0.05, bbox[3] + 0.05,
+        ),
         duration: 1.5,
+        easingFunction: Cesium.EasingFunction.CUBIC_IN_OUT,
       })
     }
   }, [selectedZone, result])
 
   return (
-    <div ref={containerRef} className="absolute inset-0" style={{ background: '#07090e' }} />
+    <div
+      ref={containerRef}
+      className="absolute inset-0 w-full h-full"
+      style={{ background: '#07090e' }}
+    />
   )
 }

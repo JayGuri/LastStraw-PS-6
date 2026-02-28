@@ -23,10 +23,6 @@ export default function ResultsPanel() {
   const result = useGlobeStore(s => s.result)
   const selectedZone = useGlobeStore(s => s.selectedZone)
   const setSelectedZone = useGlobeStore(s => s.setSelectedZone)
-  const overlayMode = useGlobeStore(s => s.overlayMode)
-  const setOverlayMode = useGlobeStore(s => s.setOverlayMode)
-  const barMetric = useGlobeStore(s => s.barMetric)
-  const setBarMetric = useGlobeStore(s => s.setBarMetric)
 
   if (!result) return null
   const { summary, flood_zones } = result
@@ -57,46 +53,6 @@ export default function ResultsPanel() {
           ))}
         </div>
       </div>
-
-      {/* Overlay mode toggle */}
-      <div className="px-4 py-2 border-b border-white/5 flex items-center gap-2">
-        <span className="text-[10px] font-mono text-text-3 shrink-0">View:</span>
-        {['both', 'polygons', 'bars'].map(mode => (
-          <button
-            key={mode}
-            onClick={() => setOverlayMode(mode)}
-            className={`px-2 py-1 rounded-lg text-[10px] font-medium transition-all
-              ${overlayMode === mode
-                ? 'bg-gold/10 text-gold-lt border border-gold/20'
-                : 'text-text-3 hover:text-text border border-transparent'}`}
-          >
-            {mode === 'both' ? 'Both' : mode === 'polygons' ? 'Zones' : 'Bars'}
-          </button>
-        ))}
-      </div>
-
-      {/* Bar metric selector */}
-      {(overlayMode === 'bars' || overlayMode === 'both') && (
-        <div className="px-4 py-2 border-b border-white/5 flex items-center gap-2">
-          <span className="text-[10px] font-mono text-text-3 shrink-0">Metric:</span>
-          {[
-            { key: 'flood_depth', label: 'Depth' },
-            { key: 'pop_density', label: 'Population' },
-            { key: 'risk_score',  label: 'Risk' },
-          ].map(m => (
-            <button
-              key={m.key}
-              onClick={() => setBarMetric(m.key)}
-              className={`px-2 py-1 rounded-lg text-[10px] font-medium transition-all
-                ${barMetric === m.key
-                  ? 'bg-ice/10 text-ice border border-ice/20'
-                  : 'text-text-3 hover:text-text border border-transparent'}`}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Zone table */}
       <div className="flex-1 overflow-y-auto max-h-[300px]">
