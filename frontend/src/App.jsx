@@ -49,19 +49,31 @@ export default function App() {
 
   return (
     <div className="relative">
+      {/* Scanline overlay — sits above everything, pointer-events-none */}
+      <div className="scanline-effect pointer-events-none fixed inset-0 z-[9997]" />
+
       <Nav />
       <Notification />
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-        >
-          <PageComponent />
-        </motion.div>
-      </AnimatePresence>
+
+      {/* Everything below the fixed nav — pt-16 clears the 64px nav bar */}
+      <div className="pt-16">
+        {/* Mock data banner */}
+        <div className="mock-banner">
+          ⚠ RUNNING ON MOCK DATA — switch to LIVE API in nav when backend is ready
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <PageComponent />
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   )
 }
