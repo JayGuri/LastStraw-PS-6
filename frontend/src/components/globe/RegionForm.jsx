@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobeStore } from "../../stores/globeStore.js";
 import { useAppStore } from "../../stores/appStore.js";
-import { geocodeApi, parseNominatimResult } from "../../api/geocodeApi.js";
+import { geocodeApi, parseNominatimResult, hasAreaGeometry, sortResultsByBoundary } from "../../api/geocodeApi.js";
 import { floodDetectApi } from "../../api/floodDetectApi.js";
 import { mockFloodResponse } from "../../data/mockFloodResponse.js";
 import CalendarPicker from "../ui/CalendarPicker.jsx";
@@ -179,7 +179,7 @@ export default function RegionForm() {
     cityDebounce.current = setTimeout(async () => {
       setSearchingCity(true);
       const { data } = await geocodeApi.search(q, { limit: 6 });
-      setCityResults(data ?? []);
+      setCityResults(sortResultsByBoundary(data ?? []));
       setSearchingCity(false);
     }, 280);
   }, []);
@@ -193,7 +193,7 @@ export default function RegionForm() {
     stateDebounce.current = setTimeout(async () => {
       setSearchingState(true);
       const { data } = await geocodeApi.searchState(q, { limit: 6 });
-      setStateResults(data ?? []);
+      setStateResults(sortResultsByBoundary(data ?? []));
       setSearchingState(false);
     }, 280);
   }, []);
@@ -207,10 +207,24 @@ export default function RegionForm() {
     countryDebounce.current = setTimeout(async () => {
       setSearchingCountry(true);
       const { data } = await geocodeApi.searchCountry(q, { limit: 6 });
-      setCountryResults(data ?? []);
+      setCountryResults(sortResultsByBoundary(data ?? []));
       setSearchingCountry(false);
     }, 280);
   }, []);
+
+  // Always fetch the actual admin boundary (Polygon/MultiPolygon) for the selected place
+  // so the globe shows the real border (e.g. Bharuch-style outline), not just bbox or point.
+  const enrichGeocodedWithBoundary = useCallback((item, currentGeocoded) => {
+    const osmType = item.osm_type ?? currentGeocoded?.osm_type;
+    const osmId = item.osm_id ?? currentGeocoded?.osm_id;
+    if (!osmType || osmId == null) return;
+    geocodeApi.lookup(osmType, osmId).then(({ data }) => {
+      if (!data?.[0]) return;
+      const looked = parseNominatimResult(data[0]);
+      if (hasAreaGeometry(looked))
+        store.setGeocodedBoundary(looked.boundary_geojson, looked.bbox);
+    });
+  }, [store]);
 
   // ── Selection handlers ──────────────────────────────────────────────────
   const handleSelectCity = (item) => {
@@ -220,7 +234,6 @@ export default function RegionForm() {
     setCityQuery(cityName);
     setCityResults([]);
 
-    // Auto-fill state + country from address components
     if (parsed.state) {
       setStateQuery(parsed.state);
       setStateResults([]);
@@ -231,12 +244,14 @@ export default function RegionForm() {
     }
 
     store.setCity({ name: cityName, lat: parsed.lat, lon: parsed.lon });
-    store.setGeocoded({
+    const geocoded = {
       ...parsed,
       display_name: [cityName, parsed.state, parsed.country]
         .filter(Boolean)
         .join(", "),
-    });
+    };
+    store.setGeocoded(geocoded);
+    enrichGeocodedWithBoundary(item, geocoded);
   };
 
   const handleSelectState = (item) => {
@@ -246,17 +261,18 @@ export default function RegionForm() {
     setStateQuery(stateName);
     setStateResults([]);
 
-    // Auto-fill country
     if (parsed.country) {
       setCountryQuery(parsed.country);
       setCountryResults([]);
     }
 
     store.setState({ name: stateName, lat: parsed.lat, lon: parsed.lon });
-    store.setGeocoded({
+    const geocoded = {
       ...parsed,
       display_name: [stateName, parsed.country].filter(Boolean).join(", "),
-    });
+    };
+    store.setGeocoded(geocoded);
+    enrichGeocodedWithBoundary(item, geocoded);
   };
 
   const handleSelectCountry = (item) => {
@@ -273,10 +289,9 @@ export default function RegionForm() {
       lat: parsed.lat,
       lon: parsed.lon,
     });
-    store.setGeocoded({
-      ...parsed,
-      display_name: countryName,
-    });
+    const geocoded = { ...parsed, display_name: countryName };
+    store.setGeocoded(geocoded);
+    enrichGeocodedWithBoundary(item, geocoded);
   };
 
   const handleConfirmArea = () => store.setRegionConfirmed(true);

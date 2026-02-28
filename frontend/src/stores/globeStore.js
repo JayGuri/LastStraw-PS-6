@@ -14,6 +14,13 @@ export const useGlobeStore = create((set, get) => ({
   // Geocoded result (from Nominatim)
   geocoded: null,
   setGeocoded: (g) => set({ geocoded: g, regionConfirmed: false }),
+  /** Update only boundary/bbox (e.g. after lookup returns real admin border). */
+  setGeocodedBoundary: (boundary_geojson, bbox) =>
+    set((s) =>
+      s.geocoded
+        ? { geocoded: { ...s.geocoded, boundary_geojson, bbox: bbox ?? s.geocoded.bbox } }
+        : s
+    ),
 
   // User must confirm the highlighted region before analysis
   regionConfirmed: false,
