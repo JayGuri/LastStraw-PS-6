@@ -81,11 +81,10 @@ export default function App() {
 
   const PageComponent = PAGES[activeTab] ?? Landing;
   const isLoginPage = activeTab === "login";
-  const isLandingPage = activeTab === "landing";
 
   return (
-    <div className="relative">
-      {!isLoginPage && !isLandingPage && <Nav />}
+    <div className="relative min-h-screen app-gradient">
+      {!isLoginPage && <Nav />}
       <Notification />
       <AnimatePresence mode="wait">
         <motion.div
