@@ -6,6 +6,7 @@ const TABS = [
   { id: "landing", label: "Briefing", icon: "◉", emoji: "⬛" },
   { id: "globe", label: "Theater", icon: "⊕", emoji: "🌍" },
   { id: "mission", label: "Operations", icon: "⬡", emoji: "⚡" },
+  { id: "insights", label: "Insights", icon: "◈", emoji: "📊" },
 ];
 
 const SUBSCRIPTION_TIERS = {
