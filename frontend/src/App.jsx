@@ -8,11 +8,6 @@ import DistrictIntelligence from "./pages/DistrictIntelligence.jsx";
 import ApiTerminal from "./pages/ApiTerminal.jsx";
 import { useAppStore } from "./stores/appStore.js";
 
-const Dashboard            = React.lazy(() => import('./pages/Dashboard.jsx'))
-const MissionControl       = React.lazy(() => import('./pages/MissionControl.jsx'))
-const DistrictIntelligence = React.lazy(() => import('./pages/DistrictIntelligence.jsx'))
-const ApiTerminal          = React.lazy(() => import('./pages/ApiTerminal.jsx'))
-
 const PAGES = {
   login: Login,
   dashboard: Dashboard,
