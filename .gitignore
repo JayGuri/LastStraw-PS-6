@@ -37,3 +37,6 @@ Thumbs.db
 # Vite / local dev
 *.local
 .cache/
+
+# Misc
+.env
