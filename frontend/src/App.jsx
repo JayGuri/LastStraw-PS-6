@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import MissionControl from "./pages/MissionControl.jsx";
 import DistrictIntelligence from "./pages/DistrictIntelligence.jsx";
 import ApiTerminal from "./pages/ApiTerminal.jsx";
+import GlobeAnalysis from "./pages/GlobeAnalysis.jsx";
 import { useAppStore } from "./stores/appStore.js";
 
 const PAGES = {
@@ -14,6 +15,7 @@ const PAGES = {
   mission: MissionControl,
   map: DistrictIntelligence,
   api: ApiTerminal,
+  globe: GlobeAnalysis,
 };
 
 function Notification() {
@@ -64,6 +66,7 @@ export default function App() {
     else if (path === "/mission") setActiveTab("mission");
     else if (path === "/map") setActiveTab("map");
     else if (path === "/api") setActiveTab("api");
+    else if (path === "/globe") setActiveTab("globe");
     // Defaults to dashboard otherwise
   }, [setActiveTab]);
 
@@ -75,6 +78,7 @@ export default function App() {
       mission: "/mission",
       map: "/map",
       api: "/api",
+      globe: "/globe",
     };
     const targetPath = routeMap[activeTab] || "/";
     if (window.location.pathname !== targetPath) {

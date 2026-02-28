@@ -5,6 +5,7 @@ const TABS = [
   { id: 'dashboard', label: 'Dashboard',       icon: '◈', emoji: '🌍' },
   { id: 'mission',   label: 'Mission Control', icon: '⬡', emoji: '⚡' },
   { id: 'map',       label: 'District Intel',  icon: '◉', emoji: '🗺' },
+  { id: 'globe',     label: 'Globe Analysis',  icon: '⊕', emoji: '🌐' },
   { id: 'api',       label: 'API Terminal',    icon: '⌘', emoji: '⌨' },
 ]
 
