@@ -6,145 +6,7 @@ import { geocodeApi, parseNominatimResult } from "../../api/geocodeApi.js";
 import { floodDetectApi } from "../../api/floodDetectApi.js";
 import { mockFloodResponse } from "../../data/mockFloodResponse.js";
 import CalendarPicker from "../ui/CalendarPicker.jsx";
-
-// ── Inline autocomplete input ──────────────────────────────────────────────
-function GeoSearchInput({
-  label,
-  placeholder,
-  value,
-  onChange,
-  results,
-  onSelect,
-  isSearching,
-  onClear,
-}) {
-  const [open, setOpen] = useState(false);
-  const wrapRef = useRef(null);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (!wrapRef.current?.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Open when results arrive
-  useEffect(() => {
-    if (results.length > 0) setOpen(true);
-  }, [results]);
-
-  return (
-    <div ref={wrapRef} className="relative">
-      <label
-        className="text-[10px] uppercase font-mono tracking-[0.2em] mb-2 block"
-        style={{ color: "rgba(236,232,223,0.5)" }}
-      >
-        {label}
-      </label>
-      <div className="relative flex items-center">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => {
-            if (results.length > 0) setOpen(true);
-          }}
-          placeholder={placeholder}
-          className="w-full text-xs font-mono tracking-wide px-3 py-2.5 transition-all outline-none"
-          style={{
-            background: "rgba(236,232,223,0.03)",
-            border: "1px solid rgba(201,169,110,0.15)",
-            color: "#ece8df",
-          }}
-          onFocusCapture={(e) => {
-            e.target.style.borderColor = "#c9a96e";
-          }}
-          onBlurCapture={(e) => {
-            e.target.style.borderColor = "rgba(201,169,110,0.15)";
-          }}
-          autoComplete="off"
-        />
-        {isSearching && (
-          <span
-            className="absolute right-3 text-[10px] font-mono tracking-widest animate-pulse"
-            style={{ color: "rgba(201,169,110,0.5)" }}
-          >
-            ...
-          </span>
-        )}
-        {!isSearching && value && (
-          <button
-            onClick={() => {
-              onClear();
-              setOpen(false);
-            }}
-            className="absolute right-3 text-xs"
-            style={{ color: "rgba(236,232,223,0.4)", fontFamily: "monospace" }}
-          >
-            [X]
-          </button>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {open && results.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.12 }}
-            className="absolute z-50 w-full mt-1 overflow-hidden"
-            style={{
-              background: "#0a0907",
-              border: "1px solid rgba(201,169,110,0.3)",
-              borderTop: "none",
-              maxHeight: "200px",
-              overflowY: "auto",
-            }}
-          >
-            {results.map((item) => {
-              const parts = item.display_name.split(",").map((s) => s.trim());
-              const primary = parts[0];
-              const secondary = parts.slice(1, 3).join(", ");
-              return (
-                <button
-                  key={item.place_id}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    onSelect(item);
-                    setOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2.5 flex flex-col hover:bg-[rgba(201,169,110,0.05)] transition-colors"
-                  style={{ borderBottom: "1px solid rgba(201,169,110,0.08)" }}
-                >
-                  <span
-                    className="text-[11px] font-mono uppercase tracking-widest truncate"
-                    style={{ color: "#ece8df" }}
-                  >
-                    {primary}
-                  </span>
-                  {secondary && (
-                    <span
-                      className="text-[9px] font-mono uppercase tracking-wider truncate"
-                      style={{ color: "rgba(236,232,223,0.4)" }}
-                    >
-                      {secondary}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RegionForm() {
@@ -518,7 +380,7 @@ export default function RegionForm() {
       <button
         onClick={handleAnalyze}
         disabled={!geo || isRunning}
-        className="relative group w-full mt-2"
+        className="relative group w-full mt-2 overflow-hidden"
         style={{
           padding: "0.8rem 1rem",
           cursor: !geo || isRunning ? "not-allowed" : "pointer",
@@ -531,16 +393,16 @@ export default function RegionForm() {
         />
         <span
           className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-          style={{ background: "#c0392b" }}
+          style={{ background: "#c9a96e" }}
         />
 
         <span
-          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors"
-          style={{ fontSize: "0.65rem", color: "#c9a96e" }}
+          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#c9a96e] group-hover:text-[#0a0907]"
+          style={{ fontSize: "0.65rem" }}
         >
           {isRunning ?
             <>
-              <span className="w-1.5 h-1.5 bg-[#c9a96e] animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
               Initializing Scan...
             </>
           : "Execute Detection"}
