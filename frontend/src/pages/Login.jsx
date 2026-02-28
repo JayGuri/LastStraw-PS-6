@@ -17,7 +17,7 @@ export default function Login() {
     const result = handleOAuthCallback();
     if (result) {
       showNotification(`Welcome back, ${result.user.email.split("@")[0]}`, "success");
-      setTimeout(() => setActiveTab("dashboard"), 300);
+      setTimeout(() => setActiveTab("globe"), 300);
     }
   }, [handleOAuthCallback, showNotification, setActiveTab]);
 
@@ -51,7 +51,7 @@ export default function Login() {
     try {
       await login(email, password);
       showNotification(`Welcome back, ${email.split("@")[0]}`, "success");
-      setTimeout(() => setActiveTab("dashboard"), 300);
+      setTimeout(() => setActiveTab("globe"), 300);
     } catch (error) {
       showNotification(error.message || "Login failed. Please try again.", "error");
     } finally {

@@ -4,7 +4,7 @@ const storedMock = localStorage.getItem('cosmeon_mock_mode')
 const initMockMode = storedMock === null ? true : storedMock !== 'false'
 
 export const useAppStore = create((set, get) => ({
-  activeTab: 'login', // login | dashboard | mission | map | api
+  activeTab: 'login', // login | landing | mission | globe
   setActiveTab: (tab) => set({ activeTab: tab }),
 
   // Global notification
