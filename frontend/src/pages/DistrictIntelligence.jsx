@@ -23,6 +23,24 @@ function DistrictDetailPanel({ district, onClose }) {
   const riskScore = Math.round(district.floodPct * 0.6 + (district.pop / 10000000) * 40)
   const changeDelta = (district.floodPct * 0.18).toFixed(1)
 
+  const generateForecast = (d) => {
+    const base = d.floodPct
+    return [
+      { label: '+1D',  floodPct: +(base * (0.96 + Math.random() * 0.08)).toFixed(1), conf: 0.89 },
+      { label: '+3D',  floodPct: +(base * (0.88 + Math.random() * 0.16)).toFixed(1), conf: 0.81 },
+      { label: '+7D',  floodPct: +(base * (0.74 + Math.random() * 0.24)).toFixed(1), conf: 0.70 },
+      { label: '+14D', floodPct: +(base * (0.58 + Math.random() * 0.30)).toFixed(1), conf: 0.55 },
+    ]
+  }
+  const forecast = generateForecast(district)
+
+  const floodColor = (pct) => {
+    if (pct > 40) return '#d84040'
+    if (pct > 25) return '#d06828'
+    if (pct > 10) return '#c8a018'
+    return '#38a058'
+  }
+
   const radarPoints = () => {
     const metrics = [
       district.floodPct / 70,
@@ -173,6 +191,44 @@ function DistrictDetailPanel({ district, onClose }) {
           <SparkChart data={hist} color={c.hex} height={100} />
         </div>
 
+        {/* Risk Forecast */}
+        <div className="mt-5 pt-4 border-t border-white/5">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="data-tag text-medium/60">⚡ Risk Forecast</span>
+            <span className="data-tag text-medium/40 text-[9px]">EXPERIMENTAL</span>
+            <span className="font-mono text-[9px] text-text-3 ml-auto">
+              AI-PROJECTED · MOCK MODEL
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {forecast.map((f, i) => (
+              <motion.div
+                key={f.label}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+                className="card-glass p-3 text-center"
+              >
+                <div className="data-tag mb-2 block text-center w-full"
+                     style={{ color: floodColor(f.floodPct) }}>
+                  {f.label}
+                </div>
+                <div className="font-display text-xl font-bold"
+                     style={{ color: floodColor(f.floodPct) }}>
+                  {f.floodPct}%
+                </div>
+                <div className="mt-2 h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-700"
+                       style={{ width: `${f.conf * 100}%`, background: floodColor(f.floodPct) + '80' }} />
+                </div>
+                <div className="font-mono text-[9px] text-text-3 mt-1">
+                  {Math.round(f.conf * 100)}% conf.
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
         {/* Quality flags */}
         <div>
           <div className="text-[9px] sm:text-[10px] font-mono text-text-3 mb-2 uppercase tracking-wider">
@@ -225,7 +281,7 @@ export default function DistrictIntelligence() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="section-tag mb-2">District Intelligence</div>
-            <h1 className="font-display font-extrabold text-xl sm:text-3xl text-text">
+            <h1 className="font-display font-extrabold text-xl sm:text-3xl text-text tracking-tight">
               Bangladesh Flood Risk Map
             </h1>
           </div>

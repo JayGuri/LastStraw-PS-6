@@ -97,7 +97,7 @@ export default function ApiTerminal() {
         {/* Header */}
         <div className="mb-5 sm:mb-8">
           <div className="section-tag section-tag-ice mb-2 sm:mb-3 text-[10px] sm:text-xs">API Reference</div>
-          <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-text">
+          <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-text tracking-tight">
             API Terminal
           </h1>
           <p className="text-text-2 text-xs sm:text-sm mt-1.5 sm:mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">

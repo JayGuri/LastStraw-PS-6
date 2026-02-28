@@ -156,10 +156,10 @@ export default function MissionControl() {
           <div>
             <span className="data-tag text-gold/50 mb-3 block">PIPELINE EXECUTOR</span>
             <div className="section-tag mb-2 sm:mb-3">Pipeline Execution</div>
-            <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-gradient-gold">
+            <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-gradient-gold tracking-tight">
               Mission Control
             </h1>
-            <p className="text-text-2 mt-1 sm:mt-2 text-xs sm:text-sm max-w-lg">
+            <p className="font-body text-text-2 mt-1 sm:mt-2 text-xs sm:text-sm max-w-lg leading-relaxed">
               Simulate the full SAR flood-detection pipeline — from satellite ingestion to
               per-district risk scores. Watch each stage execute in real time.
             </p>

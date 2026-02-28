@@ -1,11 +1,12 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Nav from './components/common/Nav.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import MissionControl from './pages/MissionControl.jsx'
-import DistrictIntelligence from './pages/DistrictIntelligence.jsx'
-import ApiTerminal from './pages/ApiTerminal.jsx'
 import { useAppStore } from './stores/appStore.js'
+
+const Dashboard            = React.lazy(() => import('./pages/Dashboard.jsx'))
+const MissionControl       = React.lazy(() => import('./pages/MissionControl.jsx'))
+const DistrictIntelligence = React.lazy(() => import('./pages/DistrictIntelligence.jsx'))
+const ApiTerminal          = React.lazy(() => import('./pages/ApiTerminal.jsx'))
 
 const PAGES = {
   dashboard: Dashboard,
@@ -44,7 +45,8 @@ function Notification() {
 }
 
 export default function App() {
-  const activeTab = useAppStore(s => s.activeTab)
+  const activeTab  = useAppStore(s => s.activeTab)
+  const isMockMode = useAppStore(s => s.isMockMode)
   const PageComponent = PAGES[activeTab] ?? Dashboard
 
   return (
@@ -57,22 +59,32 @@ export default function App() {
 
       {/* Everything below the fixed nav — pt-16 clears the 64px nav bar */}
       <div className="pt-16">
-        {/* Mock data banner */}
-        <div className="mock-banner">
-          ⚠ RUNNING ON MOCK DATA — switch to LIVE API in nav when backend is ready
-        </div>
+        {/* Mock data banner — only shown in mock mode */}
+        {isMockMode && (
+          <div className="mock-banner">
+            ⚠ RUNNING ON MOCK DATA — switch to LIVE API in nav when backend is ready
+          </div>
+        )}
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-          >
-            <PageComponent />
-          </motion.div>
-        </AnimatePresence>
+        <React.Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="font-mono text-xs text-gold/40 animate-pulse tracking-widest">
+              LOADING COSMEON...
+            </div>
+          </div>
+        }>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              <PageComponent />
+            </motion.div>
+          </AnimatePresence>
+        </React.Suspense>
       </div>
     </div>
   )

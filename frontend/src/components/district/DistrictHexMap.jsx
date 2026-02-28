@@ -175,23 +175,48 @@ export default function DistrictHexMap({ onSelect }) {
         )
       })()}
 
-      {/* Hover tooltip */}
+      {/* Hover tooltip — foreignObject for styled HTML content */}
       {hoveredDistrict && (() => {
         const { x, y } = hexCenter(hoveredDistrict.col, hoveredDistrict.row)
         const d = hoveredDistrict
+        const tw = 130, th = 52
+        const tx = Math.max(0, Math.min(maxX - tw, x - tw / 2))
+        const ty = Math.max(0, y - HEX_R - th - 10)
         return (
-          <g style={{ pointerEvents: 'none' }}>
-            <rect x={x - 52} y={y - HEX_R - 44} width={104} height={38}
-                  rx="4" fill="#0e141f" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-            <text x={x} y={y - HEX_R - 30} textAnchor="middle"
-                  fontSize="9" fontFamily="DM Sans, sans-serif" fontWeight="600"
-                  fill="#bfcfd8">{d.name}</text>
-            <text x={x} y={y - HEX_R - 18} textAnchor="middle"
-                  fontSize="8" fontFamily="JetBrains Mono, monospace"
-                  fill={RISK_COLORS[d.risk]?.hex ?? '#fff'}>
-              {d.risk} · {d.floodPct}% · {(d.pop/1000).toFixed(0)}k pop
-            </text>
-          </g>
+          <foreignObject
+            x={tx} y={ty} width={tw} height={th}
+            style={{ pointerEvents: 'none', overflow: 'visible' }}
+          >
+            <div xmlns="http://www.w3.org/1999/xhtml"
+                 style={{
+                   background: 'rgba(14,20,31,0.95)',
+                   border: '1px solid rgba(255,255,255,0.1)',
+                   borderRadius: '6px',
+                   padding: '7px 10px',
+                   width: `${tw}px`,
+                   boxSizing: 'border-box',
+                 }}
+            >
+              <div style={{
+                fontFamily: 'DM Sans, sans-serif',
+                fontSize: '9px',
+                fontWeight: 600,
+                color: '#bfcfd8',
+                marginBottom: '3px',
+                whiteSpace: 'nowrap',
+              }}>
+                {d.name}
+              </div>
+              <div style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '7.5px',
+                color: RISK_COLORS[d.risk]?.hex ?? '#fff',
+                whiteSpace: 'nowrap',
+              }}>
+                {d.risk} · {d.floodPct}% · {(d.pop / 1000).toFixed(0)}k pop
+              </div>
+            </div>
+          </foreignObject>
         )
       })()}
     </svg>

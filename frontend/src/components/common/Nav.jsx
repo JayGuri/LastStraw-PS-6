@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useAppStore } from '../../stores/appStore.js'
 
 const TABS = [
@@ -9,8 +9,7 @@ const TABS = [
 ]
 
 export default function Nav() {
-  const { activeTab, setActiveTab } = useAppStore()
-  const [mockMode, setMockMode] = useState(true)
+  const { activeTab, setActiveTab, isMockMode, toggleMockMode } = useAppStore()
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6
@@ -61,13 +60,13 @@ export default function Nav() {
 
         {/* Mock / Live API toggle */}
         <button
-          onClick={() => { setMockMode(m => !m); console.log('toggle mock mode') }}
+          onClick={toggleMockMode}
           className={`font-mono text-[10px] px-3 py-1 rounded-full border transition-all duration-300
-            ${mockMode
+            ${isMockMode
               ? 'border-medium/30 text-medium/70 bg-medium/5 hover:bg-medium/10'
               : 'border-low/30    text-low/70    bg-low/5    hover:bg-low/10'}`}
         >
-          {mockMode ? (
+          {isMockMode ? (
             '⚠ MOCK'
           ) : (
             <span className="flex items-center gap-1.5">
