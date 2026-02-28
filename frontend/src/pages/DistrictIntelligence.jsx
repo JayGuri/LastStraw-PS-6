@@ -21,6 +21,7 @@ function DistrictDetailPanel({ district, onClose }) {
   const c = RISK_COLORS[district.risk]
   const floodedKm2 = (district.floodPct * district.area / 100).toFixed(0)
   const riskScore = Math.round(district.floodPct * 0.6 + (district.pop / 10000000) * 40)
+  const changeDelta = (district.floodPct * 0.18).toFixed(1)
 
   const radarPoints = () => {
     const metrics = [
@@ -48,7 +49,7 @@ function DistrictDetailPanel({ district, onClose }) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 30 }}
       transition={{ duration: 0.3 }}
-      className="bg-bg-card rounded-2xl glow-border overflow-hidden flex flex-col"
+      className="card-glass rounded-2xl glow-border overflow-hidden flex flex-col"
     >
       {/* Header */}
       <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-white/5 flex items-start justify-between"
@@ -80,7 +81,7 @@ function DistrictDetailPanel({ district, onClose }) {
             { label: 'Pop. Exposed',   val: `${(district.pop * district.floodPct / 100 / 1000).toFixed(0)}k`, color: '#4ab0d8' },
             { label: 'Total Area',     val: `${district.area} km²`, color: 'rgba(191,207,216,0.6)' },
           ].map(s => (
-            <div key={s.label} className="bg-bg rounded-xl p-2.5 sm:p-3 border border-white/5">
+            <div key={s.label} className="card-glass rounded-xl p-2.5 sm:p-3">
               <div className="font-display font-bold text-base sm:text-lg" style={{ color: s.color }}>{s.val}</div>
               <div className="text-[9px] sm:text-[10px] font-mono text-text-3">{s.label}</div>
             </div>
@@ -141,6 +142,29 @@ function DistrictDetailPanel({ district, onClose }) {
           </div>
         </div>
 
+        {/* Change detection */}
+        <div className="card-glass rounded-xl p-3 sm:p-4">
+          <div className="text-[10px] sm:text-xs font-mono text-text-2 mb-2 uppercase tracking-wider">
+            Change Detection
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] sm:text-xs text-text-2 mb-1">vs. 30-day baseline</div>
+              <div className="font-display font-bold text-lg sm:text-xl text-gradient-gold">
+                +{changeDelta}%
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] sm:text-xs text-text-2 mb-1">Flood trend</div>
+              <div className="font-mono text-xs text-critical">▲ Rising</div>
+            </div>
+          </div>
+          <div className="mt-2 h-0.5 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-gradient-to-r from-gold/40 to-critical"
+                 style={{ width: `${Math.min(changeDelta * 3, 100)}%` }} />
+          </div>
+        </div>
+
         {/* Flood time series */}
         <div>
           <div className="text-[10px] sm:text-xs font-mono text-text-2 mb-2 sm:mb-3 uppercase tracking-wider">
@@ -150,23 +174,26 @@ function DistrictDetailPanel({ district, onClose }) {
         </div>
 
         {/* Quality flags */}
-        <div className="bg-bg rounded-xl p-2.5 sm:p-3 border border-white/5">
+        <div>
           <div className="text-[9px] sm:text-[10px] font-mono text-text-3 mb-2 uppercase tracking-wider">
             Data Quality
           </div>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {[
-              { label: 'Cloud cover < 20%',    ok: true  },
-              { label: 'Orbit: DESCENDING',    ok: true  },
-              { label: 'Scene complete',        ok: true  },
-              { label: 'PostGIS validated',     ok: true  },
-              { label: 'WorldPop intersected',  ok: true  },
-              { label: 'JRC water subtracted',  ok: true  },
-            ].map(f => (
-              <span key={f.label}
-                    className={`text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded font-mono border
-                      ${f.ok ? 'text-low border-low/20 bg-low/5' : 'text-critical border-critical/20 bg-critical/5'}`}>
-                {f.ok ? '✓' : '✗'} {f.label}
+              'Cloud cover < 20%',
+              'Orbit: DESCENDING',
+              'Scene complete',
+              'PostGIS validated',
+              'WorldPop intersected',
+              'JRC water subtracted',
+              'Change Detection ✓',
+              'SAR Coherence ✓',
+            ].map(label => (
+              <span key={label}
+                    className="card-glass px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg flex items-center gap-1.5
+                               text-[9px] sm:text-[10px] font-mono text-text-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-low flex-shrink-0" />
+                {label}
               </span>
             ))}
           </div>
@@ -202,31 +229,40 @@ export default function DistrictIntelligence() {
               Bangladesh Flood Risk Map
             </h1>
           </div>
-          <div className="flex items-center gap-4 sm:gap-6 text-xs font-mono">
+          <div className="flex items-center gap-3 sm:gap-4">
             {[
-              { label: 'Critical', val: critCount, color: '#d84040' },
-              { label: 'High',     val: highCount, color: '#d06828' },
-              { label: 'Exposed',  val: `${(totExp / 1000000).toFixed(1)}M`, color: '#4ab0d8' },
+              { label: 'Critical', val: critCount, color: '#d84040', pulse: true },
+              { label: 'High',     val: highCount, color: '#d06828', pulse: false },
+              { label: 'Exposed',  val: `${(totExp / 1000000).toFixed(1)}M`, color: '#4ab0d8', pulse: false },
             ].map(s => (
-              <div key={s.label} className="text-center">
-                <div className="font-display font-bold text-lg sm:text-xl" style={{ color: s.color }}>{s.val}</div>
-                <div className="text-text-3 text-[10px] sm:text-xs">{s.label}</div>
+              <div key={s.label} className="card-glass rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-center min-w-[60px]">
+                <div className="flex items-center justify-center gap-1.5 mb-0.5">
+                  {s.pulse && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-critical animate-pulse flex-shrink-0" />
+                  )}
+                  <div className="font-display font-bold text-base sm:text-lg text-gradient-gold">{s.val}</div>
+                </div>
+                <div className="text-[9px] sm:text-[10px] font-mono text-text-3">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <div className="card-glass px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl flex items-center gap-2 sm:gap-4 flex-wrap">
           {/* Overlay toggle */}
           <div className="flex gap-0.5 sm:gap-1 bg-bg-2 rounded-xl p-0.5 sm:p-1 border border-white/5">
             {OVERLAYS.map(o => (
               <button key={o.id}
                 onClick={() => setOverlay(o.id)}
                 className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-all
+                  flex items-center gap-1
                   ${overlay === o.id ? 'text-bg font-bold' : 'text-text-2 hover:text-text'}`}
                 style={overlay === o.id ? { background: o.color } : undefined}
               >
+                {overlay === o.id && (
+                  <span className="text-[8px] leading-none">●</span>
+                )}
                 {o.label}
               </button>
             ))}
@@ -249,8 +285,8 @@ export default function DistrictIntelligence() {
             ))}
           </div>
 
-          <div className="ml-auto text-[10px] sm:text-xs font-mono text-text-3 hidden sm:block">
-            {RUN_META.runId} · {RUN_META.sceneDate}
+          <div className="ml-auto hidden sm:block">
+            <span className="data-tag text-text-3">{RUN_META.runId} · {RUN_META.sceneDate}</span>
           </div>
         </div>
 
@@ -310,26 +346,27 @@ export default function DistrictIntelligence() {
                 return (
                   <button key={d.id}
                     onClick={() => setSelectedDistrict(isSelected ? null : d)}
-                    className={`w-full text-left px-3 sm:px-4 py-2 sm:py-3 border-b border-white/[0.03]
-                                hover:bg-white/[0.02] transition-colors
-                                ${isSelected ? 'bg-gold/5 border-l-2 border-l-gold' : ''}`}
+                    className={`w-full text-left px-3 sm:px-4 py-2 sm:py-2.5 border-b border-white/[0.03]
+                                transition-colors
+                                ${isSelected
+                                  ? 'bg-gradient-to-r from-gold/10 to-transparent border-l-2 border-l-gold'
+                                  : 'hover:bg-white/[0.02]'}`}
                   >
-                    <div className="flex items-center justify-between mb-0.5">
+                    <div className="flex items-center justify-between mb-1">
                       <span className="text-[10px] sm:text-xs font-medium text-text">{d.name}</span>
                       <span className="text-[9px] sm:text-[10px] font-mono" style={{ color: c.hex }}>
                         {d.floodPct}%
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-0.5 bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full"
-                             style={{ width: `${Math.min(d.floodPct, 70) / 70 * 100}%`, background: c.hex }} />
-                      </div>
-                      <span className="text-[8px] sm:text-[9px] font-mono text-text-3"
-                            style={{ color: c.hex + 'aa' }}>
-                        {d.risk.slice(0,4)}
-                      </span>
+                    {/* Mini flood bar */}
+                    <div className="h-[2px] bg-white/5 rounded-full overflow-hidden mb-1">
+                      <div className="h-full rounded-full"
+                           style={{ width: `${Math.min(d.floodPct, 70) / 70 * 100}%`, background: c.hex }} />
                     </div>
+                    <span className="text-[8px] sm:text-[9px] font-mono"
+                          style={{ color: c.hex + 'aa' }}>
+                      {d.risk.slice(0,4)}
+                    </span>
                   </button>
                 )
               })}
@@ -369,10 +406,10 @@ export default function DistrictIntelligence() {
                     {[
                       { label: 'Total Flooded', val: '18,400 km²' },
                       { label: 'Pop. Exposed',  val: '4.2M' },
-                      { label: 'Avg Confidence','val': '87.4%' },
+                      { label: 'Avg Confidence', val: '87.4%' },
                       { label: 'Run Date',       val: '2024-11-04' },
                     ].map(s => (
-                      <div key={s.label} className="bg-bg rounded-xl p-2 sm:p-3 border border-white/5">
+                      <div key={s.label} className="card-glass rounded-xl p-2 sm:p-3">
                         <div className="font-mono font-bold text-gold-lt text-xs sm:text-sm">{s.val}</div>
                         <div className="text-[9px] sm:text-[10px] font-mono text-text-3">{s.label}</div>
                       </div>

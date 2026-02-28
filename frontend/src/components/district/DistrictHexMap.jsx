@@ -21,7 +21,7 @@ function hexPath(cx, cy, r) {
 }
 
 export default function DistrictHexMap({ onSelect }) {
-  const { overlay, selectedDistrict, hoveredDistrict, setHoveredDistrict } = useMapStore()
+  const { overlay, filterRisk, selectedDistrict, hoveredDistrict, setHoveredDistrict } = useMapStore()
   const [pulsePhase, setPulsePhase] = useState(0)
 
   useEffect(() => {
@@ -75,6 +75,11 @@ export default function DistrictHexMap({ onSelect }) {
             </radialGradient>
           )
         })}
+        {/* Vignette gradient */}
+        <radialGradient id="vignette-gradient" cx="50%" cy="50%" r="70%">
+          <stop offset="40%" stopColor="transparent" />
+          <stop offset="100%" stopColor="rgba(7,9,14,0.7)" />
+        </radialGradient>
       </defs>
 
       {DISTRICTS.map(d => {
@@ -83,17 +88,19 @@ export default function DistrictHexMap({ onSelect }) {
         const isHov      = hoveredDistrict?.id   === d.id
         const isCritical = d.risk === 'Critical'
         const pulseAlpha = isCritical ? 0.25 + Math.abs(Math.sin(pulsePhase * 0.2)) * 0.25 : 0
+        const isFiltered = filterRisk !== 'all' && d.risk !== filterRisk
 
         return (
           <g key={d.id}
              className="cursor-pointer"
-             onClick={() => onSelect(d)}
-             onMouseEnter={() => setHoveredDistrict(d)}
+             opacity={isFiltered ? 0.12 : 1}
+             onClick={() => !isFiltered && onSelect(d)}
+             onMouseEnter={() => !isFiltered && setHoveredDistrict(d)}
              onMouseLeave={() => setHoveredDistrict(null)}
-             filter={isSel ? 'url(#glow-selected)' : isCritical ? 'url(#glow-critical)' : undefined}
+             filter={!isFiltered && (isSel ? 'url(#glow-selected)' : isCritical ? 'url(#glow-critical)' : undefined)}
           >
             {/* Pulse ring for critical */}
-            {isCritical && (
+            {isCritical && !isFiltered && (
               <polygon
                 points={hexPath(x, y, HEX_R * (1.2 + Math.sin(pulsePhase * 0.2) * 0.15))}
                 fill="none"
@@ -151,6 +158,22 @@ export default function DistrictHexMap({ onSelect }) {
           </g>
         )
       })}
+
+      {/* Vignette overlay */}
+      <rect width="100%" height="100%" fill="url(#vignette-gradient)" pointerEvents="none" />
+
+      {/* Crosshair on hovered district */}
+      {hoveredDistrict && (() => {
+        const { x: cx, y: cy } = hexCenter(hoveredDistrict.col, hoveredDistrict.row)
+        return (
+          <g pointerEvents="none">
+            <line x1={cx - 60} y1={cy} x2={cx + 60} y2={cy}
+                  stroke="#4ab0d8" strokeWidth="0.5" opacity="0.2" />
+            <line x1={cx} y1={cy - 60} x2={cx} y2={cy + 60}
+                  stroke="#4ab0d8" strokeWidth="0.5" opacity="0.2" />
+          </g>
+        )
+      })()}
 
       {/* Hover tooltip */}
       {hoveredDistrict && (() => {
