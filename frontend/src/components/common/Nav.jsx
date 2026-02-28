@@ -2,12 +2,9 @@ import React from 'react'
 import { useAppStore } from '../../stores/appStore.js'
 
 const TABS = [
-  { id: 'landing',   label: 'Home',            icon: '◉', emoji: '🏠' },
-  { id: 'dashboard', label: 'Dashboard',       icon: '◈', emoji: '🌍' },
-  { id: 'mission',   label: 'Mission Control', icon: '⬡', emoji: '⚡' },
-  { id: 'map',       label: 'District Intel',  icon: '◉', emoji: '🗺' },
-  { id: 'globe',     label: 'Globe Analysis',  icon: '⊕', emoji: '🌐' },
-  { id: 'api',       label: 'API Terminal',    icon: '⌘', emoji: '⌨' },
+  { id: 'landing', label: 'Home',            icon: '◉', emoji: '🏠' },
+  { id: 'mission', label: 'Mission Control', icon: '⬡', emoji: '⚡' },
+  { id: 'globe',   label: 'Globe Analysis',   icon: '⊕', emoji: '🌐' },
 ]
 
 export default function Nav() {
