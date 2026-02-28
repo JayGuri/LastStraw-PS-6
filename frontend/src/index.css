@@ -98,6 +98,35 @@ body {
   min-height: 100dvh;
 }
 
+/* App-wide gradient — subtle, non-distracting */
+.app-gradient {
+  background: linear-gradient(
+    165deg,
+    #080b12 0%,
+    #0a0e18 22%,
+    #0c111a 45%,
+    #0a0d14 78%,
+    #070a10 100%
+  );
+  background-attachment: fixed;
+}
+
+/* Content cards — soft elevation, less harsh */
+.card-glass {
+  background: rgba(14, 18, 28, 0.72);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.data-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 img, svg, video, canvas {
   display: block;
   max-width: 100%;

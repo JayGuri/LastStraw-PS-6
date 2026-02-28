@@ -25,7 +25,7 @@ export default function GlobeAnalysis() {
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.idle
 
   return (
-    <div className="min-h-screen bg-bg noise pt-14 sm:pt-16 flex flex-col">
+    <div className="min-h-screen pt-14 noise flex flex-col">
       <div className="flex-1 flex flex-col max-w-[1600px] mx-auto w-full
                        px-3 sm:px-4 py-3 sm:py-4 gap-3 sm:gap-4">
 

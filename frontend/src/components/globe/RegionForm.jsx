@@ -5,6 +5,7 @@ import { useAppStore } from '../../stores/appStore.js'
 import { geocodeApi, parseNominatimResult } from '../../api/geocodeApi.js'
 import { floodDetectApi } from '../../api/floodDetectApi.js'
 import { mockFloodResponse } from '../../data/mockFloodResponse.js'
+import CalendarPicker from '../ui/CalendarPicker.jsx'
 
 // ── Inline autocomplete input ──────────────────────────────────────────────
 function GeoSearchInput({ label, placeholder, value, onChange, results, onSelect, isSearching, onClear }) {
@@ -369,20 +370,12 @@ export default function RegionForm() {
         )}
       </AnimatePresence>
 
-      {/* Date picker */}
-      <div>
-        <label className="text-[10px] font-mono text-text-3 mb-1.5 block uppercase tracking-wider">
-          Analysis Date
-        </label>
-        <input
-          type="date"
-          value={store.analysisDate || ''}
-          onChange={e => store.setAnalysisDate(e.target.value)}
-          className="w-full bg-bg-2 border border-white/10 rounded-xl px-3.5 py-2.5
-                     text-sm text-text font-body focus:border-gold/40
-                     focus:ring-1 focus:ring-gold/10 focus:outline-none transition-all"
-        />
-      </div>
+      {/* Analysis date — Google Calendar–style picker */}
+      <CalendarPicker
+        label="Analysis Date"
+        value={store.analysisDate || ''}
+        onChange={v => store.setAnalysisDate(v)}
+      />
 
       {/* Analyze button */}
       <motion.button

@@ -4,6 +4,7 @@ import ScrollAnimationViewer from "../components/ScrollAnimationViewer.jsx";
 import SubscriptionSection from "../components/SubscriptionSection.jsx";
 import { useScrollAnimation } from "../hooks/useScrollAnimation.js";
 import { useAppStore } from "../stores/appStore.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 // ── Non-linear scroll keyframes ──────────────────────────────────────────────
 // [rawScrollFraction, frameIndex]
@@ -162,6 +163,7 @@ const PANEL_BG_HR =
 
 export default function Landing() {
   const { setActiveTab } = useAppStore();
+  const { isAuthenticated } = useAuth();
 
   // Apple-style passive + rAF LERP scroll animation with non-linear keyframe map
   const { currentFrame, scrollProgress } = useScrollAnimation(
@@ -194,8 +196,8 @@ export default function Landing() {
         style={{ height: `calc(100vh * ${SCROLL_HEIGHT_MULTIPLIER})` }}
         className="relative w-full bg-[#060504]"
       >
-        {/* ── Sticky viewport panel — stays in view as page scrolls ─────────── */}
-        <div className="sticky top-0 w-full h-screen overflow-hidden">
+        {/* ── Sticky viewport panel — below nav (nav is h-14) ─────────── */}
+        <div className="sticky top-14 w-full h-[calc(100vh-3.5rem)] overflow-hidden">
           {/* Canvas animation — full-screen background */}
           <div className="absolute inset-0 z-0">
             <ScrollAnimationViewer
@@ -603,15 +605,14 @@ export default function Landing() {
                   {section.description}
                 </p>
 
-                {/* Sharp thin-border button — no rounded corners, Stitch style */}
+                {/* CTA: Sign in or Go to Globe when logged in */}
                 <motion.button
-                  onClick={() => setActiveTab("login")}
+                  onClick={() => setActiveTab(isAuthenticated ? "globe" : "login")}
                   className="pointer-events-auto relative group overflow-hidden"
                   style={{ padding: "0.85rem 3rem" }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {/* Border */}
                   <span
                     className="absolute inset-0"
                     style={{
@@ -619,12 +620,10 @@ export default function Landing() {
                       transition: "border-color 0.3s",
                     }}
                   />
-                  {/* Fill on hover */}
                   <span
                     className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-                    style={{ background: "#c0392b" }}
+                    style={{ background: isAuthenticated ? "#c9a96e" : "#c0392b" }}
                   />
-                  {/* Label */}
                   <span
                     className="relative z-10 font-light tracking-[0.3em] uppercase"
                     style={{
@@ -633,7 +632,7 @@ export default function Landing() {
                       transition: "color 0.3s",
                     }}
                   >
-                    Request Access
+                    {isAuthenticated ? "Go to Globe Analysis" : "Request Access"}
                   </span>
                 </motion.button>
               </motion.div>

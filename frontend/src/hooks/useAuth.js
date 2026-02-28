@@ -133,8 +133,9 @@ export function useAuth() {
       return null;
     }
 
+    let response;
     try {
-      const response = await fetch(`${API_URL}/auth/me`, {
+      response = await fetch(`${API_URL}/auth/me`, {
         method: "GET",
         headers: getAuthHeader(),
       });
@@ -149,7 +150,6 @@ export function useAuth() {
       return data.user;
     } catch (err) {
       console.error("Get user error:", err);
-      // Token might be invalid
       if (response?.status === 401) {
         clearAuthData();
       }
