@@ -1,19 +1,23 @@
 import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Nav from "./components/common/Nav.jsx";
+import Landing from "./pages/Landing.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import MissionControl from "./pages/MissionControl.jsx";
 import DistrictIntelligence from "./pages/DistrictIntelligence.jsx";
 import ApiTerminal from "./pages/ApiTerminal.jsx";
+import GlobeAnalysis from "./pages/GlobeAnalysis.jsx";
 import { useAppStore } from "./stores/appStore.js";
 
 const PAGES = {
+  landing: Landing,
   login: Login,
   dashboard: Dashboard,
   mission: MissionControl,
   map: DistrictIntelligence,
   api: ApiTerminal,
+  globe: GlobeAnalysis,
 };
 
 function Notification() {
@@ -60,21 +64,26 @@ export default function App() {
   // Initialization: Read the current URL path to set the tab correctly on load
   useEffect(() => {
     const path = window.location.pathname;
-    if (path === "/login") setActiveTab("login");
+    if (path === "/") setActiveTab("landing");
+    else if (path === "/dashboard") setActiveTab("dashboard");
+    else if (path === "/login") setActiveTab("login");
     else if (path === "/mission") setActiveTab("mission");
     else if (path === "/map") setActiveTab("map");
     else if (path === "/api") setActiveTab("api");
-    // Defaults to dashboard otherwise
+    else if (path === "/globe") setActiveTab("globe");
+    else setActiveTab("landing");
   }, [setActiveTab]);
 
   // Sync state to URL whenever it changes
   useEffect(() => {
     const routeMap = {
-      dashboard: "/",
+      landing: "/",
+      dashboard: "/dashboard",
       login: "/login",
       mission: "/mission",
       map: "/map",
       api: "/api",
+      globe: "/globe",
     };
     const targetPath = routeMap[activeTab] || "/";
     if (window.location.pathname !== targetPath) {
@@ -82,12 +91,13 @@ export default function App() {
     }
   }, [activeTab]);
 
-  const PageComponent = PAGES[activeTab] ?? Dashboard;
+  const PageComponent = PAGES[activeTab] ?? Landing;
   const isLoginPage = activeTab === "login";
+  const isLandingPage = activeTab === "landing";
 
   return (
     <div className="relative">
-      {!isLoginPage && <Nav />}
+      {!isLoginPage && !isLandingPage && <Nav />}
       <Notification />
       <AnimatePresence mode="wait">
         <motion.div
