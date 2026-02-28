@@ -21,7 +21,7 @@ function hexPath(cx, cy, r) {
 }
 
 export default function DistrictHexMap({ onSelect }) {
-  const { overlay, selectedDistrict, hoveredDistrict, setHoveredDistrict } = useMapStore()
+  const { overlay, filterRisk, selectedDistrict, hoveredDistrict, setHoveredDistrict } = useMapStore()
   const [pulsePhase, setPulsePhase] = useState(0)
 
   useEffect(() => {
@@ -75,6 +75,11 @@ export default function DistrictHexMap({ onSelect }) {
             </radialGradient>
           )
         })}
+        {/* Vignette gradient */}
+        <radialGradient id="vignette-gradient" cx="50%" cy="50%" r="70%">
+          <stop offset="40%" stopColor="transparent" />
+          <stop offset="100%" stopColor="rgba(7,9,14,0.7)" />
+        </radialGradient>
       </defs>
 
       {DISTRICTS.map(d => {
@@ -83,17 +88,19 @@ export default function DistrictHexMap({ onSelect }) {
         const isHov      = hoveredDistrict?.id   === d.id
         const isCritical = d.risk === 'Critical'
         const pulseAlpha = isCritical ? 0.25 + Math.abs(Math.sin(pulsePhase * 0.2)) * 0.25 : 0
+        const isFiltered = filterRisk !== 'all' && d.risk !== filterRisk
 
         return (
           <g key={d.id}
              className="cursor-pointer"
-             onClick={() => onSelect(d)}
-             onMouseEnter={() => setHoveredDistrict(d)}
+             opacity={isFiltered ? 0.12 : 1}
+             onClick={() => !isFiltered && onSelect(d)}
+             onMouseEnter={() => !isFiltered && setHoveredDistrict(d)}
              onMouseLeave={() => setHoveredDistrict(null)}
-             filter={isSel ? 'url(#glow-selected)' : isCritical ? 'url(#glow-critical)' : undefined}
+             filter={!isFiltered && (isSel ? 'url(#glow-selected)' : isCritical ? 'url(#glow-critical)' : undefined)}
           >
             {/* Pulse ring for critical */}
-            {isCritical && (
+            {isCritical && !isFiltered && (
               <polygon
                 points={hexPath(x, y, HEX_R * (1.2 + Math.sin(pulsePhase * 0.2) * 0.15))}
                 fill="none"
@@ -152,23 +159,64 @@ export default function DistrictHexMap({ onSelect }) {
         )
       })}
 
-      {/* Hover tooltip */}
+      {/* Vignette overlay */}
+      <rect width="100%" height="100%" fill="url(#vignette-gradient)" pointerEvents="none" />
+
+      {/* Crosshair on hovered district */}
+      {hoveredDistrict && (() => {
+        const { x: cx, y: cy } = hexCenter(hoveredDistrict.col, hoveredDistrict.row)
+        return (
+          <g pointerEvents="none">
+            <line x1={cx - 60} y1={cy} x2={cx + 60} y2={cy}
+                  stroke="#4ab0d8" strokeWidth="0.5" opacity="0.2" />
+            <line x1={cx} y1={cy - 60} x2={cx} y2={cy + 60}
+                  stroke="#4ab0d8" strokeWidth="0.5" opacity="0.2" />
+          </g>
+        )
+      })()}
+
+      {/* Hover tooltip — foreignObject for styled HTML content */}
       {hoveredDistrict && (() => {
         const { x, y } = hexCenter(hoveredDistrict.col, hoveredDistrict.row)
         const d = hoveredDistrict
+        const tw = 130, th = 52
+        const tx = Math.max(0, Math.min(maxX - tw, x - tw / 2))
+        const ty = Math.max(0, y - HEX_R - th - 10)
         return (
-          <g style={{ pointerEvents: 'none' }}>
-            <rect x={x - 52} y={y - HEX_R - 44} width={104} height={38}
-                  rx="4" fill="#0e141f" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-            <text x={x} y={y - HEX_R - 30} textAnchor="middle"
-                  fontSize="9" fontFamily="DM Sans, sans-serif" fontWeight="600"
-                  fill="#bfcfd8">{d.name}</text>
-            <text x={x} y={y - HEX_R - 18} textAnchor="middle"
-                  fontSize="8" fontFamily="JetBrains Mono, monospace"
-                  fill={RISK_COLORS[d.risk]?.hex ?? '#fff'}>
-              {d.risk} · {d.floodPct}% · {(d.pop/1000).toFixed(0)}k pop
-            </text>
-          </g>
+          <foreignObject
+            x={tx} y={ty} width={tw} height={th}
+            style={{ pointerEvents: 'none', overflow: 'visible' }}
+          >
+            <div xmlns="http://www.w3.org/1999/xhtml"
+                 style={{
+                   background: 'rgba(14,20,31,0.95)',
+                   border: '1px solid rgba(255,255,255,0.1)',
+                   borderRadius: '6px',
+                   padding: '7px 10px',
+                   width: `${tw}px`,
+                   boxSizing: 'border-box',
+                 }}
+            >
+              <div style={{
+                fontFamily: 'DM Sans, sans-serif',
+                fontSize: '9px',
+                fontWeight: 600,
+                color: '#bfcfd8',
+                marginBottom: '3px',
+                whiteSpace: 'nowrap',
+              }}>
+                {d.name}
+              </div>
+              <div style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '7.5px',
+                color: RISK_COLORS[d.risk]?.hex ?? '#fff',
+                whiteSpace: 'nowrap',
+              }}>
+                {d.risk} · {d.floodPct}% · {(d.pop / 1000).toFixed(0)}k pop
+              </div>
+            </div>
+          </foreignObject>
         )
       })()}
     </svg>

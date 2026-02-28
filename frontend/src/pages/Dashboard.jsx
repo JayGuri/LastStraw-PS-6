@@ -174,7 +174,7 @@ export default function Dashboard() {
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 overflow-hidden">
         {/* Orbit canvas background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[700px] h-[700px] opacity-80">
+          <div className="w-[320px] h-[320px] sm:w-[500px] sm:h-[500px] lg:w-[700px] lg:h-[700px] opacity-60">
             <SatelliteOrbit />
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function Dashboard() {
           animate={started ? "visible" : "hidden"}
           variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
         >
-          <motion.div variants={fade} className="section-tag mb-6">
+          <motion.div variants={fade} className="section-tag mb-4 sm:mb-6 text-[10px] sm:text-xs">
             🛰 Satellite Data → Insight Engine · Bangladesh Delta
           </motion.div>
 
@@ -197,7 +197,7 @@ export default function Dashboard() {
             className="font-display font-extrabold text-5xl sm:text-7xl leading-none mb-6 tracking-tight"
           >
             <span className="text-text">Climate </span>
-            <span className="stat-val">Risk</span>
+            <span className="text-gradient-gold">Risk</span>
             <br />
             <span className="text-text">Intelligence</span>
           </motion.h1>
@@ -233,25 +233,31 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
-          <span className="text-xs font-mono text-text-2">SCROLL</span>
-          <div className="w-px h-8 bg-gradient-to-b from-text-2 to-transparent animate-pulse" />
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
+          <span className="text-[10px] sm:text-xs font-mono text-text-2">SCROLL</span>
+          <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-text-2 to-transparent animate-pulse" />
         </div>
+
+        {/* Vignette overlay */}
+        <div className="vignette absolute inset-0 pointer-events-none z-10" />
       </section>
 
+      <hr className="section-divider" />
+
       {/* ── STAT BAR ─────────────────────────────────────── */}
-      <section className="relative z-10 -mt-16 px-6 pb-16">
+      <section className="relative z-10 -mt-10 sm:-mt-16 px-4 sm:px-6 pb-10 sm:pb-16">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
             {HERO_STATS.map((s, i) => (
               <motion.div
                 key={s.label}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.07, duration: 0.5 }}
-                className="bg-bg-card rounded-xl p-4 glow-border text-center"
+                className="card-glass rounded-xl p-3 sm:p-4 text-center"
               >
-                <div className="font-display font-bold text-2xl stat-val mb-1">
+                <span className="data-tag text-text-3 mb-2 block">{s.dataTag}</span>
+                <div className="font-display font-bold text-xl sm:text-2xl text-gradient-gold mb-1">
                   {started && (
                     <StatCounter
                       target={s.val}
@@ -262,21 +268,23 @@ export default function Dashboard() {
                     />
                   )}
                 </div>
-                <div className="text-xs font-mono text-text-2">{s.label}</div>
+                <div className="text-[10px] sm:text-xs font-mono text-text-2">{s.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
+      <hr className="section-divider" />
+
       {/* ── PROBLEM BREAKDOWN ────────────────────────────── */}
-      <section className="px-6 py-16">
+      <section className="px-4 sm:px-6 py-10 sm:py-16">
         <div className="max-w-6xl mx-auto">
           <div className="section-tag mb-4">The Problem</div>
-          <h2 className="font-display font-bold text-3xl text-text mb-10">
+          <h2 className="font-display font-bold text-2xl sm:text-3xl text-text mb-6 sm:mb-10">
             Why current systems fail
           </h2>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
             {PROBLEM_BLOCKS.map((b, i) => (
               <motion.div
                 key={b.title}
@@ -284,7 +292,8 @@ export default function Dashboard() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-bg-card rounded-2xl p-6 glow-border relative overflow-hidden group"
+                className="card-glass rounded-2xl p-5 sm:p-6 relative overflow-hidden group
+                           hover:scale-[1.02] transition-transform duration-200"
               >
                 <div
                   className="absolute top-0 left-0 right-0 h-px"
@@ -316,20 +325,23 @@ export default function Dashboard() {
         </div>
       </section>
 
+      <hr className="section-divider" />
+
       {/* ── LIVE RUN SNAPSHOT ────────────────────────────── */}
-      <section className="px-6 py-16 bg-bg-2">
+      <section className="px-4 sm:px-6 py-10 sm:py-16 bg-bg-2">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
             <div>
+              <span className="data-tag text-gold/60 mb-4 block">LIVE TELEMETRY</span>
               <div className="section-tag mb-3">Latest Run</div>
-              <h2 className="font-display font-bold text-3xl text-text">
+              <h2 className="font-display font-bold text-2xl sm:text-3xl text-text">
                 Bangladesh · Nov 2024 Flood Event
               </h2>
             </div>
-            <div className="text-right text-xs font-mono text-text-2">
+            <div className="sm:text-right text-xs font-mono text-text-2">
               <div className="text-gold font-medium mb-1">{RUN_META.runId}</div>
               <div>Scene: {RUN_META.sceneId}</div>
-              <div className="mt-1 flex items-center gap-2 justify-end">
+              <div className="mt-1 flex items-center gap-2 sm:justify-end">
                 <span className="w-1.5 h-1.5 bg-low rounded-full" />
                 Completed in {RUN_META.duration}m
               </div>
@@ -337,7 +349,7 @@ export default function Dashboard() {
           </div>
 
           {/* Run overview tiles */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
             {[
               {
                 label: "Flooded Area",
@@ -387,8 +399,8 @@ export default function Dashboard() {
                 Sorted by flood coverage
               </span>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto -webkit-overflow-scrolling-touch">
+              <table className="w-full text-xs sm:text-sm" style={{ minWidth: 580 }}>
                 <thead>
                   <tr className="border-b border-white/5">
                     {[
@@ -423,7 +435,7 @@ export default function Dashboard() {
                       </td>
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-24 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div className="w-16 sm:w-24 h-1.5 bg-white/5 rounded-full overflow-hidden">
                             <div
                               className="h-full rounded-full"
                               style={{
@@ -443,7 +455,7 @@ export default function Dashboard() {
                       <td className="px-5 py-3 font-mono text-xs text-text-2">
                         {((d.floodPct * d.area) / 100).toFixed(0)} km²
                       </td>
-                      <td className="px-5 py-3 font-mono text-xs text-text-2">
+                      <td className="px-3 sm:px-5 py-2 sm:py-3 font-mono text-[10px] sm:text-xs text-text-2">
                         {(d.pop / 1000).toFixed(0)}k
                       </td>
                       <td className="px-5 py-3">
@@ -461,14 +473,16 @@ export default function Dashboard() {
         </div>
       </section>
 
+      <hr className="section-divider" />
+
       {/* ── TECH STACK ───────────────────────────────────── */}
-      <section className="px-6 py-16">
+      <section className="px-4 sm:px-6 py-10 sm:py-16">
         <div className="max-w-6xl mx-auto">
           <div className="section-tag section-tag-ice mb-4">Tech Stack</div>
-          <h2 className="font-display font-bold text-3xl text-text mb-10">
+          <h2 className="font-display font-bold text-2xl sm:text-3xl text-text mb-6 sm:mb-10">
             Built on production-grade tools
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {TECH_STACK.map((group, gi) => (
               <motion.div
                 key={group.cat}
@@ -476,9 +490,9 @@ export default function Dashboard() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: gi * 0.06 }}
-                className="bg-bg-card rounded-xl p-5 glow-border-ice"
+                className="card-glass rounded-xl p-4 sm:p-5 hover:border-gold/15 transition-colors"
               >
-                <div className="text-ice text-xs font-mono font-medium mb-3 uppercase tracking-wider">
+                <div className="data-tag text-ice/60 mb-2 sm:mb-3">
                   {group.cat}
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -498,10 +512,12 @@ export default function Dashboard() {
         </div>
       </section>
 
+      <hr className="section-divider" />
+
       {/* ── CTA ──────────────────────────────────────────── */}
-      <section className="px-6 py-24">
+      <section className="cinematic-grid px-4 sm:px-6 py-16 sm:py-24">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="font-display font-extrabold text-4xl text-text mb-4">
+          <div className="font-display font-extrabold text-2xl sm:text-4xl text-text mb-3 sm:mb-4">
             Ready to run the engine?
           </div>
           <p className="text-text-2 mb-8">
@@ -512,12 +528,13 @@ export default function Dashboard() {
             onClick={() => setActiveTab("mission")}
             className="px-10 py-4 bg-gold text-bg font-display font-bold rounded-xl
                        shadow-gold-lg hover:shadow-gold-lg hover:bg-gold-lt transition-all
-                       text-base animate-glow-pulse"
+                       text-sm sm:text-base animate-glow-pulse"
           >
             Launch Mission Control →
           </button>
         </div>
       </section>
+
     </div>
   );
 }
