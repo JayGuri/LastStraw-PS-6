@@ -251,15 +251,21 @@ export default function CesiumGlobe() {
       })
     }
 
-    // Green highlight for selected region (precise boundary from Nominatim)
-    if (geocoded.boundary_geojson) {
+    // Green highlight: use actual boundary polygon only when Nominatim returns Polygon/MultiPolygon.
+    // Otherwise Nominatim often returns a Point (single dot); in that case we show the bbox so the
+    // region extent is always clear.
+    const greenFill = Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.35)
+    const greenEdge = Cesium.Color.fromCssColorString('#22c55e')
+    const hasAreaGeometry =
+      geocoded.boundary_geojson &&
+      ['Polygon', 'MultiPolygon'].includes(geocoded.boundary_geojson.type)
+
+    if (hasAreaGeometry) {
       const boundaryDs = new Cesium.GeoJsonDataSource('region-boundary')
-      const greenFill  = Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.32)
-      const greenEdge  = Cesium.Color.fromCssColorString('#22c55e')
       boundaryDs
         .load(geocoded.boundary_geojson, {
           stroke:       greenEdge,
-          strokeWidth:  2,
+          strokeWidth:  2.5,
           fill:         greenFill,
           clampToGround: true,
         })
@@ -276,39 +282,43 @@ export default function CesiumGlobe() {
               entity.polyline.classificationType = Cesium.ClassificationType.TERRAIN
             }
             if (entity.polygon) {
-              entity.polygon.material   = greenFill
-              entity.polygon.outline    = true
-              entity.polygon.outlineColor = greenEdge
-              entity.polygon.outlineWidth = 2.5
-              entity.polygon.clampToGround = true
-              entity.polygon.classificationType = Cesium.ClassificationType.TERRAIN
+              entity.polygon.material            = greenFill
+              entity.polygon.outline             = true
+              entity.polygon.outlineColor        = greenEdge
+              entity.polygon.outlineWidth        = 2.5
+              entity.polygon.clampToGround       = true
+              entity.polygon.classificationType  = Cesium.ClassificationType.TERRAIN
             }
           })
           if (!viewer.isDestroyed()) viewer.dataSources.add(boundaryDs)
         })
-    } else if (geocoded.bbox?.length === 4) {
-      // No precise polygon: draw bbox as rectangle for visibility
+    }
+
+    // Always show bbox when we don't have a proper polygon (Point/LineString/missing), so the
+    // selected region is never just a dot. When we have a polygon, bbox is skipped.
+    if (!hasAreaGeometry && geocoded.bbox?.length === 4) {
       const [w, s, e, n] = geocoded.bbox
       viewer.entities.add({
         id: 'region-boundary-bbox',
         rectangle: {
           coordinates: Cesium.Rectangle.fromDegrees(w, s, e, n),
-          material:    Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.25),
+          material:    greenFill,
           outline:     true,
-          outlineColor: Cesium.Color.fromCssColorString('#22c55e'),
-          outlineWidth: 2,
+          outlineColor: greenEdge,
+          outlineWidth: 2.5,
         },
       })
     }
 
+    // Small center pin for reference (secondary to the polygon/bbox)
     viewer.entities.add({
       id:       'region-center-pin',
       position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
       point: {
-        pixelSize:    10,
-        color:        Cesium.Color.fromCssColorString('#22c55e'),
-        outlineColor: Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.6),
-        outlineWidth: 8,
+        pixelSize:    6,
+        color:        greenEdge,
+        outlineColor: Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.5),
+        outlineWidth: 4,
         heightReference:          Cesium.HeightReference.CLAMP_TO_GROUND,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
       },
