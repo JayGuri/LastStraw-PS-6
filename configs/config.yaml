@@ -1,0 +1,67 @@
+project:
+  name: flood-risk-lstm-v1
+  seed: 42
+  num_workers: 2
+
+pipeline:
+  run_ingest: true
+  run_train: true
+  run_risk_mapper: true
+
+data:
+  label_column: FloodProbability
+  flood_threshold: 0.5       # probability ≥ this → flood (for binary metrics)
+  window_size: 10            # sliding window sequence length
+  split:
+    train: 0.7
+    val: 0.15
+    test: 0.15
+
+model:
+  hidden_size: 128
+  lstm_layers: 2
+  dropout: 0.3
+
+loss:
+  name: bce                  # mse | bce
+  # mse — MSELoss on raw FloodProbability (0-1 regression)
+  # bce — BCELoss on sigmoid output, treats FloodProbability as soft label
+
+train:
+  epochs: 30
+  batch_size: 256
+  lr: 0.001
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  amp: false
+  optimizer: adamw           # adamw | adam | sgd
+  scheduler: cosine          # cosine | step | none
+  scheduler_step_size: 10    # epochs per LR step (only for step scheduler)
+  scheduler_gamma: 0.5       # LR decay factor (only for step scheduler)
+  early_stopping:
+    enabled: true
+    patience: 10
+    min_delta: 0.0          # any strict improvement counts; set >0 to ignore tiny gains
+
+eval:
+  primary_metric: pr_auc
+  threshold: 0.5
+
+mlflow:
+  enabled: true
+  experiment_name: flood-risk-lstm
+  run_name: sliding-window-lstm
+
+inference:
+  default_features: null     # path to a JSON with 20 feature values; null = random stub
+  output_path: ""
+
+paths:
+  csv_raw: data/raw/flood.csv
+  csv_processed: data/processed/flood.csv
+  scaler: artifacts/scaler.joblib
+  ingest_manifest: artifacts/ingest_manifest.json
+  checkpoints: artifacts/checkpoints
+  models_dir: models          # best.pt saved here (DVC-tracked)
+  graphs_dir: artifacts/graphs # training curves + eval plots
+  insight_reports: artifacts/insight_reports
