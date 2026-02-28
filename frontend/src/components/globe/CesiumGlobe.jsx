@@ -220,6 +220,7 @@ export default function CesiumGlobe() {
       viewer.dataSources.getByName(name).forEach(ds => viewer.dataSources.remove(ds))
     })
     viewer.entities.removeById('region-center-pin')
+    viewer.entities.removeById('region-boundary-bbox')
 
     if (!geocoded) {
       isRotatingRef.current = true
@@ -250,43 +251,74 @@ export default function CesiumGlobe() {
       })
     }
 
-    if (geocoded.boundary_geojson) {
+    // Green highlight: use actual boundary polygon only when Nominatim returns Polygon/MultiPolygon.
+    // Otherwise Nominatim often returns a Point (single dot); in that case we show the bbox so the
+    // region extent is always clear.
+    const greenFill = Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.35)
+    const greenEdge = Cesium.Color.fromCssColorString('#22c55e')
+    const hasAreaGeometry =
+      geocoded.boundary_geojson &&
+      ['Polygon', 'MultiPolygon'].includes(geocoded.boundary_geojson.type)
+
+    if (hasAreaGeometry) {
       const boundaryDs = new Cesium.GeoJsonDataSource('region-boundary')
       boundaryDs
         .load(geocoded.boundary_geojson, {
-          stroke:        Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.9),
-          strokeWidth:   3,
-          fill:          Cesium.Color.TRANSPARENT,
+          stroke:       greenEdge,
+          strokeWidth:  2.5,
+          fill:         greenFill,
           clampToGround: true,
         })
         .then(() => {
           boundaryDs.entities.values.forEach(entity => {
             if (entity.polyline) {
               entity.polyline.material = new Cesium.PolylineGlowMaterialProperty({
-                glowPower: 0.3, taperPower: 1.0,
-                color: Cesium.Color.fromCssColorString('#d4900a'),
+                glowPower:  0.5,
+                taperPower: 1.0,
+                color:      greenEdge,
               })
-              entity.polyline.width             = 4
+              entity.polyline.width              = 5
               entity.polyline.clampToGround      = true
               entity.polyline.classificationType = Cesium.ClassificationType.TERRAIN
             }
             if (entity.polygon) {
-              entity.polygon.material = Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.05)
-              entity.polygon.outline  = false
+              entity.polygon.material            = greenFill
+              entity.polygon.outline             = true
+              entity.polygon.outlineColor        = greenEdge
+              entity.polygon.outlineWidth        = 2.5
+              entity.polygon.clampToGround       = true
+              entity.polygon.classificationType  = Cesium.ClassificationType.TERRAIN
             }
           })
           if (!viewer.isDestroyed()) viewer.dataSources.add(boundaryDs)
         })
     }
 
+    // Always show bbox when we don't have a proper polygon (Point/LineString/missing), so the
+    // selected region is never just a dot. When we have a polygon, bbox is skipped.
+    if (!hasAreaGeometry && geocoded.bbox?.length === 4) {
+      const [w, s, e, n] = geocoded.bbox
+      viewer.entities.add({
+        id: 'region-boundary-bbox',
+        rectangle: {
+          coordinates: Cesium.Rectangle.fromDegrees(w, s, e, n),
+          material:    greenFill,
+          outline:     true,
+          outlineColor: greenEdge,
+          outlineWidth: 2.5,
+        },
+      })
+    }
+
+    // Small center pin for reference (secondary to the polygon/bbox)
     viewer.entities.add({
       id:       'region-center-pin',
       position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
       point: {
-        pixelSize:    10,
-        color:        Cesium.Color.fromCssColorString('#e8ab30'),
-        outlineColor: Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.5),
-        outlineWidth: 8,
+        pixelSize:    6,
+        color:        greenEdge,
+        outlineColor: Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.5),
+        outlineWidth: 4,
         heightReference:          Cesium.HeightReference.CLAMP_TO_GROUND,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
       },

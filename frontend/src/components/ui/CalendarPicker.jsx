@@ -9,6 +9,7 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
  */
 export default function CalendarPicker({ value, onChange, label = "Date" }) {
   const [open, setOpen] = useState(false);
+  const [showYearPicker, setShowYearPicker] = useState(false);
   const [viewDate, setViewDate] = useState(() => {
     if (value) {
       const [y, m] = value.split("-").map(Number);
@@ -137,15 +138,22 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                 >
                   [‹]
                 </button>
-                <span
-                  className="text-[10px] uppercase font-mono tracking-widest"
-                  style={{ color: "#ece8df" }}
-                >
-                  {viewDate.toLocaleDateString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="text-[10px] uppercase font-mono tracking-widest"
+                    style={{ color: "#ece8df" }}
+                  >
+                    {viewDate.toLocaleDateString("en-US", { month: "short" })}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowYearPicker(true)}
+                    className="text-[10px] uppercase font-mono tracking-widest hover:bg-[rgba(201,169,110,0.1)] transition-colors px-1 rounded"
+                    style={{ color: "#ece8df" }}
+                  >
+                    {year} ▾
+                  </button>
+                </div>
                 <button
                   type="button"
                   onClick={nextMonth}
@@ -157,82 +165,147 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                 </button>
               </div>
 
-              {/* Weekday headers */}
-              <div className="grid grid-cols-7 gap-px px-2 pt-2 pb-1">
-                {WEEKDAYS.map((d) => (
+              {/* Days Grid OR Year Picker */}
+              {showYearPicker ?
+                <div className="p-3">
                   <div
-                    key={d}
-                    className="text-center text-[8px] uppercase tracking-wider font-mono py-1"
-                    style={{ color: "rgba(236,232,223,0.3)" }}
+                    className="flex items-center justify-between mb-3 border-b pb-2"
+                    style={{ borderColor: "rgba(201,169,110,0.15)" }}
                   >
-                    {d}
+                    <span
+                      className="text-[10px] uppercase font-mono tracking-widest"
+                      style={{ color: "#c9a96e" }}
+                    >
+                      Select Year
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowYearPicker(false)}
+                      className="text-[10px] uppercase font-mono tracking-widest hover:text-[#ece8df]"
+                      style={{ color: "rgba(236,232,223,0.5)" }}
+                    >
+                      [Close]
+                    </button>
                   </div>
-                ))}
-              </div>
-
-              {/* Days */}
-              <div className="grid grid-cols-7 gap-0.5 px-2 pb-3">
-                {weeks.flatMap((week, wi) =>
-                  week.map((day, di) => {
-                    const key = `${wi}-${di}-${day ?? "e"}`;
-                    const isToday = day === today;
-                    const selected =
-                      value &&
-                      day !== null &&
-                      value ===
-                        `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => selectDay(day)}
-                        disabled={!day}
-                        className={`
-                          w-8 h-8 text-[11px] font-mono transition-colors
-                          ${!day ? "invisible" : ""}
-                        `}
-                        style={{
-                          ...(selected ?
-                            {
-                              background: "rgba(201,169,110,0.2)",
-                              color: "#c9a96e",
-                              border: "1px solid #c9a96e",
+                  <div className="grid grid-cols-4 gap-2">
+                    {Array.from({ length: 24 }, (_, i) => {
+                      const yr = new Date().getFullYear() - 12 + i;
+                      const isCurrentYear = yr === year;
+                      return (
+                        <button
+                          key={yr}
+                          type="button"
+                          onClick={() => {
+                            setViewDate(new Date(yr, month, 1));
+                            setShowYearPicker(false);
+                          }}
+                          className="py-1.5 text-[10px] font-mono transition-colors"
+                          style={{
+                            background:
+                              isCurrentYear ?
+                                "rgba(201,169,110,0.2)"
+                              : "rgba(236,232,223,0.03)",
+                            color: isCurrentYear ? "#c9a96e" : "#ece8df",
+                            border: `1px solid ${isCurrentYear ? "#c9a96e" : "rgba(201,169,110,0.15)"}`,
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isCurrentYear) {
+                              e.currentTarget.style.background =
+                                "rgba(201,169,110,0.1)";
                             }
-                          : isToday ?
-                            {
-                              background: "rgba(236,232,223,0.05)",
-                              color: "#ece8df",
-                              border: "1px solid rgba(236,232,223,0.2)",
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isCurrentYear) {
+                              e.currentTarget.style.background =
+                                "rgba(236,232,223,0.03)";
                             }
-                          : {
-                              color: "rgba(236,232,223,0.5)",
-                              border: "1px solid transparent",
-                            }),
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!selected && day) {
-                            e.currentTarget.style.background =
-                              "rgba(201,169,110,0.1)";
-                            e.currentTarget.style.color = "#ece8df";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!selected && day) {
-                            e.currentTarget.style.background =
-                              isToday ?
-                                "rgba(236,232,223,0.05)"
-                              : "transparent";
-                            e.currentTarget.style.color =
-                              isToday ? "#ece8df" : "rgba(236,232,223,0.5)";
-                          }
-                        }}
+                          }}
+                        >
+                          {yr}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              : <>
+                  {/* Weekday headers */}
+                  <div className="grid grid-cols-7 gap-px px-2 pt-2 pb-1">
+                    {WEEKDAYS.map((d) => (
+                      <div
+                        key={d}
+                        className="text-center text-[8px] uppercase tracking-wider font-mono py-1"
+                        style={{ color: "rgba(236,232,223,0.3)" }}
                       >
-                        {day ?? ""}
-                      </button>
-                    );
-                  }),
-                )}
-              </div>
+                        {d}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Days */}
+                  <div className="grid grid-cols-7 gap-0.5 px-2 pb-3">
+                    {weeks.flatMap((week, wi) =>
+                      week.map((day, di) => {
+                        const key = `${wi}-${di}-${day ?? "e"}`;
+                        const isToday = day === today;
+                        const selected =
+                          value &&
+                          day !== null &&
+                          value ===
+                            `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() => selectDay(day)}
+                            disabled={!day}
+                            className={`
+                            w-8 h-8 text-[11px] font-mono transition-colors
+                            ${!day ? "invisible" : ""}
+                          `}
+                            style={{
+                              ...(selected ?
+                                {
+                                  background: "rgba(201,169,110,0.2)",
+                                  color: "#c9a96e",
+                                  border: "1px solid #c9a96e",
+                                }
+                              : isToday ?
+                                {
+                                  background: "rgba(236,232,223,0.05)",
+                                  color: "#ece8df",
+                                  border: "1px solid rgba(236,232,223,0.2)",
+                                }
+                              : {
+                                  color: "rgba(236,232,223,0.5)",
+                                  border: "1px solid transparent",
+                                }),
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!selected && day) {
+                                e.currentTarget.style.background =
+                                  "rgba(201,169,110,0.1)";
+                                e.currentTarget.style.color = "#ece8df";
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!selected && day) {
+                                e.currentTarget.style.background =
+                                  isToday ?
+                                    "rgba(236,232,223,0.05)"
+                                  : "transparent";
+                                e.currentTarget.style.color =
+                                  isToday ? "#ece8df" : "rgba(236,232,223,0.5)";
+                              }
+                            }}
+                          >
+                            {day ?? ""}
+                          </button>
+                        );
+                      }),
+                    )}
+                  </div>
+                </>
+              }
             </motion.div>
           </>
         )}

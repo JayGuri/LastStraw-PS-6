@@ -2,149 +2,11 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobeStore } from "../../stores/globeStore.js";
 import { useAppStore } from "../../stores/appStore.js";
-import { geocodeApi, parseNominatimResult } from "../../api/geocodeApi.js";
+import { geocodeApi, parseNominatimResult, hasAreaGeometry, sortResultsByBoundary } from "../../api/geocodeApi.js";
 import { floodDetectApi } from "../../api/floodDetectApi.js";
 import { mockFloodResponse } from "../../data/mockFloodResponse.js";
 import CalendarPicker from "../ui/CalendarPicker.jsx";
-
-// ── Inline autocomplete input ──────────────────────────────────────────────
-function GeoSearchInput({
-  label,
-  placeholder,
-  value,
-  onChange,
-  results,
-  onSelect,
-  isSearching,
-  onClear,
-}) {
-  const [open, setOpen] = useState(false);
-  const wrapRef = useRef(null);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (!wrapRef.current?.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Open when results arrive
-  useEffect(() => {
-    if (results.length > 0) setOpen(true);
-  }, [results]);
-
-  return (
-    <div ref={wrapRef} className="relative">
-      <label
-        className="text-[10px] uppercase font-mono tracking-[0.2em] mb-2 block"
-        style={{ color: "rgba(236,232,223,0.5)" }}
-      >
-        {label}
-      </label>
-      <div className="relative flex items-center">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => {
-            if (results.length > 0) setOpen(true);
-          }}
-          placeholder={placeholder}
-          className="w-full text-xs font-mono tracking-wide px-3 py-2.5 transition-all outline-none"
-          style={{
-            background: "rgba(236,232,223,0.03)",
-            border: "1px solid rgba(201,169,110,0.15)",
-            color: "#ece8df",
-          }}
-          onFocusCapture={(e) => {
-            e.target.style.borderColor = "#c9a96e";
-          }}
-          onBlurCapture={(e) => {
-            e.target.style.borderColor = "rgba(201,169,110,0.15)";
-          }}
-          autoComplete="off"
-        />
-        {isSearching && (
-          <span
-            className="absolute right-3 text-[10px] font-mono tracking-widest animate-pulse"
-            style={{ color: "rgba(201,169,110,0.5)" }}
-          >
-            ...
-          </span>
-        )}
-        {!isSearching && value && (
-          <button
-            onClick={() => {
-              onClear();
-              setOpen(false);
-            }}
-            className="absolute right-3 text-xs"
-            style={{ color: "rgba(236,232,223,0.4)", fontFamily: "monospace" }}
-          >
-            [X]
-          </button>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {open && results.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.12 }}
-            className="absolute z-50 w-full mt-1 overflow-hidden"
-            style={{
-              background: "#0a0907",
-              border: "1px solid rgba(201,169,110,0.3)",
-              borderTop: "none",
-              maxHeight: "200px",
-              overflowY: "auto",
-            }}
-          >
-            {results.map((item) => {
-              const parts = item.display_name.split(",").map((s) => s.trim());
-              const primary = parts[0];
-              const secondary = parts.slice(1, 3).join(", ");
-              return (
-                <button
-                  key={item.place_id}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    onSelect(item);
-                    setOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2.5 flex flex-col hover:bg-[rgba(201,169,110,0.05)] transition-colors"
-                  style={{ borderBottom: "1px solid rgba(201,169,110,0.08)" }}
-                >
-                  <span
-                    className="text-[11px] font-mono uppercase tracking-widest truncate"
-                    style={{ color: "#ece8df" }}
-                  >
-                    {primary}
-                  </span>
-                  {secondary && (
-                    <span
-                      className="text-[9px] font-mono uppercase tracking-wider truncate"
-                      style={{ color: "rgba(236,232,223,0.4)" }}
-                    >
-                      {secondary}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RegionForm() {
@@ -179,7 +41,7 @@ export default function RegionForm() {
     cityDebounce.current = setTimeout(async () => {
       setSearchingCity(true);
       const { data } = await geocodeApi.search(q, { limit: 6 });
-      setCityResults(data ?? []);
+      setCityResults(sortResultsByBoundary(data ?? []));
       setSearchingCity(false);
     }, 280);
   }, []);
@@ -193,7 +55,7 @@ export default function RegionForm() {
     stateDebounce.current = setTimeout(async () => {
       setSearchingState(true);
       const { data } = await geocodeApi.searchState(q, { limit: 6 });
-      setStateResults(data ?? []);
+      setStateResults(sortResultsByBoundary(data ?? []));
       setSearchingState(false);
     }, 280);
   }, []);
@@ -207,10 +69,24 @@ export default function RegionForm() {
     countryDebounce.current = setTimeout(async () => {
       setSearchingCountry(true);
       const { data } = await geocodeApi.searchCountry(q, { limit: 6 });
-      setCountryResults(data ?? []);
+      setCountryResults(sortResultsByBoundary(data ?? []));
       setSearchingCountry(false);
     }, 280);
   }, []);
+
+  // Always fetch the actual admin boundary (Polygon/MultiPolygon) for the selected place
+  // so the globe shows the real border (e.g. Bharuch-style outline), not just bbox or point.
+  const enrichGeocodedWithBoundary = useCallback((item, currentGeocoded) => {
+    const osmType = item.osm_type ?? currentGeocoded?.osm_type;
+    const osmId = item.osm_id ?? currentGeocoded?.osm_id;
+    if (!osmType || osmId == null) return;
+    geocodeApi.lookup(osmType, osmId).then(({ data }) => {
+      if (!data?.[0]) return;
+      const looked = parseNominatimResult(data[0]);
+      if (hasAreaGeometry(looked))
+        store.setGeocodedBoundary(looked.boundary_geojson, looked.bbox);
+    });
+  }, [store]);
 
   // ── Selection handlers ──────────────────────────────────────────────────
   const handleSelectCity = (item) => {
@@ -220,7 +96,6 @@ export default function RegionForm() {
     setCityQuery(cityName);
     setCityResults([]);
 
-    // Auto-fill state + country from address components
     if (parsed.state) {
       setStateQuery(parsed.state);
       setStateResults([]);
@@ -231,12 +106,14 @@ export default function RegionForm() {
     }
 
     store.setCity({ name: cityName, lat: parsed.lat, lon: parsed.lon });
-    store.setGeocoded({
+    const geocoded = {
       ...parsed,
       display_name: [cityName, parsed.state, parsed.country]
         .filter(Boolean)
         .join(", "),
-    });
+    };
+    store.setGeocoded(geocoded);
+    enrichGeocodedWithBoundary(item, geocoded);
   };
 
   const handleSelectState = (item) => {
@@ -246,17 +123,18 @@ export default function RegionForm() {
     setStateQuery(stateName);
     setStateResults([]);
 
-    // Auto-fill country
     if (parsed.country) {
       setCountryQuery(parsed.country);
       setCountryResults([]);
     }
 
     store.setState({ name: stateName, lat: parsed.lat, lon: parsed.lon });
-    store.setGeocoded({
+    const geocoded = {
       ...parsed,
       display_name: [stateName, parsed.country].filter(Boolean).join(", "),
-    });
+    };
+    store.setGeocoded(geocoded);
+    enrichGeocodedWithBoundary(item, geocoded);
   };
 
   const handleSelectCountry = (item) => {
@@ -273,16 +151,29 @@ export default function RegionForm() {
       lat: parsed.lat,
       lon: parsed.lon,
     });
-    store.setGeocoded({
-      ...parsed,
-      display_name: countryName,
-    });
+    const geocoded = { ...parsed, display_name: countryName };
+    store.setGeocoded(geocoded);
+    enrichGeocodedWithBoundary(item, geocoded);
+  };
+
+  const handleConfirmArea = () => store.setRegionConfirmed(true);
+  const handleChooseDifferent = () => {
+    store.clearRegionSelection();
+    setCityQuery("");
+    setStateQuery("");
+    setCountryQuery("");
+    setCityResults([]);
+    setStateResults([]);
+    setCountryResults([]);
   };
 
   // ── Submit analysis ──────────────────────────────────────────────────────
   const handleAnalyze = async () => {
-    if (!store.geocoded) {
-      showNotification("Select a region first", "warning");
+    if (!store.geocoded || !store.regionConfirmed) {
+      showNotification(
+        store.geocoded ? "Confirm the highlighted area first" : "Select a region first",
+        "warning"
+      );
       return;
     }
 
@@ -366,6 +257,7 @@ export default function RegionForm() {
 
   const isRunning = store.isRunning();
   const geo = store.geocoded;
+  const regionConfirmed = store.regionConfirmed;
 
   return (
     <motion.div
@@ -397,6 +289,15 @@ export default function RegionForm() {
           </span>
         )}
       </div>
+
+      {geo && !regionConfirmed && (
+        <p
+          className="text-[10px] font-mono tracking-wide"
+          style={{ color: "rgba(34,197,94,0.9)" }}
+        >
+          The green area on the globe is your selection. Confirm or choose another.
+        </p>
+      )}
 
       {/* Three independent search fields */}
       <GeoSearchInput
@@ -450,7 +351,7 @@ export default function RegionForm() {
         }}
       />
 
-      {/* Geocoded coordinates readout */}
+      {/* Geocoded + confirm step */}
       <AnimatePresence>
         {geo && (
           <motion.div
@@ -471,7 +372,7 @@ export default function RegionForm() {
                   className="text-[8px] font-mono uppercase tracking-[0.2em]"
                   style={{ color: "rgba(236,232,223,0.4)" }}
                 >
-                  Active Target
+                  {regionConfirmed ? "Confirmed area" : "Area preview"}
                 </span>
                 <span
                   className="text-[8px] font-mono tracking-[0.2em]"
@@ -502,6 +403,43 @@ export default function RegionForm() {
                   <span style={{ color: "rgba(201,169,110,0.4)" }}>[BBOX]</span>
                 )}
               </div>
+
+              {!regionConfirmed ? (
+                <div className="flex gap-2 mt-3">
+                  <button
+                    type="button"
+                    onClick={handleConfirmArea}
+                    className="flex-1 py-2 text-[10px] font-mono uppercase tracking-wider border transition-colors"
+                    style={{
+                      borderColor: "#22c55e",
+                      color: "#22c55e",
+                      background: "rgba(34,197,94,0.12)",
+                    }}
+                  >
+                    Confirm area
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleChooseDifferent}
+                    className="flex-1 py-2 text-[10px] font-mono uppercase tracking-wider border transition-colors"
+                    style={{
+                      borderColor: "rgba(236,232,223,0.25)",
+                      color: "rgba(236,232,223,0.7)",
+                    }}
+                  >
+                    Choose different
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => store.setRegionConfirmed(false)}
+                  className="mt-2 text-[9px] font-mono uppercase tracking-wider"
+                  style={{ color: "rgba(201,169,110,0.7)" }}
+                >
+                  Change area
+                </button>
+              )}
             </div>
           </motion.div>
         )}
@@ -514,15 +452,15 @@ export default function RegionForm() {
         onChange={(v) => store.setAnalysisDate(v)}
       />
 
-      {/* Analyze button */}
+      {/* Analyze button — only enabled after area confirmed */}
       <button
         onClick={handleAnalyze}
-        disabled={!geo || isRunning}
-        className="relative group w-full mt-2"
+        disabled={!geo || !regionConfirmed || isRunning}
+        className="relative group w-full mt-2 overflow-hidden"
         style={{
           padding: "0.8rem 1rem",
-          cursor: !geo || isRunning ? "not-allowed" : "pointer",
-          opacity: !geo || isRunning ? 0.5 : 1,
+          cursor: !geo || !regionConfirmed || isRunning ? "not-allowed" : "pointer",
+          opacity: !geo || !regionConfirmed || isRunning ? 0.5 : 1,
         }}
       >
         <span
@@ -531,19 +469,23 @@ export default function RegionForm() {
         />
         <span
           className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-          style={{ background: "#c0392b" }}
+          style={{ background: "#c9a96e" }}
         />
 
         <span
-          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors"
-          style={{ fontSize: "0.65rem", color: "#c9a96e" }}
+          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#c9a96e] group-hover:text-[#0a0907]"
+          style={{ fontSize: "0.65rem" }}
         >
-          {isRunning ?
+          {isRunning ? (
             <>
-              <span className="w-1.5 h-1.5 bg-[#c9a96e] animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
               Initializing Scan...
             </>
-          : "Execute Detection"}
+          ) : !regionConfirmed && geo ? (
+            "Confirm area above first"
+          ) : (
+            "Execute Detection"
+          )}
         </span>
       </button>
     </motion.div>

@@ -5,6 +5,7 @@ import Landing from "./pages/Landing.jsx";
 import Login from "./pages/Login.jsx";
 import MissionControl from "./pages/MissionControl.jsx";
 import GlobeAnalysis from "./pages/GlobeAnalysis.jsx";
+import FloodInsights from "./pages/FloodInsights.jsx";
 import { useAppStore } from "./stores/appStore.js";
 
 const PAGES = {
@@ -12,6 +13,7 @@ const PAGES = {
   login: Login,
   mission: MissionControl,
   globe: GlobeAnalysis,
+  insights: FloodInsights,
 };
 
 function Notification() {
@@ -62,6 +64,7 @@ export default function App() {
     else if (path === "/login") setActiveTab("login");
     else if (path === "/mission") setActiveTab("mission");
     else if (path === "/globe") setActiveTab("globe");
+    else if (path === "/insights") setActiveTab("insights");
     else setActiveTab("landing");
   }, [setActiveTab]);
 
@@ -72,6 +75,7 @@ export default function App() {
       login: "/login",
       mission: "/mission",
       globe: "/globe",
+      insights: "/insights",
     };
     const targetPath = routeMap[activeTab] || "/";
     if (window.location.pathname !== targetPath) {
