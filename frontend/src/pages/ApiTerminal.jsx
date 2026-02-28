@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApiStore } from '../stores/apiStore.js'
 import { ENDPOINTS, ERROR_CODES } from '../data/endpoints.js'
 
 const METHOD_COLORS = {
-  POST: { bg: 'bg-gold/10',     border: 'border-gold/25',     text: 'text-gold'     },
-  GET:  { bg: 'bg-ice/10',      border: 'border-ice/20',      text: 'text-ice'      },
+  POST: { bg: 'bg-gold/10',      border: 'border-gold/25',  text: 'text-gold' },
+  GET:  { bg: 'bg-ice/[0.08]',   border: 'border-ice/20',   text: 'text-ice'  },
 }
 
 const RUN_STEPS = ['queued','preprocessing','detecting','scoring','completed']
@@ -26,13 +26,36 @@ function JsonSyntax({ text }) {
   )
 }
 
+function CopyButton({ getText }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard?.writeText(getText())
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={`absolute top-2 sm:top-3 right-2 sm:right-3 text-[9px] sm:text-[10px] font-mono
+                 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border transition-all
+                 ${copied
+                   ? 'bg-low/10 border-low/30 text-low'
+                   : 'text-text-3 hover:text-text bg-white/5 border-white/5 hover:border-white/10'}`}
+    >
+      {copied ? 'COPIED ✓' : 'copy'}
+    </button>
+  )
+}
+
 function EndpointCard({ ep, isActive, onClick }) {
   const mc = METHOD_COLORS[ep.method] ?? METHOD_COLORS.GET
   return (
     <button onClick={onClick}
       className={`w-full text-left p-3 sm:p-4 rounded-xl border transition-all duration-200
         ${isActive
-          ? 'bg-gold/5 border-gold/20 shadow-gold-sm'
+          ? 'card-glass border-gold/20 shadow-gold-sm'
           : 'bg-bg-card border-white/5 hover:border-white/10 hover:bg-bg-3'}`}
     >
       <div className="flex items-start gap-2 sm:gap-3">
@@ -74,7 +97,7 @@ export default function ApiTerminal() {
         {/* Header */}
         <div className="mb-5 sm:mb-8">
           <div className="section-tag section-tag-ice mb-2 sm:mb-3 text-[10px] sm:text-xs">API Reference</div>
-          <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-text">
+          <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-text tracking-tight">
             API Terminal
           </h1>
           <p className="text-text-2 text-xs sm:text-sm mt-1.5 sm:mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
@@ -90,7 +113,7 @@ export default function ApiTerminal() {
 
           {/* Left — endpoint list */}
           <div className="lg:col-span-3 space-y-1.5 sm:space-y-2">
-            <div className="text-[9px] sm:text-[10px] font-mono text-text-3 uppercase tracking-wider px-1 mb-2 sm:mb-3">
+            <div className="data-tag text-text-3 px-1 mb-2 sm:mb-3">
               Endpoints
             </div>
             {/* On mobile, show as horizontal scroll list; on lg+ show vertical */}
@@ -110,11 +133,14 @@ export default function ApiTerminal() {
             {/* Error codes mini-table */}
             <div className="mt-4 sm:mt-6 bg-bg-card rounded-xl p-3 sm:p-4 border border-white/5
                             hidden lg:block">
-              <div className="text-[9px] sm:text-[10px] font-mono text-text-3 uppercase tracking-wider mb-2 sm:mb-3">
+              <div className="data-tag text-text-3 mb-2 sm:mb-3">
                 Error Codes
               </div>
-              {ERROR_CODES.map(e => (
-                <div key={e.code} className="py-1 sm:py-1.5 border-b border-white/[0.03] last:border-0">
+              {ERROR_CODES.map((e, i) => (
+                <div key={e.code}
+                     className={`py-1.5 sm:py-2 border-b border-white/[0.03] last:border-0 px-1 rounded transition-colors
+                                 hover:bg-white/[0.02]
+                                 ${i % 2 === 0 ? '' : 'bg-white/[0.01]'}`}>
                   <div className="flex items-center gap-1.5 sm:gap-2">
                     <span className="text-[9px] sm:text-[10px] font-mono text-critical/80 bg-critical/5
                                      border border-critical/15 px-1 sm:px-1.5 py-0.5 rounded">
@@ -171,7 +197,7 @@ export default function ApiTerminal() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-[10px] sm:text-xs" style={{ minWidth: 400 }}>
                         <thead>
-                          <tr className="border-b border-white/5">
+                          <tr className="border-b border-white/5" style={{ background: 'rgba(255,255,255,0.03)' }}>
                             <th className="text-left px-3 sm:px-4 py-1.5 sm:py-2 text-text-3 font-mono font-normal whitespace-nowrap">Name</th>
                             <th className="text-left px-3 sm:px-4 py-1.5 sm:py-2 text-text-3 font-mono font-normal whitespace-nowrap">Type</th>
                             <th className="text-left px-3 sm:px-4 py-1.5 sm:py-2 text-text-3 font-mono font-normal whitespace-nowrap">Req</th>
@@ -180,12 +206,13 @@ export default function ApiTerminal() {
                         </thead>
                         <tbody>
                           {ep.params.map(p => (
-                            <tr key={p.name} className="border-b border-white/[0.03] last:border-0">
+                            <tr key={p.name} className="border-b border-white/[0.03] last:border-0 hover:bg-white/[0.01]">
                               <td className="px-3 sm:px-4 py-1.5 sm:py-2 font-mono text-gold/80 whitespace-nowrap">{p.name}</td>
                               <td className="px-3 sm:px-4 py-1.5 sm:py-2 font-mono text-ice/60 whitespace-nowrap">{p.type}</td>
                               <td className="px-3 sm:px-4 py-1.5 sm:py-2">
                                 {p.required
-                                  ? <span className="text-critical/70 font-mono">yes</span>
+                                  ? <span className="font-mono text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded border
+                                                     bg-critical/10 text-critical border-critical/20">yes</span>
                                   : <span className="text-text-3 font-mono">no</span>}
                               </td>
                               <td className="px-3 sm:px-4 py-1.5 sm:py-2 text-text-2">{p.desc}</td>
@@ -198,14 +225,15 @@ export default function ApiTerminal() {
                 )}
 
                 {/* Example tabs */}
-                <div className="bg-bg-card rounded-xl border border-white/5 overflow-hidden">
-                  <div className="flex border-b border-white/5">
+                <div className="rounded-xl border border-white/5 overflow-hidden"
+                     style={{ background: '#050810' }}>
+                  <div className="flex border-b border-white/5 bg-bg-card">
                     {['curl','python','response'].map(t => (
                       <button key={t}
                         onClick={() => setActiveTab(t)}
-                        className={`px-3 sm:px-4 py-2 sm:py-2.5 text-[10px] sm:text-xs font-mono transition-colors
+                        className={`px-3 sm:px-4 py-2 sm:py-2.5 text-[10px] sm:text-xs font-mono transition-all
                           ${activeTab === t
-                            ? 'text-gold bg-gold/5 border-b-2 border-gold'
+                            ? 'card-glass shadow-gold-sm text-gold border-b-2 border-gold'
                             : 'text-text-3 hover:text-text-2'}`}
                       >
                         {t === 'curl' ? 'cURL' : t === 'python' ? 'Python' : 'Response'}
@@ -233,19 +261,11 @@ export default function ApiTerminal() {
                         )}
                       </motion.div>
                     </AnimatePresence>
-                    <button
-                      onClick={() => {
-                        const text = activeTab === 'curl' ? ep.curlExample
-                          : activeTab === 'python' ? ep.pythonExample
-                          : JSON.stringify(ep.response, null, 2)
-                        navigator.clipboard?.writeText(text)
-                      }}
-                      className="absolute top-2 sm:top-3 right-2 sm:right-3 text-[9px] sm:text-[10px] font-mono text-text-3
-                                 hover:text-text px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white/5 rounded border border-white/5
-                                 hover:border-white/10 transition-all"
-                    >
-                      copy
-                    </button>
+                    <CopyButton getText={() =>
+                      activeTab === 'curl' ? ep.curlExample
+                        : activeTab === 'python' ? ep.pythonExample
+                        : JSON.stringify(ep.response, null, 2)
+                    } />
                   </div>
                 </div>
               </motion.div>
@@ -255,12 +275,12 @@ export default function ApiTerminal() {
           {/* Right — live tester */}
           <div className="lg:col-span-4 space-y-3 sm:space-y-4">
             <div className="bg-bg-card rounded-xl border border-white/5 overflow-hidden flex flex-col">
-              {/* Terminal title bar */}
+              {/* Terminal title bar — macOS chrome */}
               <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-bg-2 border-b border-white/5">
-                <div className="flex gap-1 sm:gap-1.5">
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-critical/60" />
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-medium/60" />
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-low/60" />
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full" style={{ background: '#ff5f57' }} />
+                  <div className="w-3 h-3 rounded-full" style={{ background: '#febc2e' }} />
+                  <div className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
                 </div>
                 <span className="text-[10px] sm:text-xs font-mono text-text-3 ml-1 sm:ml-2 truncate">
                   cosmeon — api-terminal
@@ -281,14 +301,16 @@ export default function ApiTerminal() {
                                 flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none">
                   {RUN_STEPS.map((step, i) => (
                     <React.Fragment key={step}>
-                      <span className={`text-[8px] sm:text-[9px] font-mono whitespace-nowrap transition-colors
-                        ${i < testerStep ? 'text-low' :
-                          i === testerStep ? 'text-gold' :
-                          'text-text-3'}`}>
+                      <span className={`whitespace-nowrap transition-all
+                        ${i < testerStep
+                          ? 'text-[8px] sm:text-[9px] font-mono text-low/70 line-through decoration-low/40'
+                          : i === testerStep
+                          ? 'text-[8px] sm:text-[9px] font-mono bg-gold/15 text-gold border border-gold/30 rounded px-1.5 py-0.5'
+                          : 'text-[8px] sm:text-[9px] font-mono text-text-3'}`}>
                         {i < testerStep ? '✓' : i === testerStep ? '●' : '○'} {step}
                       </span>
                       {i < RUN_STEPS.length - 1 && (
-                        <span className="text-text-3 text-[8px] sm:text-[9px]">›</span>
+                        <span className="text-text-3 text-[8px] sm:text-[9px] flex-shrink-0">›</span>
                       )}
                     </React.Fragment>
                   ))}
@@ -311,6 +333,16 @@ export default function ApiTerminal() {
                     {testerOutput}
                     {testerRunning && <span className="cursor" />}
                   </div>
+                )}
+              </div>
+
+              {/* Status bar */}
+              <div className="px-3 sm:px-4 py-1 sm:py-1.5 bg-bg border-t border-white/[0.04]
+                              flex items-center gap-2 text-[9px] sm:text-[10px] font-mono text-text-3">
+                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${testerRunning ? 'bg-gold animate-pulse' : testerOutput ? 'bg-low' : 'bg-white/10'}`} />
+                <span>{testerRunning ? 'Executing request…' : testerOutput ? `${ep.method} ${ep.path}` : 'Ready'}</span>
+                {testerOutput && !testerRunning && (
+                  <span className="ml-auto text-low">200 OK</span>
                 )}
               </div>
 
@@ -339,37 +371,40 @@ export default function ApiTerminal() {
             </div>
 
             {/* Schema info */}
-            <div className="bg-bg-card rounded-xl border border-white/5 p-3 sm:p-4">
-              <div className="text-[9px] sm:text-[10px] font-mono text-text-3 uppercase tracking-wider mb-2 sm:mb-3">
+            <div className="card-glass rounded-xl p-3 sm:p-4">
+              <div className="data-tag text-text-3 mb-2 sm:mb-3">
                 Response Schema
               </div>
               {[
-                { field: 'run_id',       type: 'uuid',   desc: 'Unique pipeline run identifier' },
-                { field: 'status',       type: 'enum',   desc: 'queued|preprocessing|detecting|scoring|completed|failed' },
-                { field: 'flood_area_km2', type: 'float', desc: 'Total new inundated area in km²' },
-                { field: 'risk_level',   type: 'enum',   desc: 'Low | Medium | High | Critical' },
-                { field: 'confidence',   type: 'float',  desc: 'Model output probability 0.0–1.0' },
-                { field: 'geotiff_url',  type: 'string', desc: 'Presigned S3 URL (TTL: 900s)' },
+                { field: 'run_id',         type: 'uuid',   desc: 'Unique pipeline run identifier' },
+                { field: 'status',         type: 'enum',   desc: 'queued|preprocessing|detecting|scoring|completed|failed' },
+                { field: 'flood_area_km2', type: 'float',  desc: 'Total new inundated area in km²' },
+                { field: 'risk_level',     type: 'enum',   desc: 'Low | Medium | High | Critical' },
+                { field: 'confidence',     type: 'float',  desc: 'Model output probability 0.0–1.0' },
+                { field: 'geotiff_url',    type: 'string', desc: 'Presigned S3 URL (TTL: 900s)' },
               ].map(s => (
                 <div key={s.field}
-                     className="flex items-start gap-1.5 sm:gap-2 py-1 sm:py-1.5
+                     className="flex items-start gap-1.5 sm:gap-2 py-1.5 sm:py-2
                                 border-b border-white/[0.03] last:border-0">
-                  <span className="text-[9px] sm:text-[10px] font-mono text-gold/80
+                  <span className="text-gold font-mono text-[9px] sm:text-[10px]
                                    min-w-[80px] sm:min-w-[100px] flex-shrink-0">{s.field}</span>
-                  <span className="text-[9px] sm:text-[10px] font-mono text-ice/60
+                  <span className="text-ice font-mono text-[9px] sm:text-[10px]
                                    min-w-[36px] sm:min-w-[42px] flex-shrink-0">{s.type}</span>
-                  <span className="text-[9px] sm:text-[10px] text-text-3 leading-snug">{s.desc}</span>
+                  <span className="text-text-2 text-[9px] sm:text-[10px] leading-snug">{s.desc}</span>
                 </div>
               ))}
             </div>
 
             {/* Error codes — shown on mobile (hidden on lg where it's in sidebar) */}
             <div className="lg:hidden bg-bg-card rounded-xl p-3 sm:p-4 border border-white/5">
-              <div className="text-[9px] sm:text-[10px] font-mono text-text-3 uppercase tracking-wider mb-2 sm:mb-3">
+              <div className="data-tag text-text-3 mb-2 sm:mb-3">
                 Error Codes
               </div>
-              {ERROR_CODES.map(e => (
-                <div key={e.code} className="py-1 sm:py-1.5 border-b border-white/[0.03] last:border-0">
+              {ERROR_CODES.map((e, i) => (
+                <div key={e.code}
+                     className={`py-1.5 sm:py-2 border-b border-white/[0.03] last:border-0 px-1 rounded transition-colors
+                                 hover:bg-white/[0.02]
+                                 ${i % 2 === 0 ? '' : 'bg-white/[0.01]'}`}>
                   <div className="flex items-center gap-1.5 sm:gap-2">
                     <span className="text-[9px] sm:text-[10px] font-mono text-critical/80 bg-critical/5
                                      border border-critical/15 px-1 sm:px-1.5 py-0.5 rounded">
