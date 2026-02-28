@@ -220,6 +220,7 @@ export default function CesiumGlobe() {
       viewer.dataSources.getByName(name).forEach(ds => viewer.dataSources.remove(ds))
     })
     viewer.entities.removeById('region-center-pin')
+    viewer.entities.removeById('region-boundary-bbox')
 
     if (!geocoded) {
       isRotatingRef.current = true
@@ -250,33 +251,54 @@ export default function CesiumGlobe() {
       })
     }
 
+    // Green highlight for selected region (precise boundary from Nominatim)
     if (geocoded.boundary_geojson) {
       const boundaryDs = new Cesium.GeoJsonDataSource('region-boundary')
+      const greenFill  = Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.32)
+      const greenEdge  = Cesium.Color.fromCssColorString('#22c55e')
       boundaryDs
         .load(geocoded.boundary_geojson, {
-          stroke:        Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.9),
-          strokeWidth:   3,
-          fill:          Cesium.Color.TRANSPARENT,
+          stroke:       greenEdge,
+          strokeWidth:  2,
+          fill:         greenFill,
           clampToGround: true,
         })
         .then(() => {
           boundaryDs.entities.values.forEach(entity => {
             if (entity.polyline) {
               entity.polyline.material = new Cesium.PolylineGlowMaterialProperty({
-                glowPower: 0.3, taperPower: 1.0,
-                color: Cesium.Color.fromCssColorString('#d4900a'),
+                glowPower:  0.5,
+                taperPower: 1.0,
+                color:      greenEdge,
               })
-              entity.polyline.width             = 4
+              entity.polyline.width              = 5
               entity.polyline.clampToGround      = true
               entity.polyline.classificationType = Cesium.ClassificationType.TERRAIN
             }
             if (entity.polygon) {
-              entity.polygon.material = Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.05)
-              entity.polygon.outline  = false
+              entity.polygon.material   = greenFill
+              entity.polygon.outline    = true
+              entity.polygon.outlineColor = greenEdge
+              entity.polygon.outlineWidth = 2.5
+              entity.polygon.clampToGround = true
+              entity.polygon.classificationType = Cesium.ClassificationType.TERRAIN
             }
           })
           if (!viewer.isDestroyed()) viewer.dataSources.add(boundaryDs)
         })
+    } else if (geocoded.bbox?.length === 4) {
+      // No precise polygon: draw bbox as rectangle for visibility
+      const [w, s, e, n] = geocoded.bbox
+      viewer.entities.add({
+        id: 'region-boundary-bbox',
+        rectangle: {
+          coordinates: Cesium.Rectangle.fromDegrees(w, s, e, n),
+          material:    Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.25),
+          outline:     true,
+          outlineColor: Cesium.Color.fromCssColorString('#22c55e'),
+          outlineWidth: 2,
+        },
+      })
     }
 
     viewer.entities.add({
@@ -284,8 +306,8 @@ export default function CesiumGlobe() {
       position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
       point: {
         pixelSize:    10,
-        color:        Cesium.Color.fromCssColorString('#e8ab30'),
-        outlineColor: Cesium.Color.fromCssColorString('#d4900a').withAlpha(0.5),
+        color:        Cesium.Color.fromCssColorString('#22c55e'),
+        outlineColor: Cesium.Color.fromCssColorString('#16a34a').withAlpha(0.6),
         outlineWidth: 8,
         heightReference:          Cesium.HeightReference.CLAMP_TO_GROUND,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,

@@ -13,7 +13,13 @@ export const useGlobeStore = create((set, get) => ({
 
   // Geocoded result (from Nominatim)
   geocoded: null,
-  setGeocoded: (g) => set({ geocoded: g }),
+  setGeocoded: (g) => set({ geocoded: g, regionConfirmed: false }),
+
+  // User must confirm the highlighted region before analysis
+  regionConfirmed: false,
+  setRegionConfirmed: (v) => set({ regionConfirmed: v }),
+  clearRegionSelection: () =>
+    set({ geocoded: null, regionConfirmed: false }),
 
   // Date selection
   analysisDate: null,

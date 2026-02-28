@@ -279,10 +279,24 @@ export default function RegionForm() {
     });
   };
 
+  const handleConfirmArea = () => store.setRegionConfirmed(true);
+  const handleChooseDifferent = () => {
+    store.clearRegionSelection();
+    setCityQuery("");
+    setStateQuery("");
+    setCountryQuery("");
+    setCityResults([]);
+    setStateResults([]);
+    setCountryResults([]);
+  };
+
   // ── Submit analysis ──────────────────────────────────────────────────────
   const handleAnalyze = async () => {
-    if (!store.geocoded) {
-      showNotification("Select a region first", "warning");
+    if (!store.geocoded || !store.regionConfirmed) {
+      showNotification(
+        store.geocoded ? "Confirm the highlighted area first" : "Select a region first",
+        "warning"
+      );
       return;
     }
 
@@ -366,6 +380,7 @@ export default function RegionForm() {
 
   const isRunning = store.isRunning();
   const geo = store.geocoded;
+  const regionConfirmed = store.regionConfirmed;
 
   return (
     <motion.div
@@ -397,6 +412,15 @@ export default function RegionForm() {
           </span>
         )}
       </div>
+
+      {geo && !regionConfirmed && (
+        <p
+          className="text-[10px] font-mono tracking-wide"
+          style={{ color: "rgba(34,197,94,0.9)" }}
+        >
+          The green area on the globe is your selection. Confirm or choose another.
+        </p>
+      )}
 
       {/* Three independent search fields */}
       <GeoSearchInput
@@ -450,7 +474,7 @@ export default function RegionForm() {
         }}
       />
 
-      {/* Geocoded coordinates readout */}
+      {/* Geocoded + confirm step */}
       <AnimatePresence>
         {geo && (
           <motion.div
@@ -471,7 +495,7 @@ export default function RegionForm() {
                   className="text-[8px] font-mono uppercase tracking-[0.2em]"
                   style={{ color: "rgba(236,232,223,0.4)" }}
                 >
-                  Active Target
+                  {regionConfirmed ? "Confirmed area" : "Area preview"}
                 </span>
                 <span
                   className="text-[8px] font-mono tracking-[0.2em]"
@@ -502,6 +526,43 @@ export default function RegionForm() {
                   <span style={{ color: "rgba(201,169,110,0.4)" }}>[BBOX]</span>
                 )}
               </div>
+
+              {!regionConfirmed ? (
+                <div className="flex gap-2 mt-3">
+                  <button
+                    type="button"
+                    onClick={handleConfirmArea}
+                    className="flex-1 py-2 text-[10px] font-mono uppercase tracking-wider border transition-colors"
+                    style={{
+                      borderColor: "#22c55e",
+                      color: "#22c55e",
+                      background: "rgba(34,197,94,0.12)",
+                    }}
+                  >
+                    Confirm area
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleChooseDifferent}
+                    className="flex-1 py-2 text-[10px] font-mono uppercase tracking-wider border transition-colors"
+                    style={{
+                      borderColor: "rgba(236,232,223,0.25)",
+                      color: "rgba(236,232,223,0.7)",
+                    }}
+                  >
+                    Choose different
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => store.setRegionConfirmed(false)}
+                  className="mt-2 text-[9px] font-mono uppercase tracking-wider"
+                  style={{ color: "rgba(201,169,110,0.7)" }}
+                >
+                  Change area
+                </button>
+              )}
             </div>
           </motion.div>
         )}
@@ -514,15 +575,15 @@ export default function RegionForm() {
         onChange={(v) => store.setAnalysisDate(v)}
       />
 
-      {/* Analyze button */}
+      {/* Analyze button — only enabled after area confirmed */}
       <button
         onClick={handleAnalyze}
-        disabled={!geo || isRunning}
+        disabled={!geo || !regionConfirmed || isRunning}
         className="relative group w-full mt-2"
         style={{
           padding: "0.8rem 1rem",
-          cursor: !geo || isRunning ? "not-allowed" : "pointer",
-          opacity: !geo || isRunning ? 0.5 : 1,
+          cursor: !geo || !regionConfirmed || isRunning ? "not-allowed" : "pointer",
+          opacity: !geo || !regionConfirmed || isRunning ? 0.5 : 1,
         }}
       >
         <span
@@ -538,12 +599,16 @@ export default function RegionForm() {
           className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors"
           style={{ fontSize: "0.65rem", color: "#c9a96e" }}
         >
-          {isRunning ?
+          {isRunning ? (
             <>
               <span className="w-1.5 h-1.5 bg-[#c9a96e] animate-pulse" />
               Initializing Scan...
             </>
-          : "Execute Detection"}
+          ) : !regionConfirmed && geo ? (
+            "Confirm area above first"
+          ) : (
+            "Execute Detection"
+          )}
         </span>
       </button>
     </motion.div>

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mongo.routes import router as auth_router
-from mongo.client import db
+from mongo.client import db, ensure_indexes
 
 # Load environment variables
 load_dotenv()
@@ -35,6 +35,12 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
+
+
+@app.on_event("startup")
+def startup():
+    """Run MongoDB index creation after app is loaded (non-blocking)."""
+    ensure_indexes()
 
 
 @app.get("/health")
