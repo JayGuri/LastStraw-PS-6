@@ -51,6 +51,7 @@ from engine import (
     snap_facilities_to_nodes,
 )
 from utils_geo import extract_wgs84_coords, fetch_facilities_from_osm, flood_circle, get_nearest_node
+from flood_infrastructure import circle_to_bbox_and_poly, query_flood_infrastructure
 
 # ---------------------------------------------------------------------------
 # FastAPI application
@@ -376,6 +377,31 @@ _DEFAULT_HUB_LON = 73.0297
 
 
 # ---------------------------------------------------------------------------
+# Origin-in-flood guard
+# ---------------------------------------------------------------------------
+
+def _origin_in_flood_zone(lat: float, lon: float, flood: FloodConfig, epsg: int) -> bool:
+    """Return True if (*lat*, *lon*) falls inside the flood circle.
+
+    Both the origin and the flood polygon are projected to the graph's UTM CRS
+    before the point-in-polygon test so the comparison is in metres, not
+    degrees.
+    """
+    try:
+        from pyproj import Transformer
+        from shapely.geometry import Point
+
+        tr = Transformer.from_crs("EPSG:4326", f"EPSG:{epsg}", always_xy=True)
+        ox, oy   = tr.transform(lon, lat)
+        fcx, fcy = tr.transform(flood.center_lon, flood.center_lat)
+        flood_poly = Point(fcx, fcy).buffer(flood.radius_m)
+        return flood_poly.contains(Point(ox, oy))
+    except Exception as exc:
+        log.warning("Origin-in-flood check failed (non-fatal): %s", exc)
+        return False
+
+
+# ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
 
@@ -474,6 +500,20 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
         )
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc))
+
+    # Reject request when the origin itself is inside the flood zone —
+    # no outward path is physically passable from a flooded location.
+    if _origin_in_flood_zone(req.point_a.lat, req.point_a.lon, flood_used, epsg):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=(
+                f"Origin ({req.point_a.lat}, {req.point_a.lon}) is inside the flood zone "
+                f"(center={flood_used.center_lat},{flood_used.center_lon}, "
+                f"radius={flood_used.radius_m}m). "
+                "No outward route is physically feasible from a flooded location. "
+                "Provide an origin outside the flood area."
+            ),
+        )
 
     # Snap origin to nearest node
     try:
@@ -647,6 +687,19 @@ def route(req: RouteRequest) -> RouteResponse:
     except Exception as exc:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc))
 
+    # Reject request when the origin itself is inside the flood zone.
+    if _origin_in_flood_zone(req.point_a.lat, req.point_a.lon, flood_used, epsg):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=(
+                f"Origin ({req.point_a.lat}, {req.point_a.lon}) is inside the flood zone "
+                f"(center={flood_used.center_lat},{flood_used.center_lon}, "
+                f"radius={flood_used.radius_m}m). "
+                "No outward route is physically feasible from a flooded location. "
+                "Provide an origin outside the flood area."
+            ),
+        )
+
     # ---- snap origin ----
     try:
         node_a = get_nearest_node(G_work, req.point_a.lat, req.point_a.lon)
@@ -816,6 +869,145 @@ def simulate(req: SimulateRequest) -> SimulateResponse:
         summary=summary,
         warnings=sim_warnings,
         facilities=facilities_out,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Flood infrastructure extraction models
+# ---------------------------------------------------------------------------
+
+class FloodInfraRequest(BaseModel):
+    """
+    Request for critical-infrastructure extraction within a circular flood extent.
+    """
+    center_lat: float = Field(
+        ...,
+        ge=-90.0, le=90.0,
+        description="Latitude of the flood circle centre (WGS-84 decimal degrees).",
+        examples=[19.0330],
+    )
+    center_lon: float = Field(
+        ...,
+        ge=-180.0, le=180.0,
+        description="Longitude of the flood circle centre (WGS-84 decimal degrees).",
+        examples=[73.0297],
+    )
+    radius_m: float = Field(
+        500.0,
+        gt=0,
+        description="Radius of the flood zone in metres.",
+        examples=[1000.0],
+    )
+    output_dir: str = Field(
+        ".",
+        description="Server-side directory where GeoJSON and CSV files are saved.",
+    )
+    output_prefix: str = Field(
+        "flood_infrastructure",
+        description="Filename prefix (without extension) for both output files.",
+    )
+    max_retries: int = Field(4, ge=1, le=10, description="Overpass retry attempts per tag query.")
+    retry_sleep: float = Field(10.0, ge=1.0, description="Base retry sleep in seconds (doubles each attempt).")
+    tag_sleep: float = Field(1.5, ge=0.0, description="Polite delay (seconds) between successive tag queries.")
+
+
+class InfraFeature(BaseModel):
+    """A single extracted infrastructure feature."""
+    feature_id:   str
+    name:         str
+    feature_type: str
+    latitude:     float
+    longitude:    float
+    flood_risk:   bool = True
+
+
+class FloodInfraResponse(BaseModel):
+    """Response from the flood infrastructure extraction endpoint."""
+    total_features: int
+    summary:        Dict[str, int] = Field(description="Count of each feature_type found.")
+    geojson_path:   str            = Field(description="Server-side path to the saved GeoJSON file.")
+    csv_path:       str            = Field(description="Server-side path to the saved CSV file.")
+    geojson:        Dict[str, Any] = Field(description="Full GeoJSON FeatureCollection.")
+    features:       List[InfraFeature]
+
+
+# ---------------------------------------------------------------------------
+# Flood infrastructure endpoint
+# ---------------------------------------------------------------------------
+
+@app.post("/flood-infrastructure", response_model=FloodInfraResponse, tags=["Analysis"])
+def flood_infrastructure(req: FloodInfraRequest) -> FloodInfraResponse:
+    """
+    **Flood-extent critical infrastructure extractor.**
+
+    Accepts a circular flood extent defined by a **centre coordinate**
+    (``center_lat``, ``center_lon``) and a **radius in metres** (``radius_m``)
+    and queries the OpenStreetMap Overpass API to extract all critical
+    infrastructure nodes and buildings within that extent.
+
+    A separate Overpass query is issued for each of the following OSM tags:
+
+    | Tag | Feature type |
+    |-----|--------------|
+    | amenity=hospital | hospital |
+    | amenity=school | school |
+    | amenity=police | police |
+    | amenity=fire_station | fire_station |
+    | amenity=pharmacy | pharmacy |
+    | amenity=place_of_worship | place_of_worship |
+    | amenity=community_centre | community_centre |
+    | building=residential | residential_building |
+    | building=commercial | commercial_building |
+    | building=yes | building |
+
+    For **way** and **relation** elements (polygon buildings), the centroid is
+    computed via Shapely and used as the representative coordinate point.
+
+    All extracted features receive ``flood_risk=true`` because they fall
+    within the supplied flood extent.  Results are saved as both a **GeoJSON**
+    file and a **CSV** file server-side and also returned in the response body.
+    """
+    import traceback as _tb
+
+    try:
+        bbox, flood_poly = circle_to_bbox_and_poly(
+            req.center_lat, req.center_lon, req.radius_m
+        )
+        result = query_flood_infrastructure(
+            bbox=bbox,
+            geojson_polygon=None,
+            _flood_shape=flood_poly,
+            output_dir=req.output_dir,
+            output_prefix=req.output_prefix,
+            max_retries=req.max_retries,
+            retry_sleep=req.retry_sleep,
+            tag_sleep=req.tag_sleep,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))
+    except Exception as exc:
+        log.error("Unexpected error in /flood-infrastructure: %s\n%s", exc, _tb.format_exc())
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc))
+
+    return FloodInfraResponse(
+        total_features=len(result.features),
+        summary=result.summary,
+        geojson_path=str(result.geojson_path),
+        csv_path=str(result.csv_path),
+        geojson=result.geojson,
+        features=[
+            InfraFeature(
+                feature_id=f["feature_id"],
+                name=f["name"],
+                feature_type=f["feature_type"],
+                latitude=f["latitude"],
+                longitude=f["longitude"],
+                flood_risk=True,
+            )
+            for f in result.features
+        ],
     )
 
 
