@@ -51,21 +51,21 @@ export default function GeoSearchInput({
           className="w-full text-xs font-mono tracking-wide px-3 py-2.5 transition-all outline-none"
           style={{
             background: "rgba(236,232,223,0.03)",
-            border: "1px solid rgba(201,169,110,0.15)",
+            border: "1px solid rgba(242,209,109,0.15)",
             color: "#ece8df",
           }}
           onFocusCapture={(e) => {
-            e.target.style.borderColor = "#c9a96e";
+            e.target.style.borderColor = "#f2d16d";
           }}
           onBlurCapture={(e) => {
-            e.target.style.borderColor = "rgba(201,169,110,0.15)";
+            e.target.style.borderColor = "rgba(242,209,109,0.15)";
           }}
           autoComplete="off"
         />
         {isSearching && (
           <span
             className="absolute right-3 text-[10px] font-mono tracking-widest animate-pulse"
-            style={{ color: "rgba(201,169,110,0.5)" }}
+            style={{ color: "rgba(242,209,109,0.5)" }}
           >
             ...
           </span>
@@ -95,7 +95,7 @@ export default function GeoSearchInput({
             className="absolute z-50 w-full mt-1 overflow-hidden"
             style={{
               background: "#0a0907",
-              border: "1px solid rgba(201,169,110,0.3)",
+              border: "1px solid rgba(242,209,109,0.3)",
               borderTop: "none",
               maxHeight: "200px",
               overflowY: "auto",
@@ -114,8 +114,8 @@ export default function GeoSearchInput({
                     onSelect(item);
                     setOpen(false);
                   }}
-                  className="w-full text-left px-3 py-2.5 flex flex-col hover:bg-[rgba(201,169,110,0.05)] transition-colors"
-                  style={{ borderBottom: "1px solid rgba(201,169,110,0.08)" }}
+                  className="w-full text-left px-3 py-2.5 flex flex-col hover:bg-[rgba(242,209,109,0.05)] transition-colors"
+                  style={{ borderBottom: "1px solid rgba(242,209,109,0.08)" }}
                 >
                   <span
                     className="text-[11px] font-mono uppercase tracking-widest truncate"

@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Nav from "./components/common/Nav.jsx";
 import Landing from "./pages/Landing.jsx";
 import Login from "./pages/Login.jsx";
-import MissionControl from "./pages/MissionControl.jsx";
 import GlobeAnalysis from "./pages/GlobeAnalysis.jsx";
 import FloodInsights from "./pages/FloodInsights.jsx";
 import { useAppStore } from "./stores/appStore.js";
@@ -11,7 +10,6 @@ import { useAppStore } from "./stores/appStore.js";
 const PAGES = {
   landing: Landing,
   login: Login,
-  mission: MissionControl,
   globe: GlobeAnalysis,
   insights: FloodInsights,
 };
@@ -62,7 +60,6 @@ export default function App() {
     const path = window.location.pathname;
     if (path === "/") setActiveTab("landing");
     else if (path === "/login") setActiveTab("login");
-    else if (path === "/mission") setActiveTab("mission");
     else if (path === "/globe") setActiveTab("globe");
     else if (path === "/insights") setActiveTab("insights");
     else setActiveTab("landing");
@@ -73,7 +70,6 @@ export default function App() {
     const routeMap = {
       landing: "/",
       login: "/login",
-      mission: "/mission",
       globe: "/globe",
       insights: "/insights",
     };

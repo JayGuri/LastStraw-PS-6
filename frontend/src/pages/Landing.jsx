@@ -140,7 +140,7 @@ const heroVariants = {
 // Shared text style tokens
 const LABEL_STYLE = {
   fontSize: "0.6rem",
-  color: "#c9a96e",
+  color: "#f2d16d",
   fontFamily: "monospace",
 };
 const TITLE_STYLE = {
@@ -232,7 +232,7 @@ export default function Landing() {
                 {/* Pre-title rule */}
                 <div
                   className="w-16 h-px mb-8"
-                  style={{ background: "rgba(201,169,110,0.5)" }}
+                  style={{ background: "rgba(242,209,109,0.5)" }}
                 />
                 {/* Main title */}
                 <h1
@@ -279,7 +279,7 @@ export default function Landing() {
                   <span
                     className="text-[9px] tracking-[0.4em] uppercase"
                     style={{
-                      color: "rgba(201,169,110,0.5)",
+                      color: "rgba(242,209,109,0.5)",
                       fontFamily: "monospace",
                     }}
                   >
@@ -289,7 +289,7 @@ export default function Landing() {
                     className="w-4 h-4"
                     fill="none"
                     viewBox="0 0 16 16"
-                    stroke="#c9a96e"
+                    stroke="#f2d16d"
                     strokeWidth="1.2"
                     strokeLinecap="round"
                     style={{ opacity: 0.5 }}
@@ -340,7 +340,7 @@ export default function Landing() {
                           className="w-[3px] self-stretch shrink-0"
                           style={{
                             background:
-                              "linear-gradient(to top, #c9a96e 0%, rgba(201,169,110,0.2) 100%)",
+                              "linear-gradient(to top, #f2d16d 0%, rgba(242,209,109,0.2) 100%)",
                           }}
                         />
                         <div
@@ -393,7 +393,7 @@ export default function Landing() {
                           className="w-[3px] self-stretch shrink-0"
                           style={{
                             background:
-                              "linear-gradient(to top, #c9a96e 0%, rgba(201,169,110,0.2) 100%)",
+                              "linear-gradient(to top, #f2d16d 0%, rgba(242,209,109,0.2) 100%)",
                           }}
                         />
                         <div
@@ -445,7 +445,7 @@ export default function Landing() {
                       className="w-full h-px"
                       style={{
                         background:
-                          "linear-gradient(to right, rgba(201,169,110,0.7) 0%, rgba(201,169,110,0.15) 75%, transparent 100%)",
+                          "linear-gradient(to right, rgba(242,209,109,0.7) 0%, rgba(242,209,109,0.15) 75%, transparent 100%)",
                       }}
                     />
                     <div
@@ -483,7 +483,7 @@ export default function Landing() {
                         <div
                           className="w-[38%] shrink-0 pt-10 hidden sm:block"
                           style={{
-                            borderLeft: "1px solid rgba(201,169,110,0.12)",
+                            borderLeft: "1px solid rgba(242,209,109,0.12)",
                             paddingLeft: "2rem",
                           }}
                         >
@@ -516,7 +516,7 @@ export default function Landing() {
                   className="tracking-[0.45em] uppercase mb-10"
                   style={{
                     fontSize: "0.6rem",
-                    color: "rgba(201,169,110,0.6)",
+                    color: "rgba(242,209,109,0.6)",
                     fontFamily: "monospace",
                   }}
                 >
@@ -576,7 +576,7 @@ export default function Landing() {
                   <span
                     className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
                     style={{
-                      background: isAuthenticated ? "#c9a96e" : "#c0392b",
+                      background: isAuthenticated ? "#f2d16d" : "#c0392b",
                     }}
                   />
                   <span

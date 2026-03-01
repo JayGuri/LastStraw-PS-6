@@ -7,7 +7,7 @@ export default function GlobeLegend({ activeView }) {
       case "detection":
         return (
           <>
-            <div className="text-[9px] uppercase tracking-widest text-[#c9a96e]/70 mb-2 font-mono">
+            <div className="text-[9px] uppercase tracking-widest text-[#f2d16d]/70 mb-2 font-mono">
               Detection Alert Levels
             </div>
             <div className="flex flex-col gap-1.5 min-w-[120px]">
@@ -24,7 +24,7 @@ export default function GlobeLegend({ activeView }) {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#c9a96e] border border-white/20" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#f2d16d] border border-white/20" />
                 <span className="text-[10px] text-[#ece8df] font-mono">
                   MEDIUM
                 </span>
@@ -41,7 +41,7 @@ export default function GlobeLegend({ activeView }) {
       case "risk":
         return (
           <>
-            <div className="text-[9px] uppercase tracking-widest text-[#c9a96e]/70 mb-2 font-mono">
+            <div className="text-[9px] uppercase tracking-widest text-[#f2d16d]/70 mb-2 font-mono">
               Risk Dashboard
             </div>
             <div className="flex flex-col gap-1.5 min-w-[120px] mb-3">
@@ -58,7 +58,7 @@ export default function GlobeLegend({ activeView }) {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#c9a96e] shadow-[0_0_8px_rgba(201,169,110,0.8)]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#f2d16d] shadow-[0_0_8px_rgba(242,209,109,0.8)]" />
                 <span className="text-[10px] text-[#ece8df] font-mono">
                   MEDIUM RISK
                 </span>
@@ -70,7 +70,7 @@ export default function GlobeLegend({ activeView }) {
                 </span>
               </div>
             </div>
-            <div className="text-[9px] uppercase tracking-widest text-[#c9a96e]/70 mb-2 font-mono border-t border-[rgba(201,169,110,0.15)] pt-2">
+            <div className="text-[9px] uppercase tracking-widest text-[#f2d16d]/70 mb-2 font-mono border-t border-[rgba(242,209,109,0.15)] pt-2">
               Scale
             </div>
             <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export default function GlobeLegend({ activeView }) {
       case "lifeline":
         return (
           <>
-            <div className="text-[9px] uppercase tracking-widest text-[#c9a96e]/70 mb-2 font-mono">
+            <div className="text-[9px] uppercase tracking-widest text-[#f2d16d]/70 mb-2 font-mono">
               Lifeline Infrastructure
             </div>
             <div className="flex flex-col gap-1.5 min-w-[150px]">
@@ -142,7 +142,7 @@ export default function GlobeLegend({ activeView }) {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -10 }}
         transition={{ duration: 0.3 }}
-        className="absolute bottom-4 left-4 z-20 bg-[#0a0907]/80 backdrop-blur-md border border-[rgba(201,169,110,0.2)] p-3 rounded"
+        className="absolute top-4 left-4 z-20 bg-[#0a0907]/80 backdrop-blur-md border border-[rgba(242,209,109,0.2)] p-3 rounded"
       >
         {getLegendContent()}
       </motion.div>

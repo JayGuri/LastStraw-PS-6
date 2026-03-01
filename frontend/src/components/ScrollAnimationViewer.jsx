@@ -187,25 +187,25 @@ export default function ScrollAnimationViewer({
         >
           <p
             className="text-[10px] tracking-[0.4em] uppercase mb-4"
-            style={{ color: "#c9a96e", fontFamily: "monospace" }}
+            style={{ color: "#f2d16d", fontFamily: "monospace" }}
           >
             Loading
           </p>
           <div
             className="w-48 h-px"
-            style={{ background: "rgba(201,169,110,0.15)" }}
+            style={{ background: "rgba(242,209,109,0.15)" }}
           >
             <div
               className="h-full transition-all duration-150"
               style={{
                 width: `${loadProgress * 100}%`,
-                background: "#c9a96e",
+                background: "#f2d16d",
               }}
             />
           </div>
           <p
             className="mt-3 tabular-nums text-[9px]"
-            style={{ color: "rgba(201,169,110,0.4)", fontFamily: "monospace" }}
+            style={{ color: "rgba(242,209,109,0.4)", fontFamily: "monospace" }}
           >
             {Math.round(loadProgress * totalFrames)}&nbsp;/&nbsp;{totalFrames}
           </p>
@@ -247,7 +247,7 @@ export default function ScrollAnimationViewer({
         <div className="absolute top-6 inset-x-0 flex flex-col items-center gap-1 pointer-events-none z-20">
           <span
             className="tracking-[0.35em] text-[10px] uppercase animate-pulse"
-            style={{ color: "#c9a96e", fontFamily: "monospace" }}
+            style={{ color: "#f2d16d", fontFamily: "monospace" }}
           >
             Scroll to Explore
           </span>
@@ -255,7 +255,7 @@ export default function ScrollAnimationViewer({
             className="w-4 h-4 animate-bounce"
             viewBox="0 0 16 16"
             fill="none"
-            stroke="#c9a96e"
+            stroke="#f2d16d"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -273,22 +273,22 @@ export default function ScrollAnimationViewer({
         >
           <div
             className="relative w-px flex-1 rounded-full"
-            style={{ background: "rgba(201,169,110,0.20)" }}
+            style={{ background: "rgba(242,209,109,0.20)" }}
           >
             {/* Progress dot — CSS transform, no layout change */}
             <div
               className="absolute left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full"
               style={{
                 top: `${progressPercent}%`,
-                background: "#c9a96e",
-                boxShadow: "0 0 8px 2px rgba(201,169,110,0.5)",
+                background: "#f2d16d",
+                boxShadow: "0 0 8px 2px rgba(242,209,109,0.5)",
                 transition: "top 80ms linear", // fast linear — rAF drives smoothness
               }}
             />
           </div>
           <span
             className="mt-2 tabular-nums text-[9px] tracking-widest"
-            style={{ color: "rgba(201,169,110,0.5)", fontFamily: "monospace" }}
+            style={{ color: "rgba(242,209,109,0.5)", fontFamily: "monospace" }}
           >
             {progressPercent.toString().padStart(3, "0")}
           </span>
@@ -303,7 +303,7 @@ export default function ScrollAnimationViewer({
         >
           <p
             className="tracking-[0.3em] text-[9px] uppercase mb-1"
-            style={{ color: "#c9a96e", fontFamily: "monospace" }}
+            style={{ color: "#f2d16d", fontFamily: "monospace" }}
           >
             Chapter {chapter.num}
           </p>
@@ -319,7 +319,7 @@ export default function ScrollAnimationViewer({
           </p>
           <div
             className="mt-1.5 h-px w-10 rounded-full"
-            style={{ background: "rgba(201,169,110,0.45)" }}
+            style={{ background: "rgba(242,209,109,0.45)" }}
           />
         </div>
       )}

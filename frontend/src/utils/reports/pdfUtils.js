@@ -4,13 +4,13 @@ import { jsPDF } from 'jspdf'
 export const C = {
   bg: [10, 9, 7],          // #0a0907
   bgAlt: [15, 13, 11],     // slightly lighter rows
-  amber: [201, 169, 110],  // #c9a96e
+  amber: [242, 209, 109],  // #f2d16d
   amberDim: [100, 84, 55], // 50% amber for dividers
   cream: [236, 232, 223],  // #ece8df
   creamDim: [150, 147, 141], // ~60% cream for secondary labels
   critical: [192, 57, 43], // red
   high: [220, 120, 40],    // orange
-  medium: [201, 169, 110], // amber (same as brand)
+  medium: [242, 209, 109], // amber (same as brand)
   low: [34, 197, 94],      // green
   ice: [74, 176, 216],     // #4ab0d8 for SAR/depth data
   border: [30, 28, 24],    // subtle border color

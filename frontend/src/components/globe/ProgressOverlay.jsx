@@ -120,13 +120,13 @@ export default function ProgressOverlay({ activeView = "detection" }) {
       className="absolute inset-x-4 bottom-4 p-4 z-10"
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.52)",
+        border: "1px solid rgba(242,209,109,0.52)",
       }}
     >
       <div className="flex items-center justify-between mb-3">
         <span
           className="text-[9px] font-mono tracking-[0.2em] uppercase"
-          style={{ color: "#c9a96e" }}
+          style={{ color: "#f2d16d" }}
         >
           {title}
         </span>
@@ -145,7 +145,7 @@ export default function ProgressOverlay({ activeView = "detection" }) {
       >
         <motion.div
           className="h-full"
-          style={{ background: "#c9a96e" }}
+          style={{ background: "#f2d16d" }}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5 }}
@@ -164,7 +164,7 @@ export default function ProgressOverlay({ activeView = "detection" }) {
               style={{
                 color:
                   isDone ? "rgba(236,232,223,0.5)"
-                  : isCurrent ? "#c9a96e"
+                  : isCurrent ? "#f2d16d"
                   : "rgba(236,232,223,0.2)",
               }}
             >
@@ -182,13 +182,13 @@ export default function ProgressOverlay({ activeView = "detection" }) {
                 <span
                   className="w-3 h-3 flex items-center justify-center"
                   style={{
-                    border: "1px solid #c9a96e",
-                    background: "rgba(201,169,110,0.1)",
+                    border: "1px solid #f2d16d",
+                    background: "rgba(242,209,109,0.1)",
                   }}
                 >
                   <span
                     className="w-1.5 h-1.5 animate-pulse"
-                    style={{ background: "#c9a96e" }}
+                    style={{ background: "#f2d16d" }}
                   />
                 </span>
               : <span

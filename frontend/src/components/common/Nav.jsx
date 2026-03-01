@@ -5,7 +5,6 @@ import { useAuth } from "../../hooks/useAuth.js";
 const TABS = [
   { id: "landing", label: "Briefing", icon: "◉", emoji: "⬛" },
   { id: "globe", label: "Theater", icon: "⊕", emoji: "🌍" },
-  { id: "mission", label: "Operations", icon: "⬡", emoji: "⚡" },
   { id: "insights", label: "Insights", icon: "◈", emoji: "📊" },
 ];
 
@@ -17,8 +16,8 @@ const SUBSCRIPTION_TIERS = {
   },
   plus: {
     label: "Analyst",
-    color: "#c9a96e",
-    border: "rgba(201,169,110,0.4)",
+    color: "#f2d16d",
+    border: "rgba(242,209,109,0.4)",
   },
   pro: {
     label: "Sovereign",
@@ -51,7 +50,7 @@ function TierBadge({ level }) {
 }
 
 export default function Nav() {
-  const { activeTab, setActiveTab, isMockMode, toggleMockMode } = useAppStore();
+  const { activeTab, setActiveTab } = useAppStore();
   const { user, isAuthenticated, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -72,7 +71,7 @@ export default function Nav() {
       className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 sm:px-6"
       style={{
         background: "#060504",
-        borderBottom: "1px solid rgba(201,169,110,0.15)",
+        borderBottom: "1px solid rgba(242,209,109,0.15)",
       }}
     >
       {/* Brand */}
@@ -91,7 +90,7 @@ export default function Nav() {
             className="mt-1 tracking-[0.3em] uppercase"
             style={{
               fontSize: "0.45rem",
-              color: "#c9a96e",
+              color: "#f2d16d",
               fontFamily: "monospace",
             }}
           >
@@ -110,7 +109,7 @@ export default function Nav() {
               onClick={() => setActiveTab(tab.id)}
               className="relative px-3 sm:px-4 py-2 flex items-center gap-2 transition-colors duration-300"
               style={{
-                color: isActive ? "#c9a96e" : "rgba(236,232,223,0.4)",
+                color: isActive ? "#f2d16d" : "rgba(236,232,223,0.4)",
               }}
             >
               <span className="md:hidden text-xs leading-none">
@@ -139,45 +138,25 @@ export default function Nav() {
 
       {/* Right */}
       <div className="flex items-center gap-3 sm:gap-5">
-        <button
-          onClick={toggleMockMode}
-          className="tracking-[0.25em] uppercase transition-colors"
-          style={{
-            fontSize: "0.55rem",
-            fontFamily: "monospace",
-            padding: "4px 8px",
-            color: isMockMode ? "#c0392b" : "rgba(201,169,110,0.7)",
-            border: `1px solid ${
-              isMockMode ? "rgba(192,57,43,0.4)" : "rgba(201,169,110,0.2)"
-            }`,
-          }}
-        >
-          {isMockMode ? "SIMULATED" : "LIVE"}
-        </button>
-
         {isAuthenticated ?
-          <div ref={profileRef} className="relative">
+          <div ref={profileRef} className="relative flex items-center gap-3">
+            <div className="hidden sm:block">
+              <TierBadge level={tier} />
+            </div>
             <button
               onClick={() => setProfileOpen((o) => !o)}
-              className="flex items-center gap-3 pl-3 pr-2 py-1 transition-colors"
+              className="w-8 h-8 rounded-full flex items-center justify-center font-display transition-colors"
               style={{
-                border: "1px solid rgba(236,232,223,0.15)",
                 background:
-                  profileOpen ? "rgba(236,232,223,0.05)" : "transparent",
+                  profileOpen ?
+                    "rgba(242,209,109,0.2)"
+                  : "rgba(242,209,109,0.1)",
+                border: "1px solid rgba(242,209,109,0.3)",
+                color: "#f2d16d",
+                fontSize: "0.95rem",
               }}
             >
-              <TierBadge level={tier} />
-              <div
-                className="w-6 h-6 flex items-center justify-center font-display"
-                style={{
-                  background: "rgba(201,169,110,0.1)",
-                  border: "1px solid rgba(201,169,110,0.3)",
-                  color: "#c9a96e",
-                  fontSize: "0.8rem",
-                }}
-              >
-                {(user?.email ?? "?").charAt(0).toUpperCase()}
-              </div>
+              {(user?.email ?? "?").charAt(0).toUpperCase()}
             </button>
 
             {profileOpen && (
@@ -185,7 +164,7 @@ export default function Nav() {
                 className="absolute right-0 top-full mt-2 w-56 py-2 shadow-2xl"
                 style={{
                   background: "#0a0907",
-                  border: "1px solid rgba(201,169,110,0.2)",
+                  border: "1px solid rgba(242,209,109,0.2)",
                 }}
               >
                 <div
@@ -233,17 +212,17 @@ export default function Nav() {
           >
             <span
               className="absolute inset-0"
-              style={{ border: "1px solid rgba(201,169,110,0.4)" }}
+              style={{ border: "1px solid rgba(242,209,109,0.4)" }}
             />
             <span
               className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-              style={{ background: "#c9a96e" }}
+              style={{ background: "#f2d16d" }}
             />
             <span
               className="relative z-10 tracking-[0.2em] uppercase transition-colors group-hover:text-[#060504]"
               style={{
                 fontSize: "0.6rem",
-                color: "#c9a96e",
+                color: "#f2d16d",
                 fontFamily: "monospace",
               }}
             >

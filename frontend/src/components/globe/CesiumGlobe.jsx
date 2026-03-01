@@ -305,12 +305,12 @@ export default function CesiumGlobe() {
     if (result && result.alert_level) {
       const ALERT_COLORS = {
         LOW: "#22c55e",
-        MEDIUM: "#c9a96e",
+        MEDIUM: "#f2d16d",
         HIGH: "#dc7828",
         CRITICAL: "#c0392b",
       };
       baseColor = Cesium.Color.fromCssColorString(
-        ALERT_COLORS[result.alert_level] ?? "#c9a96e",
+        ALERT_COLORS[result.alert_level] ?? "#f2d16d",
       );
       outlineAlpha = 0.8;
       fillAlpha = 0.5;
@@ -422,7 +422,7 @@ export default function CesiumGlobe() {
       if (lower === "high")
         return Cesium.Color.fromCssColorString("#dc7828").withAlpha(1.0);
       if (lower === "medium")
-        return Cesium.Color.fromCssColorString("#c9a96e").withAlpha(1.0);
+        return Cesium.Color.fromCssColorString("#f2d16d").withAlpha(1.0);
       // low or default
       return Cesium.Color.fromCssColorString("#22c55e").withAlpha(1.0);
     };

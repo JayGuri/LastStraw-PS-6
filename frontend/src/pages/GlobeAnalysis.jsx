@@ -13,16 +13,16 @@ import { useLifelineStore } from "../stores/lifelineStore.js";
 
 const STATUS_CONFIG = {
   idle: { label: "IDLE", style: "text-text-3 border-white/10" },
-  queued: { label: "QUEUED", style: "text-[#c9a96e] border-[#c9a96e]/30" },
+  queued: { label: "QUEUED", style: "text-[#f2d16d] border-[#f2d16d]/30" },
   preprocessing: {
     label: "PREPROCESSING",
-    style: "text-[#c9a96e] border-[#c9a96e]/30",
+    style: "text-[#f2d16d] border-[#f2d16d]/30",
   },
   detecting: {
     label: "DETECTING",
-    style: "text-[#c9a96e] border-[#c9a96e]/30",
+    style: "text-[#f2d16d] border-[#f2d16d]/30",
   },
-  scoring: { label: "SCORING", style: "text-[#c9a96e] border-[#c9a96e]/30" },
+  scoring: { label: "SCORING", style: "text-[#f2d16d] border-[#f2d16d]/30" },
   completed: {
     label: "COMPLETED",
     style: "text-[#ece8df] border-[#ece8df]/40",
@@ -95,14 +95,14 @@ export default function GlobeAnalysis() {
         {/* Header */}
         <div
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4"
-          style={{ borderBottom: "1px solid rgba(201,169,110,0.15)" }}
+          style={{ borderBottom: "1px solid rgba(242,209,109,0.15)" }}
         >
           <div>
             <span
               className="tracking-[0.35em] uppercase mb-2 block"
               style={{
                 fontSize: "0.6rem",
-                color: "#c9a96e",
+                color: "#f2d16d",
                 fontFamily: "monospace",
               }}
             >
@@ -131,7 +131,7 @@ export default function GlobeAnalysis() {
                 className={`px-2 py-0.5 text-[10px] uppercase font-mono tracking-widest border bg-transparent ${cfg.style}`}
               >
                 {isRunning && (
-                  <span className="w-1.5 h-1.5 bg-[#c9a96e] inline-block mb-[1px] mr-2" />
+                  <span className="w-1.5 h-1.5 bg-[#f2d16d] inline-block mb-[1px] mr-2" />
                 )}
                 {cfg.label}
               </div>
@@ -157,7 +157,7 @@ export default function GlobeAnalysis() {
           {/* Globe panel */}
           <div
             className="col-span-12 lg:col-span-8 relative min-h-[420px]"
-            style={{ border: "1px solid rgba(201,169,110,0.4)" }}
+            style={{ border: "1px solid rgba(242,209,109,0.4)" }}
           >
             <CesiumGlobe />
             {showOverlay && <ProgressOverlay activeView={activeView} />}
@@ -165,10 +165,10 @@ export default function GlobeAnalysis() {
             <GlobeLegend activeView={activeView} />
 
             {/* Corner brackets */}
-            <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#c9a96e] z-10" />
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#c9a96e] z-10" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#c9a96e] z-10" />
-            <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#c9a96e] z-10" />
+            <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#f2d16d] z-10" />
+            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#f2d16d] z-10" />
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#f2d16d] z-10" />
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#f2d16d] z-10" />
           </div>
 
           {/* Sidebar */}
@@ -177,13 +177,13 @@ export default function GlobeAnalysis() {
                           overflow-y-auto lg:max-h-[calc(100vh-10rem)] pr-2"
           >
             {/* Tab Switcher */}
-            <div className="flex gap-2 border-b border-[rgba(201,169,110,0.15)] pb-4">
+            <div className="flex gap-2 border-b border-[rgba(242,209,109,0.15)] pb-4">
               <motion.button
                 onClick={() => handleViewChange("detection")}
                 className={`flex-1 px-2 py-2 text-[10px] uppercase tracking-widest font-mono border transition-all duration-200 ${
                   activeView === "detection" ?
-                    "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
-                  : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                    "border-[#f2d16d] text-[#f2d16d] bg-[#0a0907]/50"
+                  : "border-[rgba(242,209,109,0.15)] text-text-3 hover:border-[#f2d16d]/30"
                 }`}
                 whileHover={activeView !== "detection" ? { y: -1 } : {}}
               >
@@ -193,8 +193,8 @@ export default function GlobeAnalysis() {
                 onClick={() => handleViewChange("risk")}
                 className={`flex-1 px-2 py-2 text-[10px] uppercase tracking-widest font-mono border transition-all duration-200 ${
                   activeView === "risk" ?
-                    "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
-                  : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                    "border-[#f2d16d] text-[#f2d16d] bg-[#0a0907]/50"
+                  : "border-[rgba(242,209,109,0.15)] text-text-3 hover:border-[#f2d16d]/30"
                 }`}
                 whileHover={activeView !== "risk" ? { y: -1 } : {}}
               >
@@ -204,8 +204,8 @@ export default function GlobeAnalysis() {
                 onClick={() => handleViewChange("lifeline")}
                 className={`flex-1 px-2 py-2 text-[10px] uppercase tracking-widest font-mono border transition-all duration-200 ${
                   activeView === "lifeline" ?
-                    "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
-                  : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                    "border-[#f2d16d] text-[#f2d16d] bg-[#0a0907]/50"
+                  : "border-[rgba(242,209,109,0.15)] text-text-3 hover:border-[#f2d16d]/30"
                 }`}
                 whileHover={activeView !== "lifeline" ? { y: -1 } : {}}
               >

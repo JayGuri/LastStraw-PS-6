@@ -14,11 +14,11 @@ const C = {
   bgCard: "#0a0907",
   bgFeat: "#0d0b08",
   cream: "#ece8df",
-  gold: "#c9a96e",
+  gold: "#f2d16d",
   red: "#c0392b",
   muted: "rgba(236,232,223,0.55)",
-  border: "rgba(201,169,110,0.14)",
-  featBorder: "rgba(201,169,110,0.52)",
+  border: "rgba(242,209,109,0.14)",
+  featBorder: "rgba(242,209,109,0.52)",
 };
 
 // ── Business Outlook stats ────────────────────────────────────────────────
@@ -272,7 +272,7 @@ export default function SubscriptionSection() {
         <div
           className="w-full h-px"
           style={{
-            background: `linear-gradient(to right, ${C.gold} 0%, rgba(201,169,110,0.15) 60%, transparent 100%)`,
+            background: `linear-gradient(to right, ${C.gold} 0%, rgba(242,209,109,0.15) 60%, transparent 100%)`,
           }}
         />
 
@@ -400,7 +400,7 @@ export default function SubscriptionSection() {
             className="mt-4 tracking-[0.15em] uppercase"
             style={{
               fontSize: "0.6rem",
-              color: "rgba(201,169,110,0.5)",
+              color: "rgba(242,209,109,0.5)",
               fontFamily: "monospace",
             }}
           >
@@ -433,8 +433,8 @@ export default function SubscriptionSection() {
           <div
             className="mb-8 mx-auto max-w-2xl px-5 py-4"
             style={{
-              border: `1px solid rgba(201,169,110,0.4)`,
-              background: "rgba(201,169,110,0.06)",
+              border: `1px solid rgba(242,209,109,0.4)`,
+              background: "rgba(242,209,109,0.06)",
             }}
           >
             <p
@@ -604,7 +604,7 @@ export default function SubscriptionSection() {
                     className="mt-4 text-center tracking-[0.2em]"
                     style={{
                       fontSize: "0.58rem",
-                      color: "rgba(201,169,110,0.45)",
+                      color: "rgba(242,209,109,0.45)",
                       fontFamily: "monospace",
                     }}
                   >
@@ -622,7 +622,7 @@ export default function SubscriptionSection() {
         <div
           className="h-px w-full"
           style={{
-            background: `linear-gradient(to right, transparent, rgba(201,169,110,0.2) 30%, rgba(201,169,110,0.2) 70%, transparent)`,
+            background: `linear-gradient(to right, transparent, rgba(242,209,109,0.5) 30%, rgba(242,209,109,0.5) 70%, transparent)`,
           }}
         />
         <div className="mt-8 flex items-center justify-between">
@@ -630,7 +630,7 @@ export default function SubscriptionSection() {
             className="tracking-[0.35em] uppercase"
             style={{
               fontSize: "0.57rem",
-              color: "rgba(201,169,110,0.35)",
+              color: "rgba(242,209,109,0.8)",
               fontFamily: "monospace",
             }}
           >
@@ -640,7 +640,7 @@ export default function SubscriptionSection() {
             className="tracking-[0.35em] uppercase"
             style={{
               fontSize: "0.57rem",
-              color: "rgba(201,169,110,0.35)",
+              color: "rgba(242,209,109,0.8)",
               fontFamily: "monospace",
             }}
           >

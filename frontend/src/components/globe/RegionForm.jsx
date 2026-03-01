@@ -15,7 +15,6 @@ import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RegionForm() {
   const store = useGlobeStore();
-  const isMockMode = useAppStore((s) => s.isMockMode);
   const showNotification = useAppStore((s) => s.showNotification);
   const geocoded = store.geocoded;
 
@@ -207,11 +206,6 @@ export default function RegionForm() {
     store.resetRun();
     store.setRunState({ status: "queued", progress: 0 });
 
-    if (isMockMode) {
-      simulateMockPolling();
-      return;
-    }
-
     const payload = {
       lat: store.geocoded.lat,
       lon: store.geocoded.lon,
@@ -222,39 +216,43 @@ export default function RegionForm() {
     const { data, error } = await floodDetectApi.submitDetection(payload);
 
     if (error) {
-      store.setRunState({ status: "failed", error });
-      showNotification(error, "error");
+      showNotification(
+        "Live detection failed. Falling back to simulated run.",
+        "warning",
+      );
+
+      store.resetRun();
+      store.setRunState({ status: "queued", progress: 0 });
+
+      const stages = [
+        "queued",
+        "preprocessing",
+        "detecting",
+        "scoring",
+        "completed",
+      ];
+      let idx = 0;
+      const timer = setInterval(() => {
+        idx++;
+        if (idx < stages.length) {
+          store.setRunState({
+            status: stages[idx],
+            progress: Math.round((idx / (stages.length - 1)) * 100),
+          });
+        }
+        if (stages[idx] === "completed") {
+          clearInterval(timer);
+          store.setResult(mockFloodResponse);
+          showNotification("Simulated flood detection complete", "success");
+        }
+      }, 1500);
+
       return;
     }
 
     store.setRunState({ status: "completed", progress: 100 });
     store.setResult(data);
     showNotification("Flood forecast complete", "success");
-  };
-
-  const simulateMockPolling = () => {
-    const stages = [
-      "queued",
-      "preprocessing",
-      "detecting",
-      "scoring",
-      "completed",
-    ];
-    let idx = 0;
-    const timer = setInterval(() => {
-      idx++;
-      if (idx < stages.length) {
-        store.setRunState({
-          status: stages[idx],
-          progress: Math.round((idx / (stages.length - 1)) * 100),
-        });
-      }
-      if (stages[idx] === "completed") {
-        clearInterval(timer);
-        store.setResult(mockFloodResponse);
-        showNotification("Flood detection complete (mock)", "success");
-      }
-    }, 1500);
   };
 
   const isRunning = store.isRunning();
@@ -268,28 +266,20 @@ export default function RegionForm() {
       className="p-5 flex flex-col gap-5"
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
       }}
     >
       {/* Header */}
       <div
         className="flex items-center justify-between border-b pb-3"
-        style={{ borderColor: "rgba(201,169,110,0.15)" }}
+        style={{ borderColor: "rgba(242,209,109,0.15)" }}
       >
         <span
           className="text-[9px] font-mono tracking-[0.3em] uppercase"
-          style={{ color: "rgba(201,169,110,0.6)" }}
+          style={{ color: "rgba(242,209,109,0.6)" }}
         >
           Target Coordinates
         </span>
-        {isMockMode && (
-          <span
-            className="text-[8px] font-mono tracking-widest uppercase px-1.5 py-0.5 border"
-            style={{ color: "#c0392b", borderColor: "#c0392b" }}
-          >
-            SIMULATED
-          </span>
-        )}
       </div>
 
       {geo && !regionConfirmed && (
@@ -379,7 +369,7 @@ export default function RegionForm() {
                 </span>
                 <span
                   className="text-[8px] font-mono tracking-[0.2em]"
-                  style={{ color: "rgba(201,169,110,0.6)" }}
+                  style={{ color: "rgba(242,209,109,0.6)" }}
                 >
                   {geo.country_code?.toUpperCase() || ""}
                 </span>
@@ -395,15 +385,15 @@ export default function RegionForm() {
                 style={{ color: "rgba(236,232,223,0.3)" }}
               >
                 <span>
-                  <span style={{ color: "rgba(201,169,110,0.6)" }}>LAT </span>
+                  <span style={{ color: "rgba(242,209,109,0.6)" }}>LAT </span>
                   {geo.lat?.toFixed(4)}
                 </span>
                 <span>
-                  <span style={{ color: "rgba(201,169,110,0.6)" }}>LON </span>
+                  <span style={{ color: "rgba(242,209,109,0.6)" }}>LON </span>
                   {geo.lon?.toFixed(4)}
                 </span>
                 {geo.bbox && (
-                  <span style={{ color: "rgba(201,169,110,0.4)" }}>[BBOX]</span>
+                  <span style={{ color: "rgba(242,209,109,0.4)" }}>[BBOX]</span>
                 )}
               </div>
 
@@ -437,7 +427,7 @@ export default function RegionForm() {
                   type="button"
                   onClick={() => store.setRegionConfirmed(false)}
                   className="mt-2 text-[9px] font-mono uppercase tracking-wider"
-                  style={{ color: "rgba(201,169,110,0.7)" }}
+                  style={{ color: "rgba(242,209,109,0.7)" }}
                 >
                   Change area
                 </button>
@@ -451,19 +441,19 @@ export default function RegionForm() {
       <div
         className="px-3 py-2 border"
         style={{
-          borderColor: "rgba(201,169,110,0.15)",
-          background: "rgba(201,169,110,0.04)",
+          borderColor: "rgba(242,209,109,0.15)",
+          background: "rgba(242,209,109,0.04)",
         }}
       >
         <div
           className="text-[8px] font-mono uppercase tracking-[0.25em] mb-1"
-          style={{ color: "rgba(201,169,110,0.5)" }}
+          style={{ color: "rgba(242,209,109,0.5)" }}
         >
           Forecast Window
         </div>
         <div
           className="text-[11px] font-mono tracking-widest"
-          style={{ color: "#c9a96e" }}
+          style={{ color: "#f2d16d" }}
         >
           {forecastDate} · 24H
         </div>
@@ -489,20 +479,20 @@ export default function RegionForm() {
       >
         <span
           className="absolute inset-0 transition-colors"
-          style={{ border: "1px solid rgba(201,169,110,0.4)" }}
+          style={{ border: "1px solid rgba(242,209,109,0.4)" }}
         />
         <span
           className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-          style={{ background: "#c9a96e" }}
+          style={{ background: "#f2d16d" }}
         />
 
         <span
-          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#c9a96e] group-hover:text-[#0a0907]"
+          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#f2d16d] group-hover:text-[#0a0907]"
           style={{ fontSize: "0.65rem" }}
         >
           {isRunning ?
             <>
-              <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-[#f2d16d] group-hover:bg-[#0a0907] animate-pulse" />
               Generating Forecast...
             </>
           : !regionConfirmed && geo ?

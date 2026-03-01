@@ -96,12 +96,12 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
         className="w-full flex items-center justify-between gap-2 px-3 py-2.5 transition-all outline-none text-xs font-mono tracking-wide"
         style={{
           background: "rgba(236,232,223,0.03)",
-          border: `1px solid ${open ? "#c9a96e" : "rgba(201,169,110,0.15)"}`,
+          border: `1px solid ${open ? "#f2d16d" : "rgba(242,209,109,0.15)"}`,
           color: value ? "#ece8df" : "rgba(236,232,223,0.4)",
         }}
       >
         <span>{displayLabel}</span>
-        <span style={{ color: "rgba(201,169,110,0.5)" }}>▾</span>
+        <span style={{ color: "rgba(242,209,109,0.5)" }}>▾</span>
       </button>
 
       <AnimatePresence>
@@ -120,20 +120,20 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
               className="absolute z-50 top-full left-0 mt-1 w-[280px]"
               style={{
                 background: "#0a0907",
-                border: "1px solid rgba(201,169,110,0.3)",
+                border: "1px solid rgba(242,209,109,0.3)",
                 borderTop: "none",
               }}
             >
               {/* Month header */}
               <div
                 className="flex items-center justify-between px-3 py-2.5 border-b"
-                style={{ borderColor: "rgba(201,169,110,0.15)" }}
+                style={{ borderColor: "rgba(242,209,109,0.15)" }}
               >
                 <button
                   type="button"
                   onClick={prevMonth}
-                  className="p-1 px-2 hover:bg-[rgba(201,169,110,0.1)] transition-colors text-[10px]"
-                  style={{ color: "#c9a96e", fontFamily: "monospace" }}
+                  className="p-1 px-2 hover:bg-[rgba(242,209,109,0.1)] transition-colors text-[10px]"
+                  style={{ color: "#f2d16d", fontFamily: "monospace" }}
                   aria-label="Previous month"
                 >
                   [‹]
@@ -148,7 +148,7 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                   <button
                     type="button"
                     onClick={() => setShowYearPicker(true)}
-                    className="text-[10px] uppercase font-mono tracking-widest hover:bg-[rgba(201,169,110,0.1)] transition-colors px-1 rounded"
+                    className="text-[10px] uppercase font-mono tracking-widest hover:bg-[rgba(242,209,109,0.1)] transition-colors px-1 rounded"
                     style={{ color: "#ece8df" }}
                   >
                     {year} ▾
@@ -157,8 +157,8 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                 <button
                   type="button"
                   onClick={nextMonth}
-                  className="p-1 px-2 hover:bg-[rgba(201,169,110,0.1)] transition-colors text-[10px]"
-                  style={{ color: "#c9a96e", fontFamily: "monospace" }}
+                  className="p-1 px-2 hover:bg-[rgba(242,209,109,0.1)] transition-colors text-[10px]"
+                  style={{ color: "#f2d16d", fontFamily: "monospace" }}
                   aria-label="Next month"
                 >
                   [›]
@@ -170,11 +170,11 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                 <div className="p-3">
                   <div
                     className="flex items-center justify-between mb-3 border-b pb-2"
-                    style={{ borderColor: "rgba(201,169,110,0.15)" }}
+                    style={{ borderColor: "rgba(242,209,109,0.15)" }}
                   >
                     <span
                       className="text-[10px] uppercase font-mono tracking-widest"
-                      style={{ color: "#c9a96e" }}
+                      style={{ color: "#f2d16d" }}
                     >
                       Select Year
                     </span>
@@ -203,15 +203,15 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                           style={{
                             background:
                               isCurrentYear ?
-                                "rgba(201,169,110,0.2)"
+                                "rgba(242,209,109,0.2)"
                               : "rgba(236,232,223,0.03)",
-                            color: isCurrentYear ? "#c9a96e" : "#ece8df",
-                            border: `1px solid ${isCurrentYear ? "#c9a96e" : "rgba(201,169,110,0.15)"}`,
+                            color: isCurrentYear ? "#f2d16d" : "#ece8df",
+                            border: `1px solid ${isCurrentYear ? "#f2d16d" : "rgba(242,209,109,0.15)"}`,
                           }}
                           onMouseEnter={(e) => {
                             if (!isCurrentYear) {
                               e.currentTarget.style.background =
-                                "rgba(201,169,110,0.1)";
+                                "rgba(242,209,109,0.1)";
                             }
                           }}
                           onMouseLeave={(e) => {
@@ -265,9 +265,9 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                             style={{
                               ...(selected ?
                                 {
-                                  background: "rgba(201,169,110,0.2)",
-                                  color: "#c9a96e",
-                                  border: "1px solid #c9a96e",
+                                  background: "rgba(242,209,109,0.2)",
+                                  color: "#f2d16d",
+                                  border: "1px solid #f2d16d",
                                 }
                               : isToday ?
                                 {
@@ -283,7 +283,7 @@ export default function CalendarPicker({ value, onChange, label = "Date" }) {
                             onMouseEnter={(e) => {
                               if (!selected && day) {
                                 e.currentTarget.style.background =
-                                  "rgba(201,169,110,0.1)";
+                                  "rgba(242,209,109,0.1)";
                                 e.currentTarget.style.color = "#ece8df";
                               }
                             }}
