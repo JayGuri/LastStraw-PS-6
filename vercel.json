@@ -5,52 +5,6 @@
   "outputDirectory": "frontend/dist",
   "public": true,
   "framework": "vite",
-  "env": {
-    "VITE_API_URL": {
-      "description": "Backend API URL (should be your Vercel domain + /api or just relative /api)",
-      "placeholder": "http://localhost:3000/api"
-    },
-    "VITE_CESIUM_TOKEN": {
-      "description": "Cesium.js access token",
-      "placeholder": "your-cesium-token"
-    },
-    "VITE_RAZORPAY_KEY": {
-      "description": "Razorpay public key",
-      "placeholder": "your-razorpay-key"
-    },
-    "VITE_RAZORPAY_ID": {
-      "description": "Razorpay merchant ID",
-      "placeholder": "your-razorpay-id"
-    },
-    "VITE_MOCK_MODE": {
-      "description": "Enable mock data mode (true/false)",
-      "placeholder": "false"
-    },
-    "MONGO_DB_CONNECTION_STRING": {
-      "description": "MongoDB Atlas connection string",
-      "placeholder": "mongodb+srv://user:pass@cluster.mongodb.net/dbname"
-    },
-    "JWT_SECRET": {
-      "description": "Secret key for JWT signing (generate with: openssl rand -hex 32)",
-      "placeholder": "your-secret-key"
-    },
-    "GOOGLE_CLIENT_ID": {
-      "description": "Google OAuth Client ID",
-      "placeholder": "xxx.apps.googleusercontent.com"
-    },
-    "GOOGLE_CLIENT_SECRET": {
-      "description": "Google OAuth Client Secret",
-      "placeholder": "GOCSPX-xxx"
-    },
-    "GOOGLE_REDIRECT_URI": {
-      "description": "Google OAuth Redirect URI (should point to your Vercel domain)",
-      "placeholder": "https://your-domain.vercel.app/api/auth/google/callback"
-    },
-    "FRONTEND_URL": {
-      "description": "Frontend domain URL",
-      "placeholder": "https://your-domain.vercel.app"
-    }
-  },
   "headers": [
     {
       "source": "/assets/(.*)",
