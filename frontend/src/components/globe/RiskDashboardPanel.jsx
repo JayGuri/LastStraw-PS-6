@@ -5,6 +5,7 @@ import { useRiskStore } from "../../stores/riskStore.js";
 import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 import CalendarPicker from "../ui/CalendarPicker.jsx";
 import { geocodeApi } from "../../api/geocodeApi.js";
+import { generateRiskReport } from "../../utils/reports/generateRiskReport.js";
 
 export default function RiskDashboardPanel() {
   // Local form state
@@ -271,8 +272,18 @@ export default function RiskDashboardPanel() {
             exit={{ opacity: 0, y: 4 }}
             className="space-y-3"
           >
-            <div className="text-[10px] uppercase tracking-widest text-text-3 font-mono border-b border-[rgba(201,169,110,0.15)] pb-2">
-              GLOBAL METRICS
+            <div className="text-[10px] uppercase tracking-widest text-text-3 font-mono border-b border-[rgba(201,169,110,0.15)] pb-2 flex justify-between items-center">
+              <span>GLOBAL METRICS</span>
+              <button
+                onClick={() => generateRiskReport(globalMetrics, districtSummaries)}
+                className="text-[9px] font-mono uppercase tracking-widest px-2 py-1 border rounded transition-colors hover:bg-[rgba(201,169,110,0.1)]"
+                style={{
+                  borderColor: "rgba(201,169,110,0.4)",
+                  color: "#c9a96e",
+                }}
+              >
+                Export PDF
+              </button>
             </div>
 
             {/* Metrics Grid */}

@@ -3,6 +3,7 @@ import * as Cesium from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
 import { useGlobeStore } from "../../stores/globeStore.js";
 import { useRiskStore } from "../../stores/riskStore.js";
+import { useLifelineStore } from "../../stores/lifelineStore.js";
 
 const SEVERITY_CFG = {
   critical: {
@@ -35,6 +36,7 @@ export default function CesiumGlobe() {
   const geocoded = useGlobeStore((s) => s.geocoded);
   const result = useGlobeStore((s) => s.result);
   const districtSummaries = useRiskStore((s) => s.districtSummaries);
+  const lifelineData = useLifelineStore((s) => s.data);
 
   // ──────────────────────────────────────────────────────────
   // 1. INIT VIEWER
@@ -295,12 +297,28 @@ export default function CesiumGlobe() {
       });
     }
 
-    // Green highlight: use actual boundary polygon only when Nominatim returns Polygon/MultiPolygon.
-    // Otherwise Nominatim often returns a Point (single dot); in that case we show the bbox so the
-    // region extent is always clear.
-    const greenFill =
-      Cesium.Color.fromCssColorString("#16a34a").withAlpha(0.35);
-    const greenEdge = Cesium.Color.fromCssColorString("#22c55e");
+    // Determine the color based on if we have a result. If we have a result, color it the alert color. Otherwise green.
+    let baseColor = Cesium.Color.fromCssColorString("#16a34a");
+    let outlineAlpha = 1.0;
+    let fillAlpha = 0.35;
+
+    if (result && result.alert_level) {
+      const ALERT_COLORS = {
+        LOW: "#22c55e",
+        MEDIUM: "#c9a96e",
+        HIGH: "#dc7828",
+        CRITICAL: "#c0392b",
+      };
+      baseColor = Cesium.Color.fromCssColorString(
+        ALERT_COLORS[result.alert_level] ?? "#c9a96e",
+      );
+      outlineAlpha = 0.8;
+      fillAlpha = 0.5;
+    }
+
+    const currentEdge = baseColor.withAlpha(outlineAlpha);
+    const currentFill = baseColor.withAlpha(fillAlpha);
+
     const hasAreaGeometry =
       geocoded.boundary_geojson &&
       ["Polygon", "MultiPolygon"].includes(geocoded.boundary_geojson.type);
@@ -309,9 +327,9 @@ export default function CesiumGlobe() {
       const boundaryDs = new Cesium.GeoJsonDataSource("region-boundary");
       boundaryDs
         .load(geocoded.boundary_geojson, {
-          stroke: greenEdge,
+          stroke: currentEdge,
           strokeWidth: 2.5,
-          fill: greenFill,
+          fill: currentFill,
           clampToGround: true,
         })
         .then(() => {
@@ -321,7 +339,7 @@ export default function CesiumGlobe() {
                 new Cesium.PolylineGlowMaterialProperty({
                   glowPower: 0.5,
                   taperPower: 1.0,
-                  color: greenEdge,
+                  color: currentEdge,
                 });
               entity.polyline.width = 5;
               entity.polyline.clampToGround = true;
@@ -329,9 +347,9 @@ export default function CesiumGlobe() {
                 Cesium.ClassificationType.TERRAIN;
             }
             if (entity.polygon) {
-              entity.polygon.material = greenFill;
+              entity.polygon.material = currentFill;
               entity.polygon.outline = true;
-              entity.polygon.outlineColor = greenEdge;
+              entity.polygon.outlineColor = currentEdge;
               entity.polygon.outlineWidth = 2.5;
               entity.polygon.clampToGround = true;
               entity.polygon.classificationType =
@@ -350,28 +368,16 @@ export default function CesiumGlobe() {
         id: "region-boundary-bbox",
         rectangle: {
           coordinates: Cesium.Rectangle.fromDegrees(w, s, e, n),
-          material: greenFill,
+          material: currentFill,
           outline: true,
-          outlineColor: greenEdge,
+          outlineColor: currentEdge,
           outlineWidth: 2.5,
         },
       });
     }
 
-    // Small center pin for reference (secondary to the polygon/bbox)
-    viewer.entities.add({
-      id: "region-center-pin",
-      position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
-      point: {
-        pixelSize: 6,
-        color: greenEdge,
-        outlineColor: Cesium.Color.fromCssColorString("#16a34a").withAlpha(0.5),
-        outlineWidth: 4,
-        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
-      },
-    });
-  }, [geocoded]);
+    // Centered pin removed so the Forecast logic can claim the spot without overlay clashes.
+  }, [geocoded, result]);
 
   // ──────────────────────────────────────────────────────────
   // 3. RENDER FORECAST RESULT
@@ -388,43 +394,7 @@ export default function CesiumGlobe() {
 
     if (!result) return;
 
-    // Map alert level to color
-    const ALERT_CESIUM = {
-      LOW: Cesium.Color.fromCssColorString("#22c55e"),
-      MEDIUM: Cesium.Color.fromCssColorString("#c9a96e"),
-      HIGH: Cesium.Color.fromCssColorString("#dc7828"),
-      CRITICAL: Cesium.Color.fromCssColorString("#c0392b"),
-    };
-
-    const alertColor = ALERT_CESIUM[result.alert_level] ?? ALERT_CESIUM.MEDIUM;
-
-    // Render forecast pin at geocoded location
-    if (result.lat !== undefined && result.lon !== undefined) {
-      viewer.entities.add({
-        id: "forecast-pin",
-        position: Cesium.Cartesian3.fromDegrees(result.lon, result.lat, 0),
-        point: {
-          pixelSize: 18,
-          color: alertColor,
-          outlineColor: alertColor.withAlpha(0.5),
-          outlineWidth: 20,
-          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        },
-        label: {
-          text: `${(result.flood_probability * 100).toFixed(0)}% Risk`,
-          font: '12px "JetBrains Mono", monospace',
-          fillColor: Cesium.Color.WHITE.withAlpha(0.9),
-          outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
-          outlineWidth: 2,
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-          pixelOffset: new Cesium.Cartesian2(0, -20),
-          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        },
-      });
-    }
+    // Replaced forecast pin with dynamic region boundary coloring.
   }, [result]);
 
   // ──────────────────────────────────────────────────────────
@@ -435,8 +405,9 @@ export default function CesiumGlobe() {
     if (!viewer || viewer.isDestroyed()) return;
 
     // Clean up old risk districts
-    const oldRiskDs = viewer.dataSources.getByName("risk-districts");
-    oldRiskDs.forEach((ds) => viewer.dataSources.remove(ds));
+    viewer.dataSources
+      .getByName("risk-districts")
+      .forEach((ds) => viewer.dataSources.remove(ds));
 
     if (!districtSummaries || districtSummaries.length === 0) return;
 
@@ -568,6 +539,116 @@ export default function CesiumGlobe() {
       });
     }
   }, [districtSummaries]);
+
+  // ──────────────────────────────────────────────────────────
+  // 5. RENDER LIFELINE INFRASTRUCTURE
+  // ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    const viewer = viewerRef.current;
+    if (!viewer || viewer.isDestroyed()) return;
+
+    // Clean up old lifeline data
+    viewer.dataSources
+      .getByName("lifeline-infrastructure")
+      .forEach((ds) => viewer.dataSources.remove(ds));
+
+    if (!lifelineData?.geojson?.features) return;
+
+    const ds = new Cesium.CustomDataSource("lifeline-infrastructure");
+
+    function getFeatureStyle(type) {
+      switch (type) {
+        case "hospital":
+          return { color: Cesium.Color.RED, size: 14 };
+        case "school":
+          return { color: Cesium.Color.DODGERBLUE, size: 12 };
+        case "place_of_worship":
+          return { color: Cesium.Color.PURPLE, size: 12 };
+        case "residential_building":
+          return { color: Cesium.Color.LIMEGREEN, size: 8 };
+        case "commercial_building":
+          return { color: Cesium.Color.GOLD, size: 10 };
+        case "building":
+          return { color: Cesium.Color.GRAY.withAlpha(0.6), size: 4 };
+        default:
+          return { color: Cesium.Color.WHITE, size: 6 };
+      }
+    }
+
+    let allWest = Infinity,
+      allEast = -Infinity,
+      allSouth = Infinity,
+      allNorth = -Infinity;
+
+    lifelineData.geojson.features.forEach((feature) => {
+      if (
+        feature.geometry.type === "Point" &&
+        feature.geometry.coordinates.length >= 2
+      ) {
+        const [lon, lat] = feature.geometry.coordinates;
+        allWest = Math.min(allWest, lon);
+        allEast = Math.max(allEast, lon);
+        allSouth = Math.min(allSouth, lat);
+        allNorth = Math.max(allNorth, lat);
+
+        const props = feature.properties;
+        const style = getFeatureStyle(props.feature_type);
+
+        ds.entities.add({
+          position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
+          point: {
+            pixelSize: style.size,
+            color: style.color,
+            outlineColor: Cesium.Color.BLACK,
+            outlineWidth: props.feature_type === "building" ? 0.5 : 1.5,
+            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          },
+          label:
+            props.feature_type !== "building" ?
+              {
+                text: props.name || props.feature_type,
+                font: '10px "JetBrains Mono", monospace',
+                fillColor: Cesium.Color.WHITE,
+                outlineColor: Cesium.Color.BLACK,
+                outlineWidth: 2,
+                style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                pixelOffset: new Cesium.Cartesian2(0, -15),
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                scaleByDistance: new Cesium.NearFarScalar(100, 1.0, 5000, 0.0), // Fade out labels when zoomed out
+              }
+            : undefined,
+        });
+      }
+    });
+
+    viewer.dataSources.add(ds);
+
+    if (
+      isFinite(allWest) &&
+      isFinite(allEast) &&
+      isFinite(allSouth) &&
+      isFinite(allNorth)
+    ) {
+      const padding = 0.02;
+      viewer.camera.flyTo({
+        destination: Cesium.Rectangle.fromDegrees(
+          allWest - padding,
+          allSouth - padding,
+          allEast + padding,
+          allNorth + padding,
+        ),
+        duration: 2.0,
+        easingFunction: Cesium.EasingFunction.CUBIC_IN_OUT,
+        orientation: {
+          heading: 0,
+          pitch: Cesium.Math.toRadians(-75), // Steeper top down for infrastructure parsing
+          roll: 0.0,
+        },
+      });
+    }
+  }, [lifelineData]);
 
   return (
     <div

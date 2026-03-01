@@ -8,6 +8,7 @@ import StatCounter from "../components/common/StatCounter.jsx";
 import GeoSearchInput from "../components/ui/GeoSearchInput.jsx";
 import CalendarPicker from "../components/ui/CalendarPicker.jsx";
 import { geocodeApi } from "../api/geocodeApi.js";
+import { generateInsightsReport } from "../utils/reports/generateInsightsReport.js";
 
 // ── Sub-Component: DataSourceBadge ──────────────────────────
 function DataSourceBadge() {
@@ -1161,6 +1162,20 @@ export default function FloodInsights() {
                   transition={{ duration: 0.25 }}
                   className="space-y-4"
                 >
+                  {/* Export Button */}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => generateInsightsReport(selectedRun)}
+                      className="text-[9px] font-mono uppercase tracking-widest px-3 py-1.5 border rounded transition-colors hover:bg-[rgba(201,169,110,0.1)]"
+                      style={{
+                        borderColor: "rgba(201,169,110,0.4)",
+                        color: "#c9a96e",
+                      }}
+                    >
+                      Export PDF
+                    </button>
+                  </div>
+
                   {/* Row 1: Key metrics grid */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <StatCard

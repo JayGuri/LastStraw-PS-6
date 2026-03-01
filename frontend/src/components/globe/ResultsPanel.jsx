@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useGlobeStore } from "../../stores/globeStore.js";
+import { generateDetectionReport } from "../../utils/reports/generateDetectionReport.js";
 
 const ALERT_STYLES = {
   LOW: {
@@ -52,18 +53,20 @@ function AlertBadge({ alertLevel }) {
 
 export default function ResultsPanel() {
   const result = useGlobeStore((s) => s.result);
+  const geocoded = useGlobeStore((s) => s.geocoded);
 
   if (!result) return null;
 
   const {
     flood_probability,
     alert_level,
-    window_hours,
-    latest_timestamp,
+    forecast_horizon_hours,
+    based_on_data_until,
+    peak_flood_time,
     features_snapshot = {},
   } = result;
 
-  const probabilityPercent = (flood_probability * 100).toFixed(0);
+  const probabilityPercent = (flood_probability * 100).toFixed(2);
 
   return (
     <motion.div
@@ -105,6 +108,17 @@ export default function ResultsPanel() {
               Flood Probability
             </div>
           </div>
+
+          <button
+            onClick={() => generateDetectionReport(result, geocoded)}
+            className="text-[9px] font-mono uppercase tracking-widest px-3 py-1.5 border rounded transition-colors hover:bg-[rgba(201,169,110,0.1)]"
+            style={{
+              borderColor: "rgba(201,169,110,0.4)",
+              color: "#c9a96e",
+            }}
+          >
+            Export PDF
+          </button>
         </div>
       </div>
 
@@ -120,11 +134,19 @@ export default function ResultsPanel() {
           >
             Forecast Window
           </span>
+          <span className="text-[9px] font-mono" style={{ color: "#c9a96e" }}>
+            {forecast_horizon_hours}H
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
           <span
-            className="text-[9px] font-mono"
-            style={{ color: "#c9a96e" }}
+            className="text-[9px] font-mono tracking-widest uppercase"
+            style={{ color: "rgba(236,232,223,0.4)" }}
           >
-            {window_hours}H
+            Peak Flood Est.
+          </span>
+          <span className="text-[9px] font-mono" style={{ color: "#c0392b" }}>
+            {peak_flood_time}
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -138,7 +160,7 @@ export default function ResultsPanel() {
             className="text-[9px] font-mono"
             style={{ color: "rgba(236,232,223,0.6)" }}
           >
-            {latest_timestamp}
+            {based_on_data_until?.replace("+00:00", "")}
           </span>
         </div>
       </div>
@@ -198,9 +220,9 @@ export default function ResultsPanel() {
             },
           ].map((feature) => {
             const displayValue =
-              feature.decimals !== undefined
-                ? feature.value?.toFixed(feature.decimals)
-                : Math.round(feature.value ?? 0);
+              feature.decimals !== undefined ?
+                feature.value?.toFixed(feature.decimals)
+              : Math.round(feature.value ?? 0);
 
             return (
               <div

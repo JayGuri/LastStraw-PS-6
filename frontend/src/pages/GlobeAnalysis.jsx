@@ -5,8 +5,11 @@ import RegionForm from "../components/globe/RegionForm.jsx";
 import ResultsPanel from "../components/globe/ResultsPanel.jsx";
 import ProgressOverlay from "../components/globe/ProgressOverlay.jsx";
 import RiskDashboardPanel from "../components/globe/RiskDashboardPanel.jsx";
+import LifelinePanel from "../components/globe/LifelinePanel.jsx";
+import GlobeLegend from "../components/globe/GlobeLegend.jsx";
 import { useGlobeStore } from "../stores/globeStore.js";
 import { useRiskStore } from "../stores/riskStore.js";
+import { useLifelineStore } from "../stores/lifelineStore.js";
 
 const STATUS_CONFIG = {
   idle: { label: "IDLE", style: "text-text-3 border-white/10" },
@@ -33,7 +36,9 @@ export default function GlobeAnalysis() {
   const status = useGlobeStore((s) => s.status);
   const result = useGlobeStore((s) => s.result);
   const geocoded = useGlobeStore((s) => s.geocoded);
+  const hardResetGlobe = useGlobeStore((s) => s.hardReset);
   const clearRiskData = useRiskStore((s) => s.clearRiskData);
+  const clearLifelineData = useLifelineStore((s) => s.clearLifelineData);
 
   const isRunning = [
     "queued",
@@ -43,9 +48,37 @@ export default function GlobeAnalysis() {
   ].includes(status);
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.idle;
 
+  const isRiskLoading = useRiskStore((s) => s.isLoading);
+  const riskError = useRiskStore((s) => s.error);
+
+  const isLifelineLoading = useLifelineStore((s) => s.isLoading);
+  const lifelineError = useLifelineStore((s) => s.error);
+
+  const showOverlay = (() => {
+    if (activeView === "detection") return isRunning || status === "failed";
+    if (activeView === "risk") return isRiskLoading || !!riskError;
+    if (activeView === "lifeline") return isLifelineLoading || !!lifelineError;
+    return false;
+  })();
+
+  const handleGlobalReset = () => {
+    hardResetGlobe();
+    clearRiskData();
+    clearLifelineData();
+    setActiveView("detection");
+  };
+
   const handleViewChange = (view) => {
     setActiveView(view);
+    // Optionally clear other panel data when swapping views to keep globe clean
     if (view === "detection") {
+      clearRiskData();
+      clearLifelineData();
+    } else if (view === "risk") {
+      hardResetGlobe();
+      clearLifelineData();
+    } else if (view === "lifeline") {
+      hardResetGlobe();
       clearRiskData();
     }
   };
@@ -83,15 +116,25 @@ export default function GlobeAnalysis() {
             </h1>
           </div>
 
-          <div className="flex flex-col items-end gap-2">
-            {/* Status chip */}
-            <div
-              className={`px-2 py-0.5 text-[10px] uppercase font-mono tracking-widest border bg-transparent ${cfg.style}`}
-            >
-              {isRunning && (
-                <span className="w-1.5 h-1.5 bg-[#c9a96e] inline-block mb-[1px] mr-2" />
-              )}
-              {cfg.label}
+          <div className="flex flex-col items-end gap-3">
+            <div className="flex items-center gap-3">
+              {/* Reset button */}
+              <button
+                onClick={handleGlobalReset}
+                className="px-2 py-0.5 text-[10px] uppercase font-mono tracking-widest border transition-colors border-red-900/40 text-red-500 hover:bg-red-900/20"
+              >
+                RESET GLOBE
+              </button>
+
+              {/* Status chip */}
+              <div
+                className={`px-2 py-0.5 text-[10px] uppercase font-mono tracking-widest border bg-transparent ${cfg.style}`}
+              >
+                {isRunning && (
+                  <span className="w-1.5 h-1.5 bg-[#c9a96e] inline-block mb-[1px] mr-2" />
+                )}
+                {cfg.label}
+              </div>
             </div>
 
             {/* Region display */}
@@ -117,8 +160,9 @@ export default function GlobeAnalysis() {
             style={{ border: "1px solid rgba(201,169,110,0.4)" }}
           >
             <CesiumGlobe />
-            {isRunning && <ProgressOverlay />}
-            {status === "failed" && <ProgressOverlay />}
+            {showOverlay && <ProgressOverlay activeView={activeView} />}
+
+            <GlobeLegend activeView={activeView} />
 
             {/* Corner brackets */}
             <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#c9a96e] z-10" />
@@ -136,10 +180,10 @@ export default function GlobeAnalysis() {
             <div className="flex gap-2 border-b border-[rgba(201,169,110,0.15)] pb-4">
               <motion.button
                 onClick={() => handleViewChange("detection")}
-                className={`flex-1 px-3 py-2 text-xs uppercase tracking-widest font-mono border transition-all duration-200 ${
-                  activeView === "detection"
-                    ? "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
-                    : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                className={`flex-1 px-2 py-2 text-[10px] uppercase tracking-widest font-mono border transition-all duration-200 ${
+                  activeView === "detection" ?
+                    "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
+                  : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
                 }`}
                 whileHover={activeView !== "detection" ? { y: -1 } : {}}
               >
@@ -147,26 +191,39 @@ export default function GlobeAnalysis() {
               </motion.button>
               <motion.button
                 onClick={() => handleViewChange("risk")}
-                className={`flex-1 px-3 py-2 text-xs uppercase tracking-widest font-mono border transition-all duration-200 ${
-                  activeView === "risk"
-                    ? "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
-                    : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                className={`flex-1 px-2 py-2 text-[10px] uppercase tracking-widest font-mono border transition-all duration-200 ${
+                  activeView === "risk" ?
+                    "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
+                  : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
                 }`}
                 whileHover={activeView !== "risk" ? { y: -1 } : {}}
               >
-                RISK DASHBOARD
+                RISK
+              </motion.button>
+              <motion.button
+                onClick={() => handleViewChange("lifeline")}
+                className={`flex-1 px-2 py-2 text-[10px] uppercase tracking-widest font-mono border transition-all duration-200 ${
+                  activeView === "lifeline" ?
+                    "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
+                  : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                }`}
+                whileHover={activeView !== "lifeline" ? { y: -1 } : {}}
+              >
+                LIFELINE
               </motion.button>
             </div>
 
             {/* Conditional Content */}
-            {activeView === "detection" ? (
+            {activeView === "detection" && (
               <>
                 <RegionForm />
                 {result && <ResultsPanel />}
               </>
-            ) : (
-              <RiskDashboardPanel />
             )}
+
+            {activeView === "risk" && <RiskDashboardPanel />}
+
+            {activeView === "lifeline" && <LifelinePanel />}
           </div>
         </div>
       </div>
