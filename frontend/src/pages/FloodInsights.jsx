@@ -827,6 +827,84 @@ function AIInsightPanel({ selectedRun }) {
   );
 }
 
+// ── Sub-Component: AnalysisThinkingPanel ───────────────────
+const THINKING_STEPS = [
+  "Initializing analysis pipeline...",
+  "Collecting Sentinel-1 SAR imagery...",
+  "Calibrating radiometric corrections...",
+  "Computing SAR backscatter difference...",
+  "Detecting flood boundaries...",
+  "Computing flood statistics...",
+  "Assessing risk level...",
+  "Formulating AI insights...",
+  "Generating assessment report...",
+];
+
+function AnalysisThinkingPanel() {
+  const [stepIdx, setStepIdx] = React.useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStepIdx((i) => (i + 1) % THINKING_STEPS.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col items-center justify-center"
+      style={{ minHeight: "420px" }}
+    >
+      {/* Animated orb / spinner */}
+      <div className="relative mb-8">
+        {/* outer ring */}
+        <motion.div
+          className="w-16 h-16 rounded-full border"
+          style={{ borderColor: "rgba(201,169,110,0.3)" }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+        {/* inner pulsing dot */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="w-2 h-2 rounded-full" style={{ background: "#c9a96e" }} />
+        </motion.div>
+      </div>
+
+      {/* Cycling status message */}
+      <div style={{ height: "24px" }} className="overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={stepIdx}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+            className="font-mono text-[11px] text-center tracking-widest uppercase"
+            style={{ color: "#c9a96e" }}
+          >
+            {THINKING_STEPS[stepIdx]}
+          </motion.p>
+        </AnimatePresence>
+      </div>
+
+      {/* Subtitle */}
+      <p
+        className="mt-3 font-mono text-[9px] uppercase tracking-[0.3em]"
+        style={{ color: "rgba(236,232,223,0.25)" }}
+      >
+        SAR · Google Earth Engine · Gemini AI
+      </p>
+    </motion.div>
+  );
+}
+
 // ── Sub-Component: LoadingSkeleton ─────────────────────────
 function LoadingSkeleton() {
   return (
@@ -1059,8 +1137,9 @@ export default function FloodInsights() {
           {/* RIGHT PANEL: run detail */}
           <div className="lg:col-span-2 overflow-y-auto lg:max-h-[calc(100vh-10rem)] pr-1">
             <AnimatePresence mode="wait">
-              {!selectedRunId && !detailLoading && <EmptyState key="empty" />}
-              {detailLoading && (
+              {analyzeLoading && <AnalysisThinkingPanel key="thinking" />}
+              {!analyzeLoading && !selectedRunId && !detailLoading && <EmptyState key="empty" />}
+              {!analyzeLoading && detailLoading && (
                 <motion.div
                   key="loading"
                   initial={{ opacity: 0 }}
@@ -1070,10 +1149,10 @@ export default function FloodInsights() {
                   <LoadingSkeleton />
                 </motion.div>
               )}
-              {detailError && !detailLoading && (
+              {!analyzeLoading && detailError && !detailLoading && (
                 <ErrorState key="error" message={detailError} />
               )}
-              {selectedRun && !detailLoading && (
+              {!analyzeLoading && selectedRun && !detailLoading && (
                 <motion.div
                   key={selectedRun.run_id}
                   initial={{ opacity: 0, y: 12 }}
