@@ -5,6 +5,7 @@ import { useRiskStore } from "../../stores/riskStore.js";
 import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 import CalendarPicker from "../ui/CalendarPicker.jsx";
 import { geocodeApi } from "../../api/geocodeApi.js";
+import { generateRiskReport } from "../../utils/reports/generateRiskReport.js";
 
 export default function RiskDashboardPanel() {
   // Local form state
@@ -143,7 +144,7 @@ export default function RiskDashboardPanel() {
           exit={{ opacity: 0 }}
           className="space-y-3"
         >
-          <div className="text-[10px] uppercase tracking-widest text-[rgba(201,169,110,0.6)] font-mono border-b border-[rgba(201,169,110,0.15)] pb-2 flex items-center justify-between">
+          <div className="text-[10px] uppercase tracking-widest text-[rgba(242,209,109,0.6)] font-mono border-b border-[rgba(242,209,109,0.15)] pb-2 flex items-center justify-between">
             <span>RISK ANALYSIS</span>
           </div>
 
@@ -215,14 +216,14 @@ export default function RiskDashboardPanel() {
               className="w-full text-xs font-mono tracking-wide px-3 py-2.5 transition-all outline-none"
               style={{
                 background: "rgba(236,232,223,0.03)",
-                border: "1px solid rgba(201,169,110,0.15)",
+                border: "1px solid rgba(242,209,109,0.15)",
                 color: "#ece8df",
               }}
               onFocusCapture={(e) => {
-                e.target.style.borderColor = "#c9a96e";
+                e.target.style.borderColor = "#f2d16d";
               }}
               onBlurCapture={(e) => {
-                e.target.style.borderColor = "rgba(201,169,110,0.15)";
+                e.target.style.borderColor = "rgba(242,209,109,0.15)";
               }}
             />
           </div>
@@ -240,20 +241,20 @@ export default function RiskDashboardPanel() {
           >
             <span
               className="absolute inset-0 transition-colors"
-              style={{ border: "1px solid rgba(201,169,110,0.4)" }}
+              style={{ border: "1px solid rgba(242,209,109,0.4)" }}
             />
             <span
               className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-              style={{ background: "#c9a96e" }}
+              style={{ background: "#f2d16d" }}
             />
 
             <span
-              className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#c9a96e] group-hover:text-[#0a0907]"
+              className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#f2d16d] group-hover:text-[#0a0907]"
               style={{ fontSize: "0.65rem" }}
             >
               {isLoading ?
                 <>
-                  <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
+                  <span className="w-1.5 h-1.5 bg-[#f2d16d] group-hover:bg-[#0a0907] animate-pulse" />
                   ANALYZING...
                 </>
               : "RUN ANALYSIS"}
@@ -271,14 +272,24 @@ export default function RiskDashboardPanel() {
             exit={{ opacity: 0, y: 4 }}
             className="space-y-3"
           >
-            <div className="text-[10px] uppercase tracking-widest text-text-3 font-mono border-b border-[rgba(201,169,110,0.15)] pb-2">
-              GLOBAL METRICS
+            <div className="text-[10px] uppercase tracking-widest text-text-3 font-mono border-b border-[rgba(242,209,109,0.15)] pb-2 flex justify-between items-center">
+              <span>GLOBAL METRICS</span>
+              <button
+                onClick={() => generateRiskReport(globalMetrics, districtSummaries)}
+                className="text-[9px] font-mono uppercase tracking-widest px-2 py-1 border rounded transition-colors hover:bg-[rgba(242,209,109,0.1)]"
+                style={{
+                  borderColor: "rgba(242,209,109,0.4)",
+                  color: "#f2d16d",
+                }}
+              >
+                Export PDF
+              </button>
             </div>
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(201,169,110,0.15)] rounded">
-                <div className="text-[#c9a96e] uppercase tracking-widest font-mono text-[9px] mb-1">
+              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(242,209,109,0.15)] rounded">
+                <div className="text-[#f2d16d] uppercase tracking-widest font-mono text-[9px] mb-1">
                   Population
                 </div>
                 <div className="text-[#ece8df] font-mono text-sm font-semibold">
@@ -287,8 +298,8 @@ export default function RiskDashboardPanel() {
                 </div>
               </div>
 
-              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(201,169,110,0.15)] rounded">
-                <div className="text-[#c9a96e] uppercase tracking-widest font-mono text-[9px] mb-1">
+              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(242,209,109,0.15)] rounded">
+                <div className="text-[#f2d16d] uppercase tracking-widest font-mono text-[9px] mb-1">
                   Rainfall (mm)
                 </div>
                 <div className="text-[#ece8df] font-mono text-sm font-semibold">
@@ -298,8 +309,8 @@ export default function RiskDashboardPanel() {
                 </div>
               </div>
 
-              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(201,169,110,0.15)] rounded">
-                <div className="text-[#c9a96e] uppercase tracking-widest font-mono text-[9px] mb-1">
+              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(242,209,109,0.15)] rounded">
+                <div className="text-[#f2d16d] uppercase tracking-widest font-mono text-[9px] mb-1">
                   Risk Score
                 </div>
                 <div className="text-[#ece8df] font-mono text-sm font-semibold">
@@ -308,8 +319,8 @@ export default function RiskDashboardPanel() {
                 </div>
               </div>
 
-              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(201,169,110,0.15)] rounded">
-                <div className="text-[#c9a96e] uppercase tracking-widest font-mono text-[9px] mb-1">
+              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(242,209,109,0.15)] rounded">
+                <div className="text-[#f2d16d] uppercase tracking-widest font-mono text-[9px] mb-1">
                   Classification
                 </div>
                 <div
@@ -336,8 +347,8 @@ export default function RiskDashboardPanel() {
                 </div>
               </div>
 
-              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(201,169,110,0.15)] rounded">
-                <div className="text-[#c9a96e] uppercase tracking-widest font-mono text-[9px] mb-1">
+              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(242,209,109,0.15)] rounded">
+                <div className="text-[#f2d16d] uppercase tracking-widest font-mono text-[9px] mb-1">
                   Confidence
                 </div>
                 <div className="text-[#ece8df] font-mono text-sm font-semibold">
@@ -345,8 +356,8 @@ export default function RiskDashboardPanel() {
                 </div>
               </div>
 
-              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(201,169,110,0.15)] rounded">
-                <div className="text-[#c9a96e] uppercase tracking-widest font-mono text-[9px] mb-1">
+              <div className="px-3 py-2 bg-[#0a0907] border border-[rgba(242,209,109,0.15)] rounded">
+                <div className="text-[#f2d16d] uppercase tracking-widest font-mono text-[9px] mb-1">
                   Area (km²)
                 </div>
                 <div className="text-[#ece8df] font-mono text-sm font-semibold">
@@ -357,7 +368,7 @@ export default function RiskDashboardPanel() {
             </div>
 
             {/* District Summary Header */}
-            <div className="pt-3 border-t border-[rgba(201,169,110,0.15)]">
+            <div className="pt-3 border-t border-[rgba(242,209,109,0.15)]">
               <div className="text-[10px] uppercase tracking-widest text-text-3 font-mono pb-2">
                 DISTRICT SUMMARY
               </div>
@@ -389,17 +400,17 @@ export default function RiskDashboardPanel() {
                       {/* Extra Data */}
                       <div className="mt-3 grid grid-cols-3 gap-1 text-[11px] text-[rgba(236,232,223,0.7)]">
                         <div>
-                          <span className="text-[#c9a96e]">POP: </span>
+                          <span className="text-[#f2d16d]">POP: </span>
                           {(district.population || 0).toLocaleString()}
                         </div>
                         <div className="text-center">
-                          <span className="text-[#c9a96e]">RISK: </span>
+                          <span className="text-[#f2d16d]">RISK: </span>
                           <span className={`${colors.text} font-bold`}>
                             {district.risk_score}
                           </span>
                         </div>
                         <div className="text-right">
-                          <span className="text-[#c9a96e]">AREA: </span>
+                          <span className="text-[#f2d16d]">AREA: </span>
                           {district.area_km2 || "N/A"} km²
                         </div>
                       </div>
@@ -433,13 +444,13 @@ export default function RiskDashboardPanel() {
             >
               <span
                 className="absolute inset-0 transition-colors"
-                style={{ border: "1px solid rgba(201,169,110,0.15)" }}
+                style={{ border: "1px solid rgba(242,209,109,0.15)" }}
               />
               <span
                 className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-                style={{ background: "rgba(201,169,110,0.1)" }}
+                style={{ background: "rgba(242,209,109,0.1)" }}
               />
-              <span className="relative z-10 font-mono tracking-[0.2em] uppercase transition-colors text-[10px] text-[rgba(236,232,223,0.4)] group-hover:text-[#c9a96e]">
+              <span className="relative z-10 font-mono tracking-[0.2em] uppercase transition-colors text-[10px] text-[rgba(236,232,223,0.4)] group-hover:text-[#f2d16d]">
                 NEW ANALYSIS
               </span>
             </button>

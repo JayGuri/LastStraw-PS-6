@@ -1,15 +1,10 @@
-const BASE_URL =
-  import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1';
-
-export function isMockMode() {
-  return import.meta.env.VITE_MOCK_MODE === 'true';
-}
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
 
 async function request(method, path, body) {
   try {
     const options = {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     };
     if (body !== undefined) {
       options.body = JSON.stringify(body);
@@ -31,41 +26,41 @@ async function request(method, path, body) {
     const data = await res.json();
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err?.message ?? 'Network error' };
+    return { data: null, error: err?.message ?? "Network error" };
   }
 }
 
 export const cosmeonApi = {
   /** POST /runs */
   submitRun(payload) {
-    return request('POST', '/runs', payload);
+    return request("POST", "/runs", payload);
   },
 
   /** GET /runs/{runId} */
   getRunStatus(runId) {
-    return request('GET', `/runs/${runId}`);
+    return request("GET", `/runs/${runId}`);
   },
 
   /** GET /floods/{runId}/districts */
   getDistrictResults(runId) {
-    return request('GET', `/floods/${runId}/districts`);
+    return request("GET", `/floods/${runId}/districts`);
   },
 
   /** GET /floods/{runId}/districts/{districtId}/history?months={months} */
   getDistrictHistory(runId, districtId, months = 12) {
     return request(
-      'GET',
-      `/floods/${runId}/districts/${districtId}/history?months=${months}`
+      "GET",
+      `/floods/${runId}/districts/${districtId}/history?months=${months}`,
     );
   },
 
   /** GET /floods/{runId}/districts/{districtId}/change */
   getDistrictChange(runId, districtId) {
-    return request('GET', `/floods/${runId}/districts/${districtId}/change`);
+    return request("GET", `/floods/${runId}/districts/${districtId}/change`);
   },
 
   /** GET /health */
   getHealth() {
-    return request('GET', '/health');
+    return request("GET", "/health");
   },
 };

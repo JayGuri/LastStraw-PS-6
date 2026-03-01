@@ -1,6 +1,6 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
-const RUNNING_STATUSES = ['queued', 'preprocessing', 'detecting', 'scoring']
+const RUNNING_STATUSES = ["queued", "preprocessing", "detecting", "scoring"];
 
 export const useGlobeStore = create((set, get) => ({
   // ── Region Selection ──
@@ -17,16 +17,21 @@ export const useGlobeStore = create((set, get) => ({
   /** Update only boundary/bbox (e.g. after lookup returns real admin border). */
   setGeocodedBoundary: (boundary_geojson, bbox) =>
     set((s) =>
-      s.geocoded
-        ? { geocoded: { ...s.geocoded, boundary_geojson, bbox: bbox ?? s.geocoded.bbox } }
-        : s
+      s.geocoded ?
+        {
+          geocoded: {
+            ...s.geocoded,
+            boundary_geojson,
+            bbox: bbox ?? s.geocoded.bbox,
+          },
+        }
+      : s,
     ),
 
   // User must confirm the highlighted region before analysis
   regionConfirmed: false,
   setRegionConfirmed: (v) => set({ regionConfirmed: v }),
-  clearRegionSelection: () =>
-    set({ geocoded: null, regionConfirmed: false }),
+  clearRegionSelection: () => set({ geocoded: null, regionConfirmed: false }),
 
   // Date selection
   analysisDate: null,
@@ -34,7 +39,7 @@ export const useGlobeStore = create((set, get) => ({
 
   // ── Detection Run State ──
   runId: null,
-  status: 'idle',
+  status: "idle",
   progress: 0,
   error: null,
   setRunState: (patch) => set(patch),
@@ -47,22 +52,40 @@ export const useGlobeStore = create((set, get) => ({
   selectedZone: null,
   setSelectedZone: (z) => set({ selectedZone: z }),
 
-  overlayMode: 'both',
+  overlayMode: "both",
   setOverlayMode: (m) => set({ overlayMode: m }),
 
-  barMetric: 'flood_depth',
+  barMetric: "flood_depth",
   setBarMetric: (m) => set({ barMetric: m }),
 
   // ── Actions ──
-  resetRun: () => set({
-    runId: null,
-    status: 'idle',
-    progress: 0,
-    error: null,
-    result: null,
-    selectedZone: null,
-  }),
+  resetRun: () =>
+    set({
+      runId: null,
+      status: "idle",
+      progress: 0,
+      error: null,
+      result: null,
+      selectedZone: null,
+    }),
+
+  // Fully flush everything out
+  hardReset: () =>
+    set({
+      country: null,
+      state: null,
+      city: null,
+      geocoded: null,
+      regionConfirmed: false,
+      analysisDate: null,
+      runId: null,
+      status: "idle",
+      progress: 0,
+      error: null,
+      result: null,
+      selectedZone: null,
+    }),
 
   // Computed
   isRunning: () => RUNNING_STATUSES.includes(get().status),
-}))
+}));

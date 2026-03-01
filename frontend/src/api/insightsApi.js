@@ -6,6 +6,10 @@ const RISK_BASE_URL =
   import.meta.env.VITE_RISK_API_URL ??
   "https://aishwaryaaaaa-enhanced-risk-api.hf.space";
 
+const LIFELINE_BASE_URL =
+  import.meta.env.VITE_LIFELINE_API_URL ??
+  "https://harshilforworks-lifeline-engine.hf.space";
+
 async function request(baseUrl, method, path, body) {
   try {
     const options = {
@@ -42,6 +46,11 @@ export const insightsApi = {
   /** POST /analyze/risk — Trigger a new risk analysis */
   analyzeRisk(payload) {
     return request(RISK_BASE_URL, "POST", "/analyze/risk", payload);
+  },
+
+  /** POST /flood-infrastructure — Lifeline Engine */
+  analyzeLifeline(payload) {
+    return request(LIFELINE_BASE_URL, "POST", "/flood-infrastructure", payload);
   },
 
   /** GET /runs — Fetch all historical runs */

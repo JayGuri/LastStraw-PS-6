@@ -2,7 +2,12 @@ import React, { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobeStore } from "../../stores/globeStore.js";
 import { useAppStore } from "../../stores/appStore.js";
-import { geocodeApi, parseNominatimResult, hasAreaGeometry, sortResultsByBoundary } from "../../api/geocodeApi.js";
+import {
+  geocodeApi,
+  parseNominatimResult,
+  hasAreaGeometry,
+  sortResultsByBoundary,
+} from "../../api/geocodeApi.js";
 import { floodDetectApi } from "../../api/floodDetectApi.js";
 import { mockFloodResponse } from "../../data/mockFloodResponse.js";
 import GeoSearchInput from "../ui/GeoSearchInput.jsx";
@@ -10,8 +15,8 @@ import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RegionForm() {
   const store = useGlobeStore();
-  const isMockMode = useAppStore((s) => s.isMockMode);
   const showNotification = useAppStore((s) => s.showNotification);
+  const geocoded = store.geocoded;
 
   // Three independent field states
   const [cityQuery, setCityQuery] = useState("");
@@ -29,6 +34,18 @@ export default function RegionForm() {
   const cityDebounce = useRef(null);
   const stateDebounce = useRef(null);
   const countryDebounce = useRef(null);
+
+  // When store is violently cleared (e.g. from tab swap or reset), clear inputs
+  React.useEffect(() => {
+    if (!geocoded) {
+      setCityQuery("");
+      setStateQuery("");
+      setCountryQuery("");
+      setCityResults([]);
+      setStateResults([]);
+      setCountryResults([]);
+    }
+  }, [geocoded]);
 
   // ── Debounced searches ──
   const searchCity = useCallback((q) => {
@@ -75,17 +92,20 @@ export default function RegionForm() {
 
   // Always fetch the actual admin boundary (Polygon/MultiPolygon) for the selected place
   // so the globe shows the real border (e.g. Bharuch-style outline), not just bbox or point.
-  const enrichGeocodedWithBoundary = useCallback((item, currentGeocoded) => {
-    const osmType = item.osm_type ?? currentGeocoded?.osm_type;
-    const osmId = item.osm_id ?? currentGeocoded?.osm_id;
-    if (!osmType || osmId == null) return;
-    geocodeApi.lookup(osmType, osmId).then(({ data }) => {
-      if (!data?.[0]) return;
-      const looked = parseNominatimResult(data[0]);
-      if (hasAreaGeometry(looked))
-        store.setGeocodedBoundary(looked.boundary_geojson, looked.bbox);
-    });
-  }, [store]);
+  const enrichGeocodedWithBoundary = useCallback(
+    (item, currentGeocoded) => {
+      const osmType = item.osm_type ?? currentGeocoded?.osm_type;
+      const osmId = item.osm_id ?? currentGeocoded?.osm_id;
+      if (!osmType || osmId == null) return;
+      geocodeApi.lookup(osmType, osmId).then(({ data }) => {
+        if (!data?.[0]) return;
+        const looked = parseNominatimResult(data[0]);
+        if (hasAreaGeometry(looked))
+          store.setGeocodedBoundary(looked.boundary_geojson, looked.bbox);
+      });
+    },
+    [store],
+  );
 
   // ── Selection handlers ──────────────────────────────────────────────────
   const handleSelectCity = (item) => {
@@ -175,8 +195,10 @@ export default function RegionForm() {
   const handleAnalyze = async () => {
     if (!store.geocoded || !store.regionConfirmed) {
       showNotification(
-        store.geocoded ? "Confirm the highlighted area first" : "Select a region first",
-        "warning"
+        store.geocoded ?
+          "Confirm the highlighted area first"
+        : "Select a region first",
+        "warning",
       );
       return;
     }
@@ -184,79 +206,53 @@ export default function RegionForm() {
     store.resetRun();
     store.setRunState({ status: "queued", progress: 0 });
 
-    if (isMockMode) {
-      simulateMockPolling();
-      return;
-    }
-
     const payload = {
-      region: {
-        center: { lat: store.geocoded.lat, lon: store.geocoded.lon },
-        bbox: store.geocoded.bbox,
-        boundary_geojson: store.geocoded.boundary_geojson,
-        display_name: store.geocoded.display_name,
-      },
-      date: forecastDate,
-      options: { sensor: "S1_GRD", detector: "unet" },
+      lat: store.geocoded.lat,
+      lon: store.geocoded.lon,
     };
 
+    store.setRunState({ status: "detecting", progress: 50 });
+
     const { data, error } = await floodDetectApi.submitDetection(payload);
+
     if (error) {
-      store.setRunState({ status: "failed", error });
-      showNotification(error, "error");
+      showNotification(
+        "Live detection failed. Falling back to simulated run.",
+        "warning",
+      );
+
+      store.resetRun();
+      store.setRunState({ status: "queued", progress: 0 });
+
+      const stages = [
+        "queued",
+        "preprocessing",
+        "detecting",
+        "scoring",
+        "completed",
+      ];
+      let idx = 0;
+      const timer = setInterval(() => {
+        idx++;
+        if (idx < stages.length) {
+          store.setRunState({
+            status: stages[idx],
+            progress: Math.round((idx / (stages.length - 1)) * 100),
+          });
+        }
+        if (stages[idx] === "completed") {
+          clearInterval(timer);
+          store.setResult(mockFloodResponse);
+          showNotification("Simulated flood detection complete", "success");
+        }
+      }, 1500);
+
       return;
     }
 
-    store.setRunState({ runId: data.run_id, status: data.status });
-    startPolling(data.run_id);
-  };
-
-  const startPolling = (runId) => {
-    const poll = setInterval(async () => {
-      const { data, error } = await floodDetectApi.getDetectionStatus(runId);
-      if (error) {
-        clearInterval(poll);
-        store.setRunState({ status: "failed", error });
-        showNotification(error, "error");
-        return;
-      }
-      store.setRunState({ status: data.status, progress: data.progress ?? 0 });
-      if (data.status === "completed") {
-        clearInterval(poll);
-        store.setResult(data.result);
-        showNotification("Flood detection complete", "success");
-      }
-      if (data.status === "failed") {
-        clearInterval(poll);
-        store.setRunState({ error: data.error });
-        showNotification(data.error ?? "Detection failed", "error");
-      }
-    }, 3000);
-  };
-
-  const simulateMockPolling = () => {
-    const stages = [
-      "queued",
-      "preprocessing",
-      "detecting",
-      "scoring",
-      "completed",
-    ];
-    let idx = 0;
-    const timer = setInterval(() => {
-      idx++;
-      if (idx < stages.length) {
-        store.setRunState({
-          status: stages[idx],
-          progress: Math.round((idx / (stages.length - 1)) * 100),
-        });
-      }
-      if (stages[idx] === "completed") {
-        clearInterval(timer);
-        store.setResult(mockFloodResponse);
-        showNotification("Flood detection complete (mock)", "success");
-      }
-    }, 1500);
+    store.setRunState({ status: "completed", progress: 100 });
+    store.setResult(data);
+    showNotification("Flood forecast complete", "success");
   };
 
   const isRunning = store.isRunning();
@@ -270,28 +266,20 @@ export default function RegionForm() {
       className="p-5 flex flex-col gap-5"
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
       }}
     >
       {/* Header */}
       <div
         className="flex items-center justify-between border-b pb-3"
-        style={{ borderColor: "rgba(201,169,110,0.15)" }}
+        style={{ borderColor: "rgba(242,209,109,0.15)" }}
       >
         <span
           className="text-[9px] font-mono tracking-[0.3em] uppercase"
-          style={{ color: "rgba(201,169,110,0.6)" }}
+          style={{ color: "rgba(242,209,109,0.6)" }}
         >
           Target Coordinates
         </span>
-        {isMockMode && (
-          <span
-            className="text-[8px] font-mono tracking-widest uppercase px-1.5 py-0.5 border"
-            style={{ color: "#c0392b", borderColor: "#c0392b" }}
-          >
-            SIMULATED
-          </span>
-        )}
       </div>
 
       {geo && !regionConfirmed && (
@@ -299,7 +287,8 @@ export default function RegionForm() {
           className="text-[10px] font-mono tracking-wide"
           style={{ color: "rgba(34,197,94,0.9)" }}
         >
-          The green area on the globe is your selection. Confirm or choose another.
+          The green area on the globe is your selection. Confirm or choose
+          another.
         </p>
       )}
 
@@ -380,7 +369,7 @@ export default function RegionForm() {
                 </span>
                 <span
                   className="text-[8px] font-mono tracking-[0.2em]"
-                  style={{ color: "rgba(201,169,110,0.6)" }}
+                  style={{ color: "rgba(242,209,109,0.6)" }}
                 >
                   {geo.country_code?.toUpperCase() || ""}
                 </span>
@@ -396,19 +385,19 @@ export default function RegionForm() {
                 style={{ color: "rgba(236,232,223,0.3)" }}
               >
                 <span>
-                  <span style={{ color: "rgba(201,169,110,0.6)" }}>LAT </span>
+                  <span style={{ color: "rgba(242,209,109,0.6)" }}>LAT </span>
                   {geo.lat?.toFixed(4)}
                 </span>
                 <span>
-                  <span style={{ color: "rgba(201,169,110,0.6)" }}>LON </span>
+                  <span style={{ color: "rgba(242,209,109,0.6)" }}>LON </span>
                   {geo.lon?.toFixed(4)}
                 </span>
                 {geo.bbox && (
-                  <span style={{ color: "rgba(201,169,110,0.4)" }}>[BBOX]</span>
+                  <span style={{ color: "rgba(242,209,109,0.4)" }}>[BBOX]</span>
                 )}
               </div>
 
-              {!regionConfirmed ? (
+              {!regionConfirmed ?
                 <div className="flex gap-2 mt-3">
                   <button
                     type="button"
@@ -434,16 +423,15 @@ export default function RegionForm() {
                     Choose different
                   </button>
                 </div>
-              ) : (
-                <button
+              : <button
                   type="button"
                   onClick={() => store.setRegionConfirmed(false)}
                   className="mt-2 text-[9px] font-mono uppercase tracking-wider"
-                  style={{ color: "rgba(201,169,110,0.7)" }}
+                  style={{ color: "rgba(242,209,109,0.7)" }}
                 >
                   Change area
                 </button>
-              )}
+              }
             </div>
           </motion.div>
         )}
@@ -452,17 +440,20 @@ export default function RegionForm() {
       {/* Tomorrow's Forecast Window */}
       <div
         className="px-3 py-2 border"
-        style={{ borderColor: "rgba(201,169,110,0.15)", background: "rgba(201,169,110,0.04)" }}
+        style={{
+          borderColor: "rgba(242,209,109,0.15)",
+          background: "rgba(242,209,109,0.04)",
+        }}
       >
         <div
           className="text-[8px] font-mono uppercase tracking-[0.25em] mb-1"
-          style={{ color: "rgba(201,169,110,0.5)" }}
+          style={{ color: "rgba(242,209,109,0.5)" }}
         >
           Forecast Window
         </div>
         <div
           className="text-[11px] font-mono tracking-widest"
-          style={{ color: "#c9a96e" }}
+          style={{ color: "#f2d16d" }}
         >
           {forecastDate} · 24H
         </div>
@@ -481,33 +472,32 @@ export default function RegionForm() {
         className="relative group w-full mt-2 overflow-hidden"
         style={{
           padding: "0.8rem 1rem",
-          cursor: !geo || !regionConfirmed || isRunning ? "not-allowed" : "pointer",
+          cursor:
+            !geo || !regionConfirmed || isRunning ? "not-allowed" : "pointer",
           opacity: !geo || !regionConfirmed || isRunning ? 0.5 : 1,
         }}
       >
         <span
           className="absolute inset-0 transition-colors"
-          style={{ border: "1px solid rgba(201,169,110,0.4)" }}
+          style={{ border: "1px solid rgba(242,209,109,0.4)" }}
         />
         <span
           className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-          style={{ background: "#c9a96e" }}
+          style={{ background: "#f2d16d" }}
         />
 
         <span
-          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#c9a96e] group-hover:text-[#0a0907]"
+          className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#f2d16d] group-hover:text-[#0a0907]"
           style={{ fontSize: "0.65rem" }}
         >
-          {isRunning ? (
+          {isRunning ?
             <>
-              <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-[#f2d16d] group-hover:bg-[#0a0907] animate-pulse" />
               Generating Forecast...
             </>
-          ) : !regionConfirmed && geo ? (
+          : !regionConfirmed && geo ?
             "Confirm area above first"
-          ) : (
-            "Run Forecast"
-          )}
+          : "Run Forecast"}
         </span>
       </button>
     </motion.div>

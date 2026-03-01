@@ -8,6 +8,7 @@ import StatCounter from "../components/common/StatCounter.jsx";
 import GeoSearchInput from "../components/ui/GeoSearchInput.jsx";
 import CalendarPicker from "../components/ui/CalendarPicker.jsx";
 import { geocodeApi } from "../api/geocodeApi.js";
+import { generateInsightsReport } from "../utils/reports/generateInsightsReport.js";
 
 // ── Sub-Component: DataSourceBadge ──────────────────────────
 function DataSourceBadge() {
@@ -41,9 +42,9 @@ function RunRow({ run, isSelected, onClick, index }) {
       onClick={onClick}
       className="w-full text-left px-4 py-3 border-b transition-colors"
       style={{
-        borderColor: "rgba(201,169,110,0.08)",
-        background: isSelected ? "rgba(201,169,110,0.05)" : "transparent",
-        borderLeft: isSelected ? "2px solid #c9a96e" : "2px solid transparent",
+        borderColor: "rgba(242,209,109,0.08)",
+        background: isSelected ? "rgba(242,209,109,0.05)" : "transparent",
+        borderLeft: isSelected ? "2px solid #f2d16d" : "2px solid transparent",
       }}
       onMouseEnter={(e) => {
         if (!isSelected)
@@ -74,7 +75,7 @@ function RunRow({ run, isSelected, onClick, index }) {
         </div>
         <div
           className="font-mono text-[9px] text-right"
-          style={{ color: "#c9a96e" }}
+          style={{ color: "#f2d16d" }}
         >
           {run.flood_area_km2?.toFixed(0)} km²
         </div>
@@ -99,13 +100,13 @@ function StatCard({
       className="p-4 flex flex-col justify-between"
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
         minHeight: 80,
       }}
     >
       <span
         className="font-mono text-[8px] uppercase tracking-[0.25em] mb-2"
-        style={{ color: "rgba(201,169,110,0.5)" }}
+        style={{ color: "rgba(242,209,109,0.5)" }}
       >
         {label}
       </span>
@@ -200,13 +201,13 @@ function ConfidenceCard({ data, isGrayed }) {
       className={`p-4 flex flex-col justify-between ${isGrayed ? "opacity-50" : ""}`}
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
         minHeight: 80,
       }}
     >
       <span
         className="font-mono text-[8px] uppercase tracking-[0.25em] mb-2"
-        style={{ color: "rgba(201,169,110,0.5)" }}
+        style={{ color: "rgba(242,209,109,0.5)" }}
       >
         Signal Confidence
       </span>
@@ -235,13 +236,13 @@ function DepthCard({ data, isGrayed }) {
       className={`p-4 flex flex-col justify-between ${isGrayed ? "opacity-50" : ""}`}
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
         minHeight: 80,
       }}
     >
       <span
         className="font-mono text-[8px] uppercase tracking-[0.25em] mb-2"
-        style={{ color: "rgba(201,169,110,0.5)" }}
+        style={{ color: "rgba(242,209,109,0.5)" }}
       >
         Depth Proxy
       </span>
@@ -274,18 +275,18 @@ function ChangeDetectionImage({ src, location, bbox, resolution }) {
   return (
     <div
       className="relative overflow-hidden"
-      style={{ border: "1px solid rgba(201,169,110,0.15)" }}
+      style={{ border: "1px solid rgba(242,209,109,0.15)" }}
     >
       <div
         className="px-4 py-2 border-b flex items-center justify-between"
         style={{
-          borderColor: "rgba(201,169,110,0.15)",
-          background: "rgba(201,169,110,0.03)",
+          borderColor: "rgba(242,209,109,0.15)",
+          background: "rgba(242,209,109,0.03)",
         }}
       >
         <span
           className="font-mono text-[9px] uppercase tracking-[0.3em]"
-          style={{ color: "#c9a96e" }}
+          style={{ color: "#f2d16d" }}
         >
           SAR Change Detection Panel
         </span>
@@ -339,7 +340,7 @@ function ChangeDetectionImage({ src, location, bbox, resolution }) {
 
       <div
         className="px-4 py-2 border-t"
-        style={{ borderColor: "rgba(201,169,110,0.1)" }}
+        style={{ borderColor: "rgba(242,209,109,0.1)" }}
       >
         <span
           className="font-mono text-[8px] uppercase tracking-widest"
@@ -358,20 +359,20 @@ function PatchTable({ patches = [], isGrayed }) {
   return (
     <div
       className={`${isGrayed ? "opacity-50" : ""}`}
-      style={{ border: "1px solid rgba(201,169,110,0.15)" }}
+      style={{ border: "1px solid rgba(242,209,109,0.15)" }}
     >
       <div
         className="px-4 py-2 border-b grid grid-cols-5 gap-2"
         style={{
-          borderColor: "rgba(201,169,110,0.15)",
-          background: "rgba(201,169,110,0.03)",
+          borderColor: "rgba(242,209,109,0.15)",
+          background: "rgba(242,209,109,0.03)",
         }}
       >
         {["Patch", "Area km²", "Lat", "Lon", "Risk"].map((h) => (
           <span
             key={h}
             className="font-mono text-[8px] uppercase tracking-[0.2em]"
-            style={{ color: "rgba(201,169,110,0.5)" }}
+            style={{ color: "rgba(242,209,109,0.5)" }}
           >
             {h}
           </span>
@@ -384,12 +385,12 @@ function PatchTable({ patches = [], isGrayed }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.06 }}
           className="px-4 py-3 grid grid-cols-5 gap-2 border-b"
-          style={{ borderColor: "rgba(201,169,110,0.06)" }}
+          style={{ borderColor: "rgba(242,209,109,0.06)" }}
         >
           <span className="font-mono text-[10px]" style={{ color: "#ece8df" }}>
             #{String(patch.patch_id).padStart(3, "0")}
           </span>
-          <span className="font-mono text-[10px]" style={{ color: "#c9a96e" }}>
+          <span className="font-mono text-[10px]" style={{ color: "#f2d16d" }}>
             {patch.area_km2.toFixed(2)}
           </span>
           <span
@@ -424,7 +425,7 @@ function SimpleMarkdown({ text }) {
             <p
               key={i}
               className="font-mono text-[10px] tracking-[0.2em] uppercase mt-4 mb-1 first:mt-0"
-              style={{ color: "#c9a96e" }}
+              style={{ color: "#f2d16d" }}
             >
               {headerMatch[1]}
             </p>
@@ -437,7 +438,7 @@ function SimpleMarkdown({ text }) {
               className="flex gap-2 pl-3 text-[13px] leading-relaxed"
               style={{ color: "rgba(191,207,216,0.8)" }}
             >
-              <span style={{ color: "rgba(201,169,110,0.5)", flexShrink: 0 }}>
+              <span style={{ color: "rgba(242,209,109,0.5)", flexShrink: 0 }}>
                 ›
               </span>
               <span>{bulletMatch[1]}</span>
@@ -466,7 +467,7 @@ function LocationTrendChart({ locationRuns }) {
     return (
       <div
         className="bg-[#0a0907] border rounded-lg px-3 py-2 text-xs font-mono"
-        style={{ borderColor: "rgba(201,169,110,0.3)" }}
+        style={{ borderColor: "rgba(242,209,109,0.3)" }}
       >
         {payload.map((entry, idx) => (
           <div key={idx} style={{ color: entry.color }}>
@@ -491,21 +492,21 @@ function LocationTrendChart({ locationRuns }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       style={{
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
         borderRadius: "6px",
         padding: "16px",
-        background: "rgba(201,169,110,0.03)",
+        background: "rgba(242,209,109,0.03)",
       }}
     >
       <div
         className="text-[9px] font-mono uppercase tracking-[0.3em] mb-4"
-        style={{ color: "rgba(201,169,110,0.6)" }}
+        style={{ color: "rgba(242,209,109,0.6)" }}
       >
         Location Trend
       </div>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={chartData} margin={{ top: 8, right: 20, left: -10, bottom: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(201,169,110,0.08)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(242,209,109,0.08)" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 11, fontFamily: 'JetBrains Mono', fill: 'rgba(236,232,223,0.4)' }}
@@ -613,17 +614,17 @@ function AnalyzeForm({ onSubmit, isLoading }) {
       className="p-5 flex flex-col gap-5"
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
       }}
     >
       {/* Header */}
       <div
         className="flex items-center justify-between border-b pb-3"
-        style={{ borderColor: "rgba(201,169,110,0.15)" }}
+        style={{ borderColor: "rgba(242,209,109,0.15)" }}
       >
         <span
           className="text-[9px] font-mono tracking-[0.3em] uppercase"
-          style={{ color: "rgba(201,169,110,0.6)" }}
+          style={{ color: "rgba(242,209,109,0.6)" }}
         >
           New Analysis
         </span>
@@ -708,20 +709,20 @@ function AnalyzeForm({ onSubmit, isLoading }) {
         >
           <span
             className="absolute inset-0 transition-colors"
-            style={{ border: "1px solid rgba(201,169,110,0.4)" }}
+            style={{ border: "1px solid rgba(242,209,109,0.4)" }}
           />
           <span
             className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
-            style={{ background: "#c9a96e" }}
+            style={{ background: "#f2d16d" }}
           />
 
           <span
-            className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#c9a96e] group-hover:text-[#0a0907]"
+            className="relative z-10 flex items-center justify-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors text-[#f2d16d] group-hover:text-[#0a0907]"
             style={{ fontSize: "0.65rem" }}
           >
             {isLoading ?
               <>
-                <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
+                <span className="w-1.5 h-1.5 bg-[#f2d16d] group-hover:bg-[#0a0907] animate-pulse" />
                 Analyzing...
               </>
             : "Start Analysis"}
@@ -863,7 +864,7 @@ function AnalysisThinkingPanel() {
         {/* outer ring */}
         <motion.div
           className="w-16 h-16 rounded-full border"
-          style={{ borderColor: "rgba(201,169,110,0.3)" }}
+          style={{ borderColor: "rgba(242,209,109,0.3)" }}
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
@@ -873,7 +874,7 @@ function AnalysisThinkingPanel() {
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-2 h-2 rounded-full" style={{ background: "#c9a96e" }} />
+          <div className="w-2 h-2 rounded-full" style={{ background: "#f2d16d" }} />
         </motion.div>
       </div>
 
@@ -887,7 +888,7 @@ function AnalysisThinkingPanel() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3 }}
             className="font-mono text-[11px] text-center tracking-widest uppercase"
-            style={{ color: "#c9a96e" }}
+            style={{ color: "#f2d16d" }}
           >
             {THINKING_STEPS[stepIdx]}
           </motion.p>
@@ -1051,14 +1052,14 @@ export default function FloodInsights() {
         {/* ── Page Header ───────────────────────────────────────── */}
         <div
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4"
-          style={{ borderBottom: "1px solid rgba(201,169,110,0.15)" }}
+          style={{ borderBottom: "1px solid rgba(242,209,109,0.15)" }}
         >
           <div>
             <span
               className="tracking-[0.35em] uppercase mb-2 block"
               style={{
                 fontSize: "0.6rem",
-                color: "#c9a96e",
+                color: "#f2d16d",
                 fontFamily: "monospace",
               }}
             >
@@ -1079,7 +1080,7 @@ export default function FloodInsights() {
           {/* LEFT COLUMN: form + runs list */}
           <div
             className="lg:col-span-1 flex flex-col gap-0"
-            style={{ border: "1px solid rgba(201,169,110,0.15)" }}
+            style={{ border: "1px solid rgba(242,209,109,0.15)" }}
           >
             {/* Analyze Form */}
             <AnalyzeForm
@@ -1091,13 +1092,13 @@ export default function FloodInsights() {
             <div
               className="px-4 py-3 border-b flex items-center justify-between"
               style={{
-                borderColor: "rgba(201,169,110,0.15)",
-                background: "rgba(201,169,110,0.03)",
+                borderColor: "rgba(242,209,109,0.15)",
+                background: "rgba(242,209,109,0.03)",
               }}
             >
               <span
                 className="font-mono text-[9px] uppercase tracking-[0.3em]"
-                style={{ color: "#c9a96e" }}
+                style={{ color: "#f2d16d" }}
               >
                 Historical Runs
               </span>
@@ -1161,6 +1162,20 @@ export default function FloodInsights() {
                   transition={{ duration: 0.25 }}
                   className="space-y-4"
                 >
+                  {/* Export Button */}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => generateInsightsReport(selectedRun)}
+                      className="text-[9px] font-mono uppercase tracking-widest px-3 py-1.5 border rounded transition-colors hover:bg-[rgba(242,209,109,0.1)]"
+                      style={{
+                        borderColor: "rgba(242,209,109,0.4)",
+                        color: "#f2d16d",
+                      }}
+                    >
+                      Export PDF
+                    </button>
+                  </div>
+
                   {/* Row 1: Key metrics grid */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <StatCard
@@ -1175,7 +1190,7 @@ export default function FloodInsights() {
                       value={data.flood_percentage}
                       decimals={1}
                       unit="%"
-                      color="#c9a96e"
+                      color="#f2d16d"
                     />
                     <StatCard
                       label="Severity"
@@ -1183,14 +1198,14 @@ export default function FloodInsights() {
                         <div
                           className="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 border font-mono text-sm font-medium"
                           style={{
-                            background: "rgba(201,169,110,0.1)",
-                            borderColor: "rgba(201,169,110,0.3)",
-                            color: "#c9a96e",
+                            background: "rgba(242,209,109,0.1)",
+                            borderColor: "rgba(242,209,109,0.3)",
+                            color: "#f2d16d",
                           }}
                         >
                           <span
                             className="w-1.5 h-1.5 rounded-full"
-                            style={{ background: "#c9a96e" }}
+                            style={{ background: "#f2d16d" }}
                           />
                           {data.severity}
                         </div>
@@ -1213,8 +1228,8 @@ export default function FloodInsights() {
                     <div
                       className="p-4 rounded border"
                       style={{
-                        borderColor: "rgba(201,169,110,0.15)",
-                        background: "rgba(201,169,110,0.03)",
+                        borderColor: "rgba(242,209,109,0.15)",
+                        background: "rgba(242,209,109,0.03)",
                       }}
                     >
                       <div
@@ -1225,7 +1240,7 @@ export default function FloodInsights() {
                       </div>
                       <div
                         className="text-2xl font-mono font-bold mt-2"
-                        style={{ color: "#c9a96e" }}
+                        style={{ color: "#f2d16d" }}
                       >
                         {data.total_patches?.toLocaleString() ?? "N/A"}
                       </div>
@@ -1233,8 +1248,8 @@ export default function FloodInsights() {
                     <div
                       className="p-4 rounded border"
                       style={{
-                        borderColor: "rgba(201,169,110,0.15)",
-                        background: "rgba(201,169,110,0.03)",
+                        borderColor: "rgba(242,209,109,0.15)",
+                        background: "rgba(242,209,109,0.03)",
                       }}
                     >
                       <div

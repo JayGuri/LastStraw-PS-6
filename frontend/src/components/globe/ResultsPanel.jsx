@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useGlobeStore } from "../../stores/globeStore.js";
+import { generateDetectionReport } from "../../utils/reports/generateDetectionReport.js";
 
 const ALERT_STYLES = {
   LOW: {
@@ -10,9 +11,9 @@ const ALERT_STYLES = {
     label: "LOW",
   },
   MEDIUM: {
-    bg: "rgba(201,169,110,0.08)",
-    border: "#c9a96e",
-    text: "#c9a96e",
+    bg: "rgba(242,209,109,0.08)",
+    border: "#f2d16d",
+    text: "#f2d16d",
     label: "MODERATE",
   },
   HIGH: {
@@ -52,18 +53,20 @@ function AlertBadge({ alertLevel }) {
 
 export default function ResultsPanel() {
   const result = useGlobeStore((s) => s.result);
+  const geocoded = useGlobeStore((s) => s.geocoded);
 
   if (!result) return null;
 
   const {
     flood_probability,
     alert_level,
-    window_hours,
-    latest_timestamp,
+    forecast_horizon_hours,
+    based_on_data_until,
+    peak_flood_time,
     features_snapshot = {},
   } = result;
 
-  const probabilityPercent = (flood_probability * 100).toFixed(0);
+  const probabilityPercent = (flood_probability * 100).toFixed(2);
 
   return (
     <motion.div
@@ -72,17 +75,17 @@ export default function ResultsPanel() {
       className="flex flex-col flex-1"
       style={{
         background: "#0a0907",
-        border: "1px solid rgba(201,169,110,0.15)",
+        border: "1px solid rgba(242,209,109,0.15)",
       }}
     >
       {/* Header */}
       <div
         className="px-4 py-3 border-b"
-        style={{ borderColor: "rgba(201,169,110,0.15)" }}
+        style={{ borderColor: "rgba(242,209,109,0.15)" }}
       >
         <div
           className="text-[9px] font-mono uppercase tracking-[0.3em] mb-4"
-          style={{ color: "rgba(201,169,110,0.6)" }}
+          style={{ color: "rgba(242,209,109,0.6)" }}
         >
           Flood Risk Forecast
         </div>
@@ -94,7 +97,7 @@ export default function ResultsPanel() {
           <div className="flex items-baseline gap-2">
             <div
               className="text-4xl font-mono font-bold"
-              style={{ color: "#c9a96e" }}
+              style={{ color: "#f2d16d" }}
             >
               {probabilityPercent}
             </div>
@@ -105,13 +108,24 @@ export default function ResultsPanel() {
               Flood Probability
             </div>
           </div>
+
+          <button
+            onClick={() => generateDetectionReport(result, geocoded)}
+            className="text-[9px] font-mono uppercase tracking-widest px-3 py-1.5 border rounded transition-colors hover:bg-[rgba(242,209,109,0.1)]"
+            style={{
+              borderColor: "rgba(242,209,109,0.4)",
+              color: "#f2d16d",
+            }}
+          >
+            Export PDF
+          </button>
         </div>
       </div>
 
       {/* Metadata */}
       <div
         className="px-4 py-3 border-b space-y-2"
-        style={{ borderColor: "rgba(201,169,110,0.15)" }}
+        style={{ borderColor: "rgba(242,209,109,0.15)" }}
       >
         <div className="flex items-center justify-between">
           <span
@@ -120,11 +134,19 @@ export default function ResultsPanel() {
           >
             Forecast Window
           </span>
+          <span className="text-[9px] font-mono" style={{ color: "#f2d16d" }}>
+            {forecast_horizon_hours}H
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
           <span
-            className="text-[9px] font-mono"
-            style={{ color: "#c9a96e" }}
+            className="text-[9px] font-mono tracking-widest uppercase"
+            style={{ color: "rgba(236,232,223,0.4)" }}
           >
-            {window_hours}H
+            Peak Flood Est.
+          </span>
+          <span className="text-[9px] font-mono" style={{ color: "#c0392b" }}>
+            {peak_flood_time}
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -138,7 +160,7 @@ export default function ResultsPanel() {
             className="text-[9px] font-mono"
             style={{ color: "rgba(236,232,223,0.6)" }}
           >
-            {latest_timestamp}
+            {based_on_data_until?.replace("+00:00", "")}
           </span>
         </div>
       </div>
@@ -147,7 +169,7 @@ export default function ResultsPanel() {
       <div className="flex-1 overflow-y-auto">
         <div
           className="px-4 py-3 border-b sticky top-0 bg-[#0a0907]/90 backdrop-blur-sm z-10"
-          style={{ borderColor: "rgba(201,169,110,0.15)" }}
+          style={{ borderColor: "rgba(242,209,109,0.15)" }}
         >
           <span
             className="text-[9px] font-mono tracking-widest uppercase"
@@ -176,7 +198,7 @@ export default function ResultsPanel() {
               label: "Temperature",
               value: features_snapshot.Temperature_C,
               unit: "°C",
-              color: "#c9a96e",
+              color: "#f2d16d",
             },
             {
               label: "Elevation",
@@ -198,17 +220,17 @@ export default function ResultsPanel() {
             },
           ].map((feature) => {
             const displayValue =
-              feature.decimals !== undefined
-                ? feature.value?.toFixed(feature.decimals)
-                : Math.round(feature.value ?? 0);
+              feature.decimals !== undefined ?
+                feature.value?.toFixed(feature.decimals)
+              : Math.round(feature.value ?? 0);
 
             return (
               <div
                 key={feature.label}
                 className="p-3 border rounded"
                 style={{
-                  borderColor: "rgba(201,169,110,0.15)",
-                  background: "rgba(201,169,110,0.03)",
+                  borderColor: "rgba(242,209,109,0.15)",
+                  background: "rgba(242,209,109,0.03)",
                 }}
               >
                 <div
