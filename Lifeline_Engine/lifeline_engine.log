@@ -1,0 +1,644 @@
+2026-03-01 04:31:37  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 04:31:51  INFO      [lifeline.api]  Cache miss — downloading graph for 'Navi Mumbai, India' …
+2026-03-01 04:31:51  INFO      [engine]  Downloading drive network for 'Navi Mumbai, India' …
+2026-03-01 04:31:55  INFO      [engine]  Raw graph: 5818 nodes, 14038 edges
+2026-03-01 04:31:55  INFO      [utils_geo]  Graph projected to EPSG:32643
+2026-03-01 04:31:55  INFO      [engine]  Projected graph (EPSG:32643): 5818 nodes, 14038 edges
+2026-03-01 04:31:55  INFO      [lifeline.api]  Graph cached for 'Navi Mumbai, India'
+2026-03-01 04:31:55  INFO      [utils_geo]  Fetching OSM amenity: hospital in 'Navi Mumbai, India' …
+2026-03-01 04:31:55  INFO      [utils_geo]  Total facilities fetched: 92
+2026-03-01 04:31:58  INFO      [lifeline.api]  Facility cache set: Navi Mumbai, India::hospital (92 items)
+2026-03-01 04:31:58  INFO      [utils_geo]  Flood circle: centre (-90.000000, -180.000000), radius 500 m, CRS EPSG:32643
+2026-03-01 04:31:58  INFO      [engine]  Flood mask applied: 0 / 14038 edges blocked (0.0%)
+2026-03-01 04:31:59  INFO      [engine]  Crisis graph: 5818 nodes, 14038 edges (removed 0 blocked edges)
+2026-03-01 04:36:47  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 04:38:26  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 04:42:40  INFO      [lifeline.api]  Cache miss — downloading graph for 'Navi Mumbai, India' …
+2026-03-01 04:42:40  INFO      [engine]  Downloading drive network for 'Navi Mumbai, India' …
+2026-03-01 04:42:43  INFO      [engine]  Raw graph: 5818 nodes, 14038 edges
+2026-03-01 04:42:44  INFO      [utils_geo]  Graph projected to EPSG:32643
+2026-03-01 04:42:44  INFO      [engine]  Projected graph (EPSG:32643): 5818 nodes, 14038 edges
+2026-03-01 04:42:44  INFO      [lifeline.api]  Graph cached for 'Navi Mumbai, India'
+2026-03-01 04:42:44  INFO      [utils_geo]  Flood circle: centre (19.033000, 73.029700), radius 500 m, CRS EPSG:32643
+2026-03-01 04:42:44  INFO      [engine]  Flood mask applied: 82 / 14038 edges blocked (0.6%)
+2026-03-01 04:42:44  INFO      [engine]  Crisis graph: 5818 nodes, 13956 edges (removed 82 blocked edges)
+2026-03-01 04:42:44  INFO      [utils_geo]  Fetching OSM amenity: hospital in 'Navi Mumbai, India' …
+2026-03-01 04:42:44  INFO      [utils_geo]  Fetching OSM amenity: school in 'Navi Mumbai, India' …
+2026-03-01 04:42:46  INFO      [utils_geo]  Fetching OSM amenity: police in 'Navi Mumbai, India' …
+2026-03-01 04:42:47  INFO      [utils_geo]  Fetching OSM amenity: fire_station in 'Navi Mumbai, India' …
+2026-03-01 04:42:49  INFO      [utils_geo]  Total facilities fetched: 181
+2026-03-01 04:42:49  INFO      [engine]  Hub snapped to node 9685181431 (lat=19.03300, lon=73.02970)
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0000 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0001 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0002 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0003 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0004 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0005 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0006 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0007 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0008 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0009 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0010 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0011 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0012 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0013 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0014 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0015 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0016 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0017 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0018 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0019 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:49  DEBUG     [engine]  FAC_0020 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0021 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0022 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0023 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0024 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0025 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0026 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0027 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0028 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0029 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0030 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0031 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0032 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0033 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0034 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0035 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0036 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0037 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0038 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0039 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0040 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0041 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0042 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0043 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0044 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0045 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0046 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0047 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0048 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0049 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0050 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0051 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0052 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0053 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0054 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0055 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0056 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0057 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0058 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0059 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0060 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0061 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0062 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0063 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0064 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0065 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0066 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0067 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0068 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0069 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0070 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0071 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0072 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0073 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0074 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0075 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0076 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0077 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0078 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0079 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0080 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0081 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0082 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0083 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0084 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0085 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0086 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0087 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0088 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0089 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0090 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0091 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0092 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0093 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0094 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0095 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0096 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0097 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0098 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0099 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0100 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:50  DEBUG     [engine]  FAC_0101 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0102 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0103 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0104 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0105 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0106 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0107 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0108 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0109 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0110 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0111 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0112 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0113 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0114 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0115 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0116 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0117 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0118 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0119 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0120 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0121 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0122 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0123 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0124 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0125 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0126 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0127 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0128 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0129 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0130 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0131 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0132 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0133 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0134 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0135 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0136 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0137 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0138 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0139 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0140 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0141 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0142 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0143 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0144 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0145 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0146 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0147 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0148 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0149 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0150 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0151 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0152 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0153 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0154 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0155 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0156 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0157 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0158 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0159 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0160 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0161 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0162 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:51  DEBUG     [engine]  FAC_0163 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0164 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0165 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0166 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0167 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0168 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0169 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0170 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0171 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0172 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0173 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0174 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0175 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0176 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0177 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0178 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0179 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  DEBUG     [engine]  FAC_0180 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:42:52  INFO      [engine]  Analysis complete — 181 facilities processed
+2026-03-01 04:42:52  INFO      [engine]    FULLY_ACCESSIBLE    : 181
+2026-03-01 04:42:52  INFO      [engine]  State table written → C:\PF\Projects\NMIMS_Road_engine\state_table.json
+2026-03-01 04:42:52  INFO      [engine]  State table (CSV) written → C:\PF\Projects\NMIMS_Road_engine\state_table.csv
+2026-03-01 04:48:16  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 04:48:45  INFO      [lifeline.api]  Cache miss — downloading graph for 'Navi Mumbai, India' …
+2026-03-01 04:48:45  INFO      [engine]  Downloading drive network for 'Navi Mumbai, India' …
+2026-03-01 04:48:48  INFO      [engine]  Raw graph: 5818 nodes, 14038 edges
+2026-03-01 04:48:49  INFO      [utils_geo]  Graph projected to EPSG:32643
+2026-03-01 04:48:49  INFO      [engine]  Projected graph (EPSG:32643): 5818 nodes, 14038 edges
+2026-03-01 04:48:49  INFO      [lifeline.api]  Graph cached for 'Navi Mumbai, India'
+2026-03-01 04:48:49  INFO      [utils_geo]  Flood circle: centre (19.033000, 73.029700), radius 500 m, CRS EPSG:32643
+2026-03-01 04:48:49  INFO      [engine]  Flood mask applied: 82 / 14038 edges blocked (0.6%)
+2026-03-01 04:48:49  INFO      [engine]  Crisis graph: 5818 nodes, 13956 edges (removed 82 blocked edges)
+2026-03-01 04:48:49  INFO      [utils_geo]  Fetching OSM amenity: hospital in 'Navi Mumbai, India' …
+2026-03-01 04:48:50  INFO      [utils_geo]  Fetching OSM amenity: school in 'Navi Mumbai, India' …
+2026-03-01 04:48:50  INFO      [utils_geo]  Fetching OSM amenity: police in 'Navi Mumbai, India' …
+2026-03-01 04:48:50  INFO      [utils_geo]  Fetching OSM amenity: fire_station in 'Navi Mumbai, India' …
+2026-03-01 04:48:50  INFO      [utils_geo]  Total facilities fetched: 181
+2026-03-01 04:48:50  INFO      [engine]  Hub snapped to node 9685181431 (lat=19.03300, lon=73.02970)
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0000 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0001 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0002 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0003 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0004 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0005 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0006 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0007 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0008 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0009 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0010 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0011 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0012 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0013 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0014 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0015 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0016 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0017 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0018 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0019 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0020 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0021 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0022 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0023 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0024 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0025 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0026 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0027 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0028 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:50  DEBUG     [engine]  FAC_0029 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0030 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0031 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0032 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0033 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0034 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0035 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0036 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0037 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0038 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0039 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0040 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0041 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0042 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0043 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0044 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0045 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0046 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0047 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0048 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0049 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0050 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0051 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0052 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0053 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0054 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0055 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0056 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0057 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0058 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0059 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0060 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0061 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0062 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0063 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0064 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0065 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0066 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0067 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0068 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0069 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0070 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0071 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0072 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0073 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0074 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0075 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0076 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0077 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0078 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0079 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0080 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0081 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0082 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0083 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0084 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0085 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0086 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0087 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0088 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0089 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0090 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0091 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0092 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0093 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0094 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0095 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0096 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0097 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0098 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0099 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0100 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0101 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0102 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0103 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0104 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0105 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0106 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0107 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:51  DEBUG     [engine]  FAC_0108 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0109 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0110 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0111 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0112 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0113 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0114 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0115 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0116 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0117 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0118 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0119 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0120 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0121 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0122 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0123 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0124 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0125 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0126 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0127 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0128 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0129 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0130 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0131 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0132 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0133 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0134 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0135 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0136 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0137 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0138 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0139 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0140 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0141 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0142 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0143 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0144 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0145 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0146 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0147 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0148 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0149 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0150 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0151 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0152 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0153 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0154 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0155 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0156 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0157 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0158 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0159 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0160 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0161 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0162 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0163 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0164 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0165 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0166 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0167 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0168 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0169 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0170 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0171 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0172 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0173 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0174 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0175 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0176 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0177 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0178 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0179 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  DEBUG     [engine]  FAC_0180 | node=9685181431 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:48:52  INFO      [engine]  Analysis complete — 181 facilities processed
+2026-03-01 04:48:52  INFO      [engine]    FULLY_ACCESSIBLE    : 181
+2026-03-01 04:52:22  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 04:53:03  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 04:53:39  INFO      [lifeline.api]  Cache miss — downloading graph for 'Navi Mumbai, India' …
+2026-03-01 04:53:39  INFO      [engine]  Downloading drive network for 'Navi Mumbai, India' …
+2026-03-01 04:53:48  INFO      [engine]  Raw graph: 5818 nodes, 14038 edges
+2026-03-01 04:53:48  INFO      [utils_geo]  Graph projected to EPSG:32643
+2026-03-01 04:53:48  INFO      [engine]  Projected graph (EPSG:32643): 5818 nodes, 14038 edges
+2026-03-01 04:53:48  INFO      [lifeline.api]  Graph cached for 'Navi Mumbai, India'
+2026-03-01 04:53:48  INFO      [utils_geo]  Flood circle: centre (19.033000, 73.029700), radius 500 m, CRS EPSG:32643
+2026-03-01 04:53:48  INFO      [engine]  Flood mask applied: 82 / 14038 edges blocked (0.6%)
+2026-03-01 04:53:48  INFO      [engine]  Crisis graph: 5818 nodes, 13956 edges (removed 82 blocked edges)
+2026-03-01 04:53:48  INFO      [utils_geo]  Fetching OSM amenity: hospital in 'Navi Mumbai, India' …
+2026-03-01 04:53:50  INFO      [utils_geo]  Fetching OSM amenity: school in 'Navi Mumbai, India' …
+2026-03-01 04:53:52  INFO      [utils_geo]  Fetching OSM amenity: police in 'Navi Mumbai, India' …
+2026-03-01 04:53:59  INFO      [utils_geo]  Fetching OSM amenity: fire_station in 'Navi Mumbai, India' …
+2026-03-01 04:55:07  INFO      [utils_geo]  Total facilities fetched: 181
+2026-03-01 04:55:07  INFO      [engine]  Hub snapped to node 5544516313 (lat=19.07270, lon=73.01170)
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0000 | node=4625570716 | baseline=9634 m | flood=9634 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0001 | node=245667420 | baseline=3143 m | flood=3143 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0002 | node=12395276866 | baseline=4840 m | flood=4840 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0003 | node=2246309310 | baseline=6353 m | flood=6946 m | factor=1.093 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0004 | node=2299141600 | baseline=9251 m | flood=9251 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0005 | node=2298251618 | baseline=10631 m | flood=10631 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0006 | node=7324589157 | baseline=3267 m | flood=3267 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0007 | node=1164612819 | baseline=2374 m | flood=2374 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0008 | node=4164780642 | baseline=9763 m | flood=9763 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0009 | node=2242266350 | baseline=10226 m | flood=10226 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0010 | node=10548849858 | baseline=9083 m | flood=9083 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0011 | node=2242266565 | baseline=11541 m | flood=11541 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0012 | node=1164614481 | baseline=2235 m | flood=2235 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0013 | node=12434857744 | baseline=7063 m | flood=7063 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0014 | node=2299861259 | baseline=10684 m | flood=10684 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0015 | node=5749193486 | baseline=4615 m | flood=4615 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:07  DEBUG     [engine]  FAC_0016 | node=5490831649 | baseline=5384 m | flood=5384 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0017 | node=2242266398 | baseline=10218 m | flood=10218 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0018 | node=11176881311 | baseline=4764 m | flood=4764 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0019 | node=2303768355 | baseline=6817 m | flood=6817 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0020 | node=2242266350 | baseline=10226 m | flood=10226 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0021 | node=1164614043 | baseline=1890 m | flood=1890 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0022 | node=1341432767 | baseline=5030 m | flood=5030 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0023 | node=344888727 | baseline=4856 m | flood=4856 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0024 | node=4637997494 | baseline=9985 m | flood=9985 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0025 | node=2244776496 | baseline=3998 m | flood=3998 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0026 | node=7704464202 | baseline=4620 m | flood=4620 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0027 | node=7803568939 | baseline=1843 m | flood=1843 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0028 | node=2246464208 | baseline=8750 m | flood=9115 m | factor=1.042 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0029 | node=6604466940 | baseline=3935 m | flood=3935 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0030 | node=5749193474 | baseline=4164 m | flood=4164 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0031 | node=7803568939 | baseline=1843 m | flood=1843 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0032 | node=9168811049 | baseline=9884 m | flood=9884 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0033 | node=4138437571 | baseline=2272 m | flood=2272 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0034 | node=2245082085 | baseline=4265 m | flood=4265 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0035 | node=4632210517 | baseline=9814 m | flood=9814 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0036 | node=10941192184 | baseline=1706 m | flood=1706 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0037 | node=457089682 | baseline=11040 m | flood=11040 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0038 | node=3737552915 | baseline=4223 m | flood=4223 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0039 | node=5458429248 | baseline=5243 m | flood=5243 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0040 | node=4146373159 | baseline=11255 m | flood=11255 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0041 | node=8683123016 | baseline=6599 m | flood=6599 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0042 | node=1445193394 | baseline=2881 m | flood=2881 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:08  DEBUG     [engine]  FAC_0043 | node=6605240342 | baseline=4222 m | flood=4222 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0044 | node=2245081964 | baseline=4594 m | flood=4594 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0045 | node=2298251449 | baseline=9899 m | flood=9899 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0046 | node=7803569020 | baseline=1861 m | flood=1861 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0047 | node=7803568923 | baseline=1557 m | flood=1557 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0048 | node=1448219619 | baseline=3794 m | flood=3794 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0049 | node=2242266512 | baseline=10740 m | flood=10740 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0050 | node=1164614054 | baseline=2091 m | flood=2091 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0051 | node=7803568939 | baseline=1843 m | flood=1843 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0052 | node=3388718543 | baseline=7532 m | flood=11519 m | factor=1.529 | LIMITED_ACCESS
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0053 | node=2244776524 | baseline=3868 m | flood=3868 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0054 | node=1164613209 | baseline=2175 m | flood=2175 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0055 | node=9632917639 | baseline=6343 m | flood=6343 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0056 | node=1164614047 | baseline=1672 m | flood=1672 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0057 | node=4140551636 | baseline=10092 m | flood=10092 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0058 | node=344652386 | baseline=9100 m | flood=9100 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0059 | node=338318826 | baseline=2226 m | flood=2226 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0060 | node=2299861260 | baseline=10836 m | flood=10836 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0061 | node=10304777573 | baseline=4341 m | flood=4341 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0062 | node=3388721065 | baseline=8639 m | flood=12627 m | factor=1.462 | LIMITED_ACCESS
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0063 | node=2242577300 | baseline=2562 m | flood=2562 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0064 | node=2241978771 | baseline=9590 m | flood=9590 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0065 | node=2298251432 | baseline=10627 m | flood=10627 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0066 | node=7361696431 | baseline=9690 m | flood=9690 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0067 | node=7357740997 | baseline=5638 m | flood=5638 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0068 | node=478481949 | baseline=9077 m | flood=9442 m | factor=1.040 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0069 | node=1646118611 | baseline=4834 m | flood=4834 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0070 | node=9685155713 | baseline=5160 m | flood=5160 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:09  DEBUG     [engine]  FAC_0071 | node=2246851328 | baseline=2767 m | flood=2767 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0072 | node=5461225991 | baseline=8385 m | flood=8385 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0073 | node=2246851146 | baseline=1683 m | flood=1683 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0074 | node=10961188344 | baseline=3948 m | flood=3948 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0075 | node=2246851132 | baseline=2081 m | flood=2081 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0076 | node=9632917673 | baseline=7579 m | flood=7579 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0077 | node=9685155713 | baseline=5160 m | flood=5160 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0078 | node=5490831639 | baseline=5445 m | flood=5445 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0079 | node=3799407123 | baseline=7288 m | flood=7681 m | factor=1.054 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0080 | node=5524541585 | baseline=7637 m | flood=11624 m | factor=1.522 | LIMITED_ACCESS
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0081 | node=2246851218 | baseline=2333 m | flood=2333 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0082 | node=5498535573 | baseline=8316 m | flood=8316 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0083 | node=9171129197 | baseline=5791 m | flood=5791 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0084 | node=2246309634 | baseline=8175 m | flood=12162 m | factor=1.488 | LIMITED_ACCESS
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0085 | node=2176952529 | baseline=4875 m | flood=4875 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0086 | node=474660047 | baseline=6910 m | flood=6910 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0087 | node=7357741059 | baseline=9013 m | flood=9379 m | factor=1.041 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0088 | node=5666678127 | baseline=3532 m | flood=3532 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0089 | node=2299861259 | baseline=10684 m | flood=10684 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0090 | node=4146373181 | baseline=11311 m | flood=11311 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0091 | node=10232381002 | baseline=3006 m | flood=3006 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0092 | node=2298251566 | baseline=10382 m | flood=10382 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0093 | node=5498535571 | baseline=8208 m | flood=8208 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0094 | node=5507233513 | baseline=1916 m | flood=1916 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0095 | node=2242577348 | baseline=4146 m | flood=4146 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0096 | node=7375978119 | baseline=13028 m | flood=13028 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0097 | node=6117341922 | baseline=9352 m | flood=9717 m | factor=1.039 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0098 | node=2246851212 | baseline=1218 m | flood=1218 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0099 | node=2908564087 | baseline=4773 m | flood=4773 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0100 | node=6609143053 | baseline=4952 m | flood=4952 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:10  DEBUG     [engine]  FAC_0101 | node=385750736 | baseline=1694 m | flood=1694 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0102 | node=4140329833 | baseline=9607 m | flood=9607 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0103 | node=2244776524 | baseline=3868 m | flood=3868 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0104 | node=478489288 | baseline=8280 m | flood=8280 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0105 | node=11942365550 | baseline=7087 m | flood=7087 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0106 | node=5388598572 | baseline=7379 m | flood=7379 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0107 | node=5388727695 | baseline=9329 m | flood=9329 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0108 | node=2211539244 | baseline=8074 m | flood=8074 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0109 | node=2214509911 | baseline=7307 m | flood=7307 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0110 | node=6117341922 | baseline=9352 m | flood=9717 m | factor=1.039 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0111 | node=10272854394 | baseline=5634 m | flood=5634 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0112 | node=11066845020 | baseline=5194 m | flood=5194 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0113 | node=11282716250 | baseline=4598 m | flood=4598 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0114 | node=11066862414 | baseline=4942 m | flood=4942 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0115 | node=2246851092 | baseline=3363 m | flood=3363 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0116 | node=2244775807 | baseline=2659 m | flood=2659 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0117 | node=2242577256 | baseline=2219 m | flood=2219 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0118 | node=2244775311 | baseline=1898 m | flood=1898 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0119 | node=1164614047 | baseline=1672 m | flood=1672 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0120 | node=2246851130 | baseline=2327 m | flood=2327 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0121 | node=2246851283 | baseline=2192 m | flood=2192 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0122 | node=2246465117 | baseline=5926 m | flood=∞ m | factor=inf | CUT_OFF
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0123 | node=2246464964 | baseline=7392 m | flood=7392 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0124 | node=1341432655 | baseline=6013 m | flood=6013 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0125 | node=2246310062 | baseline=5341 m | flood=5341 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0126 | node=10660714676 | baseline=4560 m | flood=4560 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0127 | node=2246851083 | baseline=2088 m | flood=2088 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0128 | node=9170897944 | baseline=184 m | flood=184 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0129 | node=5544516313 | baseline=-1 m | flood=0 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0130 | node=4146333952 | baseline=1331 m | flood=1331 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0131 | node=344887693 | baseline=3661 m | flood=3661 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:11  DEBUG     [engine]  FAC_0132 | node=2245082934 | baseline=3397 m | flood=3397 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0133 | node=12185507845 | baseline=8105 m | flood=12093 m | factor=1.492 | LIMITED_ACCESS
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0134 | node=2246309525 | baseline=7979 m | flood=11966 m | factor=1.500 | LIMITED_ACCESS
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0135 | node=2246465080 | baseline=8682 m | flood=12669 m | factor=1.459 | LIMITED_ACCESS
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0136 | node=2245081764 | baseline=5753 m | flood=5753 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0137 | node=2244879337 | baseline=714 m | flood=714 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0138 | node=2244879309 | baseline=629 m | flood=629 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0139 | node=10941192184 | baseline=1706 m | flood=1706 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0140 | node=2245083666 | baseline=2585 m | flood=2585 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0141 | node=6554621417 | baseline=1907 m | flood=1907 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0142 | node=2245083459 | baseline=2943 m | flood=2943 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0143 | node=2245084084 | baseline=2880 m | flood=2880 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0144 | node=9861788792 | baseline=5268 m | flood=5268 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0145 | node=10941298530 | baseline=4653 m | flood=4653 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0146 | node=9170881836 | baseline=5160 m | flood=5160 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0147 | node=9170878412 | baseline=5068 m | flood=5068 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0148 | node=2242577334 | baseline=4264 m | flood=4264 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0149 | node=2244776566 | baseline=4104 m | flood=4104 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0150 | node=2244776492 | baseline=3873 m | flood=3873 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0151 | node=5498535571 | baseline=8208 m | flood=8208 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0152 | node=2298251508 | baseline=10513 m | flood=10513 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0153 | node=5470840225 | baseline=9349 m | flood=9995 m | factor=1.069 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0154 | node=13542641640 | baseline=5319 m | flood=5319 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0155 | node=2246309802 | baseline=8626 m | flood=12613 m | factor=1.462 | LIMITED_ACCESS
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0156 | node=2246309621 | baseline=8507 m | flood=12495 m | factor=1.469 | LIMITED_ACCESS
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0157 | node=10246391078 | baseline=3405 m | flood=3405 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0158 | node=2298251569 | baseline=10497 m | flood=10497 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0159 | node=2246464745 | baseline=7405 m | flood=7770 m | factor=1.049 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0160 | node=7350613863 | baseline=9113 m | flood=9478 m | factor=1.040 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0161 | node=2242266565 | baseline=11541 m | flood=11541 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:12  DEBUG     [engine]  FAC_0162 | node=11066862414 | baseline=4942 m | flood=4942 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0163 | node=5753946930 | baseline=4568 m | flood=4568 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0164 | node=341816230 | baseline=3721 m | flood=3721 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0165 | node=4164605971 | baseline=7655 m | flood=7655 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0166 | node=4146366264 | baseline=9322 m | flood=9322 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0167 | node=2246464651 | baseline=7366 m | flood=7731 m | factor=1.050 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0168 | node=344891877 | baseline=5905 m | flood=5905 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0169 | node=6057423057 | baseline=7881 m | flood=7881 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0170 | node=4160788337 | baseline=9315 m | flood=9315 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0171 | node=9776476197 | baseline=1483 m | flood=1483 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0172 | node=13369268486 | baseline=10382 m | flood=10382 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0173 | node=4146366264 | baseline=9322 m | flood=9322 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0174 | node=6118416202 | baseline=7431 m | flood=11419 m | factor=1.537 | LIMITED_ACCESS
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0175 | node=5174522935 | baseline=7281 m | flood=7281 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0176 | node=2246851237 | baseline=1706 m | flood=1706 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0177 | node=2214509971 | baseline=6881 m | flood=6881 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0178 | node=5710307339 | baseline=7326 m | flood=11313 m | factor=1.544 | LIMITED_ACCESS
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0179 | node=2298251553 | baseline=10979 m | flood=10979 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  DEBUG     [engine]  FAC_0180 | node=5750682578 | baseline=5078 m | flood=5078 m | factor=1.000 | FULLY_ACCESSIBLE
+2026-03-01 04:55:13  INFO      [engine]  Analysis complete — 181 facilities processed
+2026-03-01 04:55:13  INFO      [engine]    CUT_OFF             : 1
+2026-03-01 04:55:13  INFO      [engine]    FULLY_ACCESSIBLE    : 169
+2026-03-01 04:55:13  INFO      [engine]    LIMITED_ACCESS      : 11
+2026-03-01 05:56:37  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 05:59:30  INFO      [lifeline.api]  Cache miss — downloading graph for 'Navi Mumbai, India' …
+2026-03-01 05:59:30  INFO      [engine]  Downloading drive network for 'Navi Mumbai, India' …
+2026-03-01 05:59:33  INFO      [engine]  Raw graph: 5818 nodes, 14038 edges
+2026-03-01 05:59:33  INFO      [utils_geo]  Graph projected to EPSG:32643
+2026-03-01 05:59:33  INFO      [engine]  Projected graph (EPSG:32643): 5818 nodes, 14038 edges
+2026-03-01 05:59:33  INFO      [lifeline.api]  Graph cached for 'Navi Mumbai, India'
+2026-03-01 05:59:33  DEBUG     [lifeline.api]  BBox for 'Navi Mumbai, India': 18.8527/19.3387 lat, 72.8280/73.1971 lon
+2026-03-01 05:59:33  INFO      [utils_geo]  Fetching OSM amenity: hospital in 'Navi Mumbai, India' …
+2026-03-01 05:59:33  INFO      [utils_geo]  Total facilities fetched: 92
+2026-03-01 05:59:35  INFO      [utils_geo]  Flood circle: centre (19.028000, 73.042000), radius 900 m, CRS EPSG:32643
+2026-03-01 05:59:35  INFO      [engine]  Flood mask applied: 512 / 14038 edges blocked (3.6%)
+2026-03-01 05:59:35  INFO      [engine]  Crisis graph: 5818 nodes, 13526 edges (removed 512 blocked edges)
+2026-03-01 05:59:35  DEBUG     [engine]  get_blocked_edge_coords: 318 unique blocked segments
+2026-03-01 05:59:35  INFO      [utils_geo]  Flood circle: centre (19.028000, 73.042000), radius 900 m, CRS EPSG:32643
+2026-03-01 06:11:47  INFO      [lifeline.log_config]  Logging initialised — level=INFO | file=C:\PF\Projects\NMIMS_Road_engine\Lifeline_Engine\lifeline_engine.log | json=disabled (set LOG_JSON=1 to enable)
+2026-03-01 06:12:04  INFO      [lifeline.api]  Cache miss — downloading graph for 'Navi Mumbai, India' …
+2026-03-01 06:12:04  INFO      [engine]  Downloading drive network for 'Navi Mumbai, India' …
+2026-03-01 06:12:08  INFO      [engine]  Raw graph: 5818 nodes, 14038 edges
+2026-03-01 06:12:08  INFO      [utils_geo]  Graph projected to EPSG:32643
+2026-03-01 06:12:08  INFO      [engine]  Projected graph (EPSG:32643): 5818 nodes, 14038 edges
+2026-03-01 06:12:08  INFO      [lifeline.api]  Graph cached for 'Navi Mumbai, India'
+2026-03-01 06:12:08  DEBUG     [lifeline.api]  BBox for 'Navi Mumbai, India': 18.8527/19.3387 lat, 72.8280/73.1971 lon
+2026-03-01 06:12:08  INFO      [utils_geo]  Fetching OSM amenity: hospital in 'Navi Mumbai, India' …
+2026-03-01 06:12:08  INFO      [utils_geo]  Total facilities fetched: 92
+2026-03-01 06:12:10  INFO      [utils_geo]  Flood circle: centre (19.028000, 73.042000), radius 900 m, CRS EPSG:32643
+2026-03-01 06:12:10  INFO      [engine]  Flood mask applied: 512 / 14038 edges blocked (3.6%)
+2026-03-01 06:12:10  INFO      [engine]  Crisis graph: 5818 nodes, 13526 edges (removed 512 blocked edges)
