@@ -31,9 +31,8 @@ export default function CesiumGlobe() {
   const viewerRef      = useRef(null)
   const isRotatingRef  = useRef(true)
 
-  const geocoded     = useGlobeStore(s => s.geocoded)
-  const result       = useGlobeStore(s => s.result)
-  const selectedZone = useGlobeStore(s => s.selectedZone)
+  const geocoded = useGlobeStore(s => s.geocoded)
+  const result   = useGlobeStore(s => s.result)
 
   // ──────────────────────────────────────────────────────────
   // 1. INIT VIEWER
@@ -326,103 +325,58 @@ export default function CesiumGlobe() {
   }, [geocoded])
 
   // ──────────────────────────────────────────────────────────
-  // 3. RENDER FLOOD RESULTS
+  // 3. RENDER FORECAST RESULT
   // ──────────────────────────────────────────────────────────
   useEffect(() => {
     const viewer = viewerRef.current
     if (!viewer || viewer.isDestroyed()) return
 
+    // Clean up old result entities
     ;['flood-zones', 'zone-markers'].forEach(name => {
       viewer.dataSources.getByName(name).forEach(ds => viewer.dataSources.remove(ds))
     })
-    viewer.entities.values
-      .filter(e => e.id?.startsWith('zone-pin-'))
-      .forEach(e => viewer.entities.remove(e))
+    viewer.entities.removeById('forecast-pin')
 
     if (!result) return
 
-    const features = result.flood_zones?.features ?? []
+    // Map alert level to color
+    const ALERT_CESIUM = {
+      LOW:      Cesium.Color.fromCssColorString('#22c55e'),
+      MEDIUM:   Cesium.Color.fromCssColorString('#c9a96e'),
+      HIGH:     Cesium.Color.fromCssColorString('#dc7828'),
+      CRITICAL: Cesium.Color.fromCssColorString('#c0392b'),
+    }
 
-    const geoDs = new Cesium.GeoJsonDataSource('flood-zones')
-    geoDs.load(result.flood_zones, { clampToGround: false }).then(() => {
-      geoDs.entities.values.forEach(entity => {
-        if (!entity.polygon) return
-        const sev     = entity.properties?.severity?.getValue() ?? 'medium'
-        const depth   = entity.properties?.avg_depth_m?.getValue() ?? 1
-        const cfg     = SEVERITY_CFG[sev] ?? SEVERITY_CFG.medium
-        const extrude = Math.round(depth * cfg.extrude)
+    const alertColor = ALERT_CESIUM[result.alert_level] ?? ALERT_CESIUM.MEDIUM
 
-        entity.polygon.material            = cfg.fill
-        entity.polygon.outline             = true
-        entity.polygon.outlineColor        = cfg.outline
-        entity.polygon.outlineWidth        = 2
-        entity.polygon.extrudedHeight      = extrude
-        entity.polygon.height              = 0
-        entity.polygon.shadows             = Cesium.ShadowMode.DISABLED
-        entity.polygon.classificationType  = Cesium.ClassificationType.BOTH
-      })
-      if (!viewer.isDestroyed()) viewer.dataSources.add(geoDs)
-    })
-
-    features.forEach((feature, i) => {
-      const p   = feature.properties
-      const sev = p.severity ?? 'medium'
-      const cfg = SEVERITY_CFG[sev] ?? SEVERITY_CFG.medium
-      const centroid = p.centroid ?? {
-        lat: (p.bbox[1] + p.bbox[3]) / 2,
-        lon: (p.bbox[0] + p.bbox[2]) / 2,
-      }
-
+    // Render forecast pin at geocoded location
+    if (result.lat !== undefined && result.lon !== undefined) {
       viewer.entities.add({
-        id:       `zone-pin-${i}`,
-        position: Cesium.Cartesian3.fromDegrees(centroid.lon, centroid.lat, 0),
+        id: 'forecast-pin',
+        position: Cesium.Cartesian3.fromDegrees(result.lon, result.lat, 0),
         point: {
-          pixelSize:    8,
-          color:        cfg.outline,
-          outlineColor: cfg.outline.withAlpha(0.3),
-          outlineWidth: 10,
-          heightReference:          Cesium.HeightReference.CLAMP_TO_GROUND,
+          pixelSize: 18,
+          color: alertColor,
+          outlineColor: alertColor.withAlpha(0.5),
+          outlineWidth: 20,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
           disableDepthTestDistance: Number.POSITIVE_INFINITY,
         },
         label: {
-          text:           p.admin_name ?? `Zone ${i + 1}`,
-          font:           '11px "JetBrains Mono", monospace',
-          fillColor:      Cesium.Color.WHITE.withAlpha(0.9),
-          outlineColor:   Cesium.Color.BLACK.withAlpha(0.7),
-          outlineWidth:   2,
-          style:          Cesium.LabelStyle.FILL_AND_OUTLINE,
+          text: `${(result.flood_probability * 100).toFixed(0)}% Risk`,
+          font: '12px "JetBrains Mono", monospace',
+          fillColor: Cesium.Color.WHITE.withAlpha(0.9),
+          outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
           verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-          pixelOffset:    new Cesium.Cartesian2(0, -18),
+          pixelOffset: new Cesium.Cartesian2(0, -20),
           heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
           disableDepthTestDistance: Number.POSITIVE_INFINITY,
-          translucencyByDistance: new Cesium.NearFarScalar(100_000, 1, 3_000_000, 0),
         },
       })
-    })
-  }, [result])
-
-  // ──────────────────────────────────────────────────────────
-  // 4. SELECTED ZONE — fly + highlight
-  // ──────────────────────────────────────────────────────────
-  useEffect(() => {
-    const viewer = viewerRef.current
-    if (selectedZone === null || !result || !viewer || viewer.isDestroyed()) return
-
-    const feature = result.flood_zones?.features?.[selectedZone]
-    if (!feature) return
-
-    const bbox = feature.properties?.bbox
-    if (bbox?.length === 4) {
-      viewer.camera.flyTo({
-        destination: Cesium.Rectangle.fromDegrees(
-          bbox[0] - 0.05, bbox[1] - 0.05,
-          bbox[2] + 0.05, bbox[3] + 0.05,
-        ),
-        duration: 1.5,
-        easingFunction: Cesium.EasingFunction.CUBIC_IN_OUT,
-      })
     }
-  }, [selectedZone, result])
+  }, [result])
 
   return (
     <div

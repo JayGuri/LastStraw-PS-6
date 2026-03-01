@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobeStore } from "../../stores/globeStore.js";
 import { useAppStore } from "../../stores/appStore.js";
 import { geocodeApi, parseNominatimResult, hasAreaGeometry, sortResultsByBoundary } from "../../api/geocodeApi.js";
 import { floodDetectApi } from "../../api/floodDetectApi.js";
 import { mockFloodResponse } from "../../data/mockFloodResponse.js";
-import CalendarPicker from "../ui/CalendarPicker.jsx";
 import GeoSearchInput from "../ui/GeoSearchInput.jsx";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -156,6 +155,11 @@ export default function RegionForm() {
     enrichGeocodedWithBoundary(item, geocoded);
   };
 
+  // Compute tomorrow's date for forecast
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const forecastDate = tomorrow.toISOString().slice(0, 10);
+
   const handleConfirmArea = () => store.setRegionConfirmed(true);
   const handleChooseDifferent = () => {
     store.clearRegionSelection();
@@ -192,7 +196,7 @@ export default function RegionForm() {
         boundary_geojson: store.geocoded.boundary_geojson,
         display_name: store.geocoded.display_name,
       },
-      date: store.analysisDate || new Date().toISOString().slice(0, 10),
+      date: forecastDate,
       options: { sensor: "S1_GRD", detector: "unet" },
     };
 
@@ -445,12 +449,30 @@ export default function RegionForm() {
         )}
       </AnimatePresence>
 
-      {/* Analysis date — Google Calendar–style picker */}
-      <CalendarPicker
-        label="Analysis Date"
-        value={store.analysisDate || ""}
-        onChange={(v) => store.setAnalysisDate(v)}
-      />
+      {/* Tomorrow's Forecast Window */}
+      <div
+        className="px-3 py-2 border"
+        style={{ borderColor: "rgba(201,169,110,0.15)", background: "rgba(201,169,110,0.04)" }}
+      >
+        <div
+          className="text-[8px] font-mono uppercase tracking-[0.25em] mb-1"
+          style={{ color: "rgba(201,169,110,0.5)" }}
+        >
+          Forecast Window
+        </div>
+        <div
+          className="text-[11px] font-mono tracking-widest"
+          style={{ color: "#c9a96e" }}
+        >
+          {forecastDate} · 24H
+        </div>
+        <div
+          className="text-[9px] font-mono mt-0.5"
+          style={{ color: "rgba(236,232,223,0.3)" }}
+        >
+          Tomorrow's flood risk forecast
+        </div>
+      </div>
 
       {/* Analyze button — only enabled after area confirmed */}
       <button
@@ -479,12 +501,12 @@ export default function RegionForm() {
           {isRunning ? (
             <>
               <span className="w-1.5 h-1.5 bg-[#c9a96e] group-hover:bg-[#0a0907] animate-pulse" />
-              Initializing Scan...
+              Generating Forecast...
             </>
           ) : !regionConfirmed && geo ? (
             "Confirm area above first"
           ) : (
-            "Execute Detection"
+            "Run Forecast"
           )}
         </span>
       </button>
