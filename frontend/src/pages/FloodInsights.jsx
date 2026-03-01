@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 import { useInsightsStore } from "../stores/insightsStore.js";
 import { RISK_COLORS } from "../data/districts.js";
 import RiskBadge from "../components/common/RiskBadge.jsx";
@@ -458,6 +459,108 @@ function SimpleMarkdown({ text }) {
   );
 }
 
+// ── Sub-Component: LocationTrendChart ─────────────────────────────
+function LocationTrendChart({ locationRuns }) {
+  const CustomTooltip = ({ active, payload }) => {
+    if (!active || !payload?.length) return null;
+    return (
+      <div
+        className="bg-[#0a0907] border rounded-lg px-3 py-2 text-xs font-mono"
+        style={{ borderColor: "rgba(201,169,110,0.3)" }}
+      >
+        {payload.map((entry, idx) => (
+          <div key={idx} style={{ color: entry.color }}>
+            {entry.name}: {entry.value.toFixed(1)}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const chartData = locationRuns
+    .slice()
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+    .map(run => ({
+      date: new Date(run.timestamp).toLocaleDateString('en', { month: 'short', day: 'numeric' }),
+      floodArea: run.flood_area_km2 ?? 0,
+      floodPct: run.flood_percentage ?? 0,
+    }));
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      style={{
+        border: "1px solid rgba(201,169,110,0.15)",
+        borderRadius: "6px",
+        padding: "16px",
+        background: "rgba(201,169,110,0.03)",
+      }}
+    >
+      <div
+        className="text-[9px] font-mono uppercase tracking-[0.3em] mb-4"
+        style={{ color: "rgba(201,169,110,0.6)" }}
+      >
+        Location Trend
+      </div>
+      <ResponsiveContainer width="100%" height={200}>
+        <LineChart data={chartData} margin={{ top: 8, right: 20, left: -10, bottom: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(201,169,110,0.08)" />
+          <XAxis
+            dataKey="date"
+            tick={{ fontSize: 11, fontFamily: 'JetBrains Mono', fill: 'rgba(236,232,223,0.4)' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            yAxisId="left"
+            tick={{ fontSize: 11, fontFamily: 'JetBrains Mono', fill: 'rgba(236,232,223,0.4)' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tick={{ fontSize: 11, fontFamily: 'JetBrains Mono', fill: 'rgba(236,232,223,0.4)' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Legend
+            iconType="line"
+            wrapperStyle={{
+              fontSize: '11px',
+              fontFamily: 'JetBrains Mono',
+              color: 'rgba(236,232,223,0.6)',
+              paddingTop: '16px',
+            }}
+          />
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dataKey="floodArea"
+            stroke="#d4900a"
+            strokeWidth={2}
+            dot={{ r: 4, fill: '#d4900a' }}
+            activeDot={{ r: 6, fill: '#d4900a' }}
+            name="Flood Area (km²)"
+          />
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey="floodPct"
+            stroke="#4ab0d8"
+            strokeWidth={2}
+            dot={{ r: 4, fill: '#4ab0d8' }}
+            activeDot={{ r: 6, fill: '#4ab0d8' }}
+            name="Flood % "
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </motion.div>
+  );
+}
+
 // ── Sub-Component: AnalyzeForm ─────────────────────────────
 function AnalyzeForm({ onSubmit, isLoading }) {
   const [location, setLocation] = React.useState("");
@@ -724,6 +827,84 @@ function AIInsightPanel({ selectedRun }) {
   );
 }
 
+// ── Sub-Component: AnalysisThinkingPanel ───────────────────
+const THINKING_STEPS = [
+  "Initializing analysis pipeline...",
+  "Collecting Sentinel-1 SAR imagery...",
+  "Calibrating radiometric corrections...",
+  "Computing SAR backscatter difference...",
+  "Detecting flood boundaries...",
+  "Computing flood statistics...",
+  "Assessing risk level...",
+  "Formulating AI insights...",
+  "Generating assessment report...",
+];
+
+function AnalysisThinkingPanel() {
+  const [stepIdx, setStepIdx] = React.useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStepIdx((i) => (i + 1) % THINKING_STEPS.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col items-center justify-center"
+      style={{ minHeight: "420px" }}
+    >
+      {/* Animated orb / spinner */}
+      <div className="relative mb-8">
+        {/* outer ring */}
+        <motion.div
+          className="w-16 h-16 rounded-full border"
+          style={{ borderColor: "rgba(201,169,110,0.3)" }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+        {/* inner pulsing dot */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="w-2 h-2 rounded-full" style={{ background: "#c9a96e" }} />
+        </motion.div>
+      </div>
+
+      {/* Cycling status message */}
+      <div style={{ height: "24px" }} className="overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={stepIdx}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+            className="font-mono text-[11px] text-center tracking-widest uppercase"
+            style={{ color: "#c9a96e" }}
+          >
+            {THINKING_STEPS[stepIdx]}
+          </motion.p>
+        </AnimatePresence>
+      </div>
+
+      {/* Subtitle */}
+      <p
+        className="mt-3 font-mono text-[9px] uppercase tracking-[0.3em]"
+        style={{ color: "rgba(236,232,223,0.25)" }}
+      >
+        SAR · Google Earth Engine · Gemini AI
+      </p>
+    </motion.div>
+  );
+}
+
 // ── Sub-Component: LoadingSkeleton ─────────────────────────
 function LoadingSkeleton() {
   return (
@@ -816,6 +997,17 @@ export default function FloodInsights() {
   useEffect(() => {
     fetchRuns();
   }, [fetchRuns]);
+
+  // Group runs by location for temporal chart
+  const runsByLocation = React.useMemo(() => {
+    const map = {};
+    runs.forEach(run => {
+      const key = run.location_name?.split(",")[0]?.trim() ?? "Unknown";
+      if (!map[key]) map[key] = [];
+      map[key].push(run);
+    });
+    return map;
+  }, [runs]);
 
   // Extract available data
   const data = selectedRun ?? {};
@@ -945,8 +1137,9 @@ export default function FloodInsights() {
           {/* RIGHT PANEL: run detail */}
           <div className="lg:col-span-2 overflow-y-auto lg:max-h-[calc(100vh-10rem)] pr-1">
             <AnimatePresence mode="wait">
-              {!selectedRunId && !detailLoading && <EmptyState key="empty" />}
-              {detailLoading && (
+              {analyzeLoading && <AnalysisThinkingPanel key="thinking" />}
+              {!analyzeLoading && !selectedRunId && !detailLoading && <EmptyState key="empty" />}
+              {!analyzeLoading && detailLoading && (
                 <motion.div
                   key="loading"
                   initial={{ opacity: 0 }}
@@ -956,10 +1149,10 @@ export default function FloodInsights() {
                   <LoadingSkeleton />
                 </motion.div>
               )}
-              {detailError && !detailLoading && (
+              {!analyzeLoading && detailError && !detailLoading && (
                 <ErrorState key="error" message={detailError} />
               )}
-              {selectedRun && !detailLoading && (
+              {!analyzeLoading && selectedRun && !detailLoading && (
                 <motion.div
                   key={selectedRun.run_id}
                   initial={{ opacity: 0, y: 12 }}
@@ -1058,6 +1251,15 @@ export default function FloodInsights() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Location Trend Chart — if 3+ runs for this location */}
+                  {(() => {
+                    const locationKey = selectedRun?.location_name?.split(",")[0]?.trim();
+                    const locationRuns = runsByLocation[locationKey] ?? [];
+                    return locationRuns.length >= 3 ? (
+                      <LocationTrendChart locationRuns={locationRuns} />
+                    ) : null;
+                  })()}
 
                   {/* Change detection image */}
                   <ChangeDetectionImage

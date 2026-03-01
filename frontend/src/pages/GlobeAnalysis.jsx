@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import CesiumGlobe from "../components/globe/CesiumGlobe.jsx";
 import RegionForm from "../components/globe/RegionForm.jsx";
 import ResultsPanel from "../components/globe/ResultsPanel.jsx";
 import ProgressOverlay from "../components/globe/ProgressOverlay.jsx";
+import RiskDashboardPanel from "../components/globe/RiskDashboardPanel.jsx";
 import { useGlobeStore } from "../stores/globeStore.js";
+import { useRiskStore } from "../stores/riskStore.js";
 
 const STATUS_CONFIG = {
   idle: { label: "IDLE", style: "text-text-3 border-white/10" },
@@ -26,9 +28,12 @@ const STATUS_CONFIG = {
 };
 
 export default function GlobeAnalysis() {
+  const [activeView, setActiveView] = useState("detection");
+
   const status = useGlobeStore((s) => s.status);
   const result = useGlobeStore((s) => s.result);
   const geocoded = useGlobeStore((s) => s.geocoded);
+  const clearRiskData = useRiskStore((s) => s.clearRiskData);
 
   const isRunning = [
     "queued",
@@ -37,6 +42,13 @@ export default function GlobeAnalysis() {
     "scoring",
   ].includes(status);
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.idle;
+
+  const handleViewChange = (view) => {
+    setActiveView(view);
+    if (view === "detection") {
+      clearRiskData();
+    }
+  };
 
   return (
     <div
@@ -120,8 +132,41 @@ export default function GlobeAnalysis() {
             className="col-span-12 lg:col-span-4 flex flex-col gap-6
                           overflow-y-auto lg:max-h-[calc(100vh-10rem)] pr-2"
           >
-            <RegionForm />
-            {result && <ResultsPanel />}
+            {/* Tab Switcher */}
+            <div className="flex gap-2 border-b border-[rgba(201,169,110,0.15)] pb-4">
+              <motion.button
+                onClick={() => handleViewChange("detection")}
+                className={`flex-1 px-3 py-2 text-xs uppercase tracking-widest font-mono border transition-all duration-200 ${
+                  activeView === "detection"
+                    ? "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
+                    : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                }`}
+                whileHover={activeView !== "detection" ? { y: -1 } : {}}
+              >
+                DETECTION
+              </motion.button>
+              <motion.button
+                onClick={() => handleViewChange("risk")}
+                className={`flex-1 px-3 py-2 text-xs uppercase tracking-widest font-mono border transition-all duration-200 ${
+                  activeView === "risk"
+                    ? "border-[#c9a96e] text-[#c9a96e] bg-[#0a0907]/50"
+                    : "border-[rgba(201,169,110,0.15)] text-text-3 hover:border-[#c9a96e]/30"
+                }`}
+                whileHover={activeView !== "risk" ? { y: -1 } : {}}
+              >
+                RISK DASHBOARD
+              </motion.button>
+            </div>
+
+            {/* Conditional Content */}
+            {activeView === "detection" ? (
+              <>
+                <RegionForm />
+                {result && <ResultsPanel />}
+              </>
+            ) : (
+              <RiskDashboardPanel />
+            )}
           </div>
         </div>
       </div>
