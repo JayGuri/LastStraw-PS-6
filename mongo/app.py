@@ -17,17 +17,25 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS
-origins = [
+# Configure CORS: localhost for dev, production from env (e.g. Vercel frontend URL)
+_cors_origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
 ]
+# Add production frontend URL so OAuth redirect and API calls work on Vercel
+_frontend_url = os.getenv("FRONTEND_URL", "").strip()
+if _frontend_url and _frontend_url not in _cors_origins:
+    _cors_origins.append(_frontend_url)
+# Optional: comma-separated list of extra allowed origins
+_extra = os.getenv("CORS_ORIGINS", "").strip()
+if _extra:
+    _cors_origins.extend(o.strip() for o in _extra.split(",") if o.strip())
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
