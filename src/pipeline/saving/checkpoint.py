@@ -73,15 +73,10 @@ def load_model(cfg: dict[str, Any], device: torch.device) -> nn.Module:
 
     Imports FloodLSTM lazily to avoid circular imports.
     """
-    from src.pipeline.training.model import FloodLSTM  # noqa: PLC0415
+    from src.pipeline.ingestion.loader import FEATURE_COLUMNS  # noqa: PLC0415
+    from src.pipeline.training.model import build_model  # noqa: PLC0415
 
-    model_cfg = cfg["model"]
-    model = FloodLSTM(
-        num_features=20,
-        hidden_size=int(model_cfg["hidden_size"]),
-        lstm_layers=int(model_cfg["lstm_layers"]),
-        dropout=float(model_cfg["dropout"]),
-    ).to(device)
+    model = build_model(cfg, num_features=len(FEATURE_COLUMNS)).to(device)
 
     candidates = [
         Path(cfg["paths"].get("models_dir", "models")) / "best.pt",

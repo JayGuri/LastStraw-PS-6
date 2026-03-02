@@ -44,14 +44,29 @@ def build_criterion(cfg: dict[str, Any]) -> nn.Module:
     """Construct the loss function from config.
 
     Supported values for ``loss.name``:
-    - ``mse``  (default) — MSELoss; treats FloodProbability as a continuous target.
-    - ``bce``            — BCELoss; treats the sigmoid model output as a probability
-                          against a soft label in [0, 1].
+    - ``mse`` — MSELoss for regression.
+    - ``bce`` — BCELoss. If ``loss.pos_weight`` is set, flood samples
+                (target >= 0.5) are upweighted by that factor to handle
+                class imbalance without removing sigmoid from the model.
     """
-    name = str(cfg.get("loss", {}).get("name", "mse")).lower()
+    loss_cfg = cfg.get("loss", {})
+    name = str(loss_cfg.get("name", "bce")).lower()
     if name == "mse":
         return nn.MSELoss()
     if name == "bce":
+        pw = loss_cfg.get("pos_weight", None)
+        if pw is not None:
+            # Weighted BCE: keeps model sigmoid, upweights flood class
+            class _WeightedBCE(nn.Module):
+                def __init__(self, w: float):
+                    super().__init__()
+                    self.w = w
+                def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+                    weights = torch.where(target >= 0.5,
+                                          torch.full_like(target, self.w),
+                                          torch.ones_like(target))
+                    return nn.functional.binary_cross_entropy(pred, target, weight=weights)
+            return _WeightedBCE(float(pw))
         return nn.BCELoss()
     raise ValueError(f"Unknown loss '{name}'. Choose: mse | bce")
 

@@ -1,13 +1,12 @@
 stages:
   ingest:
-    cmd: python -m src.pipeline.ingestion.run_ingest
+    cmd: python -m src.pipeline.ingestion.run_ingest_real
+    wdir: .
     deps:
-      - src/pipeline/ingestion/run_ingest.py
+      - src/pipeline/ingestion/run_ingest_real.py
       - src/pipeline/ingestion/loader.py
-      - src/utils/geo.py
       - src/config.py
       - configs/config.yaml
-      - data/raw/flood.csv
     outs:
       - data/processed/flood.csv
       - artifacts/ingest_manifest.json
@@ -46,3 +45,4 @@ stages:
       - tests/fixtures/sample_aoi.geojson
     outs:
       - artifacts/insight_reports
+

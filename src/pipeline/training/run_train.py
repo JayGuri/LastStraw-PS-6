@@ -9,6 +9,12 @@ import json
 import sys
 from pathlib import Path
 
+# Fix Windows console encoding
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 import matplotlib
 matplotlib.use("Agg")  # headless rendering
 import matplotlib.pyplot as plt
@@ -37,18 +43,15 @@ from src.utils.mlflow_dagshub import init_mlflow
 # Helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _make_splits_mask(n: int, cfg: dict) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def _make_splits_mask(n: int, cfg: dict) -> tuple[np.ndarray, np.ndarray]:
     split = cfg["data"]["split"]
     n_train = int(n * float(split["train"]))
-    n_val = int(n * float(split["val"]))
     idx = np.arange(n)
     train_mask = np.zeros(n, dtype=bool)
     train_mask[idx[:n_train]] = True
-    val_mask = np.zeros(n, dtype=bool)
-    val_mask[idx[n_train : n_train + n_val]] = True
     test_mask = np.zeros(n, dtype=bool)
-    test_mask[idx[n_train + n_val :]] = True
-    return train_mask, val_mask, test_mask
+    test_mask[idx[n_train:]] = True
+    return train_mask, test_mask
 
 
 def _save_graphs(
@@ -82,7 +85,7 @@ def _save_graphs(
     # ── Loss curve ───────────────────────────────────────────────────────────
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(epochs, [r["train_loss"] for r in history], label="train loss", marker="o", markersize=3)
-    ax.plot(epochs, [r.get("val_loss", float("nan")) for r in history], label="val loss",
+    ax.plot(epochs, [r.get("test_loss", float("nan")) for r in history], label="test loss",
             marker="s", markersize=3)
     ax.set_xlabel("Epoch")
     ax.set_ylabel("MSE Loss")
@@ -93,8 +96,8 @@ def _save_graphs(
 
     # ── PR-AUC curve ─────────────────────────────────────────────────────────
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(epochs, [r.get("val_pr_auc", float("nan")) for r in history],
-            label="val PR-AUC", color="tab:green", marker="o", markersize=3)
+    ax.plot(epochs, [r.get("test_pr_auc", float("nan")) for r in history],
+            label="test PR-AUC", color="tab:green", marker="o", markersize=3)
     ax.set_xlabel("Epoch")
     ax.set_ylabel("PR-AUC")
     ax.set_title("Validation PR-AUC")
@@ -104,8 +107,8 @@ def _save_graphs(
 
     # ── ROC-AUC curve ────────────────────────────────────────────────────────
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(epochs, [r.get("val_roc_auc", float("nan")) for r in history],
-            label="val ROC-AUC", color="tab:orange", marker="o", markersize=3)
+    ax.plot(epochs, [r.get("test_roc_auc", float("nan")) for r in history],
+            label="test ROC-AUC", color="tab:orange", marker="o", markersize=3)
     ax.set_xlabel("Epoch")
     ax.set_ylabel("ROC-AUC")
     ax.set_title("Validation ROC-AUC")
@@ -115,10 +118,10 @@ def _save_graphs(
 
     # ── MAE / MSE curve ───────────────────────────────────────────────────────
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(epochs, [r.get("val_mae", float("nan")) for r in history],
-            label="val MAE", color="tab:red", marker="o", markersize=3)
+    ax.plot(epochs, [r.get("test_mae", float("nan")) for r in history],
+            label="test MAE", color="tab:red", marker="o", markersize=3)
     ax_r = ax.twinx()
-    ax_r.plot(epochs, [r.get("val_mse", float("nan")) for r in history],
+    ax_r.plot(epochs, [r.get("test_mse", float("nan")) for r in history],
               label="val MSE", color="tab:purple", linestyle="--", marker="s", markersize=3)
     ax.set_xlabel("Epoch")
     ax.set_ylabel("MAE")
@@ -194,21 +197,17 @@ def main() -> None:
 
     # ── 2. Preprocessing ──────────────────────────────────────────────────────
     n = len(df)
-    train_mask, _, _ = _make_splits_mask(n, cfg)
+    train_mask, _ = _make_splits_mask(n, cfg)
     features_scaled, labels, _ = fit_transform(df, train_mask, cfg)
 
     # ── 3. Feature Engineering ────────────────────────────────────────────────
-    train_ds, val_ds, test_ds = build_datasets(features_scaled, labels, cfg)
+    train_ds, test_ds = build_datasets(features_scaled, labels, cfg)
 
     num_workers = int(cfg["project"]["num_workers"])
     batch_size = int(train_cfg["batch_size"])
 
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
-        num_workers=num_workers, pin_memory=device.type == "cuda",
-    )
-    val_loader = DataLoader(
-        val_ds, batch_size=batch_size, shuffle=False,
         num_workers=num_workers, pin_memory=device.type == "cuda",
     )
     test_loader = DataLoader(
@@ -247,8 +246,8 @@ def main() -> None:
         )
 
         val_metrics = evaluate(
-            model, val_loader, criterion, device,
-            flood_threshold=flood_threshold, epoch=epoch, split="val",
+            model, test_loader, criterion, device,
+            flood_threshold=flood_threshold, epoch=epoch, split="test",
         )
 
         current_lr = float(optimizer.param_groups[0]["lr"])
@@ -270,14 +269,14 @@ def main() -> None:
         print(json.dumps(row))
 
         # ── Save best ─────────────────────────────────────────────────────────
-        if val_metrics["val_pr_auc"] > best_pr_auc:
-            best_pr_auc = val_metrics["val_pr_auc"]
+        if val_metrics["test_pr_auc"] > best_pr_auc:
+            best_pr_auc = val_metrics["test_pr_auc"]
             best_epoch = epoch
             save_best(model, cfg, epoch, val_metrics)
 
         # ── Early stopping check ──────────────────────────────────────────────
         if early_stopping is not None:
-            if early_stopping.step(val_metrics["val_pr_auc"], epoch=epoch):
+            if early_stopping.step(val_metrics["test_pr_auc"], epoch=epoch):
                 print(
                     f"[train] Early stopping triggered at epoch {epoch} "
                     f"(no improvement for {early_stopping.patience} epochs). "
