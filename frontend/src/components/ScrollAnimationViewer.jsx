@@ -48,6 +48,19 @@ export default function ScrollAnimationViewer({
   }, [totalFrames]);
 
   // ── Preload all frames as ImageBitmaps (off main thread) ─────────────
+  //
+  //  Strategy: priority-batched, concurrency-limited loading
+  //
+  //  Phase 1 — "First paint" batch (frames 0–15, up to 8 parallel):
+  //    Load the first 16 frames immediately so the canvas can render
+  //    frame 0 within ~300ms on a fast connection instead of waiting
+  //    for all 240 fetches to queue.
+  //
+  //  Phase 2 — "Background fill" (frames 16–239, batches of 12):
+  //    Load remaining frames in controlled batches. This prevents the
+  //    browser's HTTP/1.1 connection pool (6 connections per origin)
+  //    from being fully saturated, which would stall ALL fetches.
+  //
   useEffect(() => {
     if (loadedRef.current) return;
     loadedRef.current = true;
@@ -55,35 +68,81 @@ export default function ScrollAnimationViewer({
     let loaded = 0;
     const bitmaps = new Array(totalFrames).fill(null);
 
-    framePaths.forEach((url, i) => {
+    // Helper: fetch one frame and decode it off the main thread
+    const loadFrame = (url, i) =>
       fetch(url)
         .then((res) => res.blob())
-        .then((blob) => createImageBitmap(blob)) // ← decodes off main thread
+        .then((blob) => createImageBitmap(blob))
         .then((bitmap) => {
           bitmaps[i] = bitmap;
           loaded++;
           setLoadProgress(loaded / totalFrames);
-
+          // Always keep bitmapsRef current so drawFrame can access newly-loaded frames
+          bitmapsRef.current = bitmaps;
           if (loaded === totalFrames) {
-            bitmapsRef.current = bitmaps;
             setReady(true);
           }
         })
         .catch(() => {
-          // If createImageBitmap not available (old Safari), fall back to Image
-          const img = new Image();
-          img.onload = () => {
-            bitmaps[i] = img;
-            loaded++;
-            setLoadProgress(loaded / totalFrames);
-            if (loaded === totalFrames) {
+          // Fallback for browsers that don't support createImageBitmap (old Safari)
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              bitmaps[i] = img;
+              loaded++;
+              setLoadProgress(loaded / totalFrames);
+              // Always keep bitmapsRef current so drawFrame can access newly-loaded frames
               bitmapsRef.current = bitmaps;
-              setReady(true);
-            }
-          };
-          img.src = url;
+              if (loaded === totalFrames) {
+                setReady(true);
+              }
+              resolve();
+            };
+            img.onerror = resolve; // don't stall on broken frames
+            img.src = url;
+          });
         });
-    });
+
+    // Helper: run an array of tasks with at most `concurrency` running at once
+    const runWithConcurrency = async (tasks, concurrency) => {
+      let idx = 0;
+      const worker = async () => {
+        while (idx < tasks.length) {
+          const taskIdx = idx++;
+          await tasks[taskIdx]();
+        }
+      };
+      const workers = Array.from(
+        { length: Math.min(concurrency, tasks.length) },
+        worker,
+      );
+      await Promise.all(workers);
+    };
+
+    const run = async () => {
+      // Phase 1 — load first 16 frames (8 parallel) so canvas shows frame 0 ASAP
+      const firstBatchEnd = Math.min(16, totalFrames);
+      const firstBatchTasks = framePaths
+        .slice(0, firstBatchEnd)
+        .map((url, i) => () => loadFrame(url, i));
+      await runWithConcurrency(firstBatchTasks, 8);
+
+      // ── Early ready: show canvas as soon as first 16 frames are in ────
+      // bitmapsRef is already kept live by loadFrame above, so drawFrame
+      // works for indexes 0–15 the moment we flip ready → true.
+      bitmapsRef.current = bitmaps;
+      setReady(true);
+
+      // Phase 2 — load remaining frames 16–239 (12 parallel)
+      if (totalFrames > firstBatchEnd) {
+        const remainingTasks = framePaths
+          .slice(firstBatchEnd)
+          .map((url, i) => () => loadFrame(url, firstBatchEnd + i));
+        await runWithConcurrency(remainingTasks, 12);
+      }
+    };
+
+    run();
   }, [framePaths, totalFrames]);
 
   // Store dpr in a ref so drawFrame always reads the current value
@@ -171,11 +230,20 @@ export default function ScrollAnimationViewer({
       className={`relative w-full h-full overflow-hidden ${className}`}
       style={{ background: "#0a0a0f" }}
     >
-      {/* ── Canvas — the only rendering surface, never changes in DOM ─── */}
+      {/* ── Canvas — slides up + fades in from below the moment ready=true ─ */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ display: "block", imageRendering: "auto" }}
+        style={{
+          display: "block",
+          imageRendering: "auto",
+          opacity: ready ? 1 : 0,
+          transform: ready ? "translateY(0)" : "translateY(18px)",
+          transition:
+            ready ?
+              "opacity 420ms cubic-bezier(0.25,0.46,0.45,0.94), transform 420ms cubic-bezier(0.25,0.46,0.45,0.94)"
+            : "none",
+        }}
         aria-label={`Scroll animation frame ${currentFrame + 1} of ${totalFrames}`}
       />
 

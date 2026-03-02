@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import Spline from "@splinetool/react-spline";
 import { useAppStore } from "../stores/appStore.js";
 import { useAuth } from "../hooks/useAuth.js";
+
+// Lazy-load the Spline component so its heavy JS bundle (~2MB) is deferred
+// and doesn't block the first paint of the login form.
+const Spline = lazy(() => import("@splinetool/react-spline"));
 
 export default function Login() {
   const { setActiveTab, showNotification } = useAppStore();
@@ -11,6 +14,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [splineLoaded, setSplineLoaded] = useState(false);
 
   // Aggressive Spline watermark removal hook
   useEffect(() => {
@@ -73,8 +77,23 @@ export default function Login() {
       {/* ── Left Side: Spline Art & Branding (60%) ── */}
       <div className="relative flex-1 hidden lg:block overflow-hidden pointer-events-auto">
         {/* Large Spline Canvas (Cropped to hide watermark) */}
-        <div className="absolute top-0 left-0 w-full h-[calc(100vh+80px)]">
-          <Spline scene="https://prod.spline.design/OnP8WcwVxeq8dv0g/scene.splinecode" />
+        <div
+          className="absolute top-0 left-0 w-full h-[calc(100vh+80px)]"
+          style={{
+            opacity: splineLoaded ? 1 : 0,
+            transform: splineLoaded ? "translateY(0)" : "translateY(20px)",
+            transition:
+              splineLoaded ?
+                "opacity 500ms cubic-bezier(0.25,0.46,0.45,0.94), transform 500ms cubic-bezier(0.25,0.46,0.45,0.94)"
+              : "none",
+          }}
+        >
+          <Suspense fallback={<div className="w-full h-full bg-[#020617]" />}>
+            <Spline
+              scene="https://prod.spline.design/OnP8WcwVxeq8dv0g/scene.splinecode"
+              onLoad={() => setSplineLoaded(true)}
+            />
+          </Suspense>
         </div>
 
         {/* Subtle vignette so the art blends smoothly */}
@@ -240,12 +259,17 @@ export default function Login() {
         </motion.div>
       </div>
 
-      {/* Mobile Spline Fallback Background */}
-      <div className="absolute inset-0 lg:hidden pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[calc(100vh+80px)] opacity-50">
-          <Spline scene="https://prod.spline.design/OnP8WcwVxeq8dv0g/scene.splinecode" />
-        </div>
-        <div className="absolute inset-0 bg-[#020617]/80" />
+      {/* Mobile background — pure CSS gradient (replaces second Spline instance) */}
+      <div className="absolute inset-0 lg:hidden pointer-events-none -z-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 40%, rgba(56,189,248,0.12) 0%, transparent 60%), " +
+              "radial-gradient(ellipse at 70% 70%, rgba(20,184,166,0.10) 0%, transparent 55%), " +
+              "#020617",
+          }}
+        />
       </div>
     </div>
   );
