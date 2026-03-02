@@ -8,6 +8,7 @@ import GlobeAnalysis from "./pages/GlobeAnalysis.jsx";
 import FloodInsights from "./pages/FloodInsights.jsx";
 import { useAppStore } from "./stores/appStore.js";
 import { useAuth } from "./hooks/useAuth.js";
+import { useInsightsStore } from "./stores/insightsStore.js";
 
 const PAGES = {
   landing: Landing,
@@ -59,6 +60,18 @@ export default function App() {
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const showNotification = useAppStore((s) => s.showNotification);
   const { isAuthenticated, handleOAuthCallback } = useAuth();
+  const fetchRuns = useInsightsStore((s) => s.fetchRuns);
+
+  // Preload historical runs as soon as the user is authenticated,
+  // so the insights page list is ready before they navigate there.
+  useEffect(() => {
+    if (isAuthenticated) fetchRuns();
+  }, [isAuthenticated, fetchRuns]);
+
+  // Scroll to top on every page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [activeTab]);
 
   // GLOBAL: Handle OAuth token from URL immediately when App loads
   useEffect(() => {
