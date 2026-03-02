@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useAppStore } from "../stores/appStore.js";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const TOKEN_KEY = "hackx_auth_token";
@@ -9,38 +10,25 @@ const USER_KEY = "hackx_user";
  * Manages JWT tokens and user info in localStorage
  */
 export function useAuth() {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const token = useAppStore((s) => s.token);
+  const user = useAppStore((s) => s.user);
+  const setAppAuthData = useAppStore((s) => s.setAuthData);
+  const clearAppAuthData = useAppStore((s) => s.clearAuthData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // Initialize from localStorage on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem(TOKEN_KEY);
-    const storedUser = localStorage.getItem(USER_KEY);
-
-    if (storedToken) {
-      setToken(storedToken);
-      if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch (e) {
-          console.error("Failed to parse stored user:", e);
-          localStorage.removeItem(USER_KEY);
-        }
-      }
-    }
-  }, []);
 
   /**
    * Store authentication data in localStorage
    */
-  const storeAuthData = useCallback((newToken, newUser) => {
-    localStorage.setItem(TOKEN_KEY, newToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
-    setToken(newToken);
-    setUser(newUser);
-  }, []);
+  const storeAuthData = useCallback(
+    (newToken, newUser) => {
+      localStorage.setItem(TOKEN_KEY, newToken);
+      localStorage.setItem(USER_KEY, JSON.stringify(newUser));
+      setAppAuthData(newToken, newUser);
+    },
+    [setAppAuthData],
+  );
 
   /**
    * Clear authentication data
@@ -48,9 +36,8 @@ export function useAuth() {
   const clearAuthData = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
-    setToken(null);
-    setUser(null);
-  }, []);
+    clearAppAuthData();
+  }, [clearAppAuthData]);
 
   /**
    * Get the current authorization header
@@ -61,6 +48,44 @@ export function useAuth() {
     }
     return {};
   }, [token]);
+
+  /**
+   * Signup with email and password
+   */
+  const signup = useCallback(
+    async (email, password) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(`${API_URL}/auth/signup`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.detail || errorData.error || "Signup failed",
+          );
+        }
+
+        const data = await response.json();
+        storeAuthData(data.token, data.user);
+        return data;
+      } catch (err) {
+        const message = err.message || "An error occurred during signup";
+        setError(message);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [storeAuthData],
+  );
 
   /**
    * Login with email and password
@@ -122,6 +147,7 @@ export function useAuth() {
     } finally {
       clearAuthData();
       setIsLoading(false);
+      window.location.href = "/";
     }
   }, [token, getAuthHeader, clearAuthData]);
 
@@ -219,11 +245,7 @@ export function useAuth() {
           storeAuthData(tokenFromUrl, userInfo);
 
           // Clean up URL
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname,
-          );
+          window.history.replaceState({}, document.title, "/");
 
           return { token: tokenFromUrl, user: userInfo };
         }
@@ -245,6 +267,7 @@ export function useAuth() {
 
     // Methods
     login,
+    signup,
     logout,
     getCurrentUser,
     refreshToken,

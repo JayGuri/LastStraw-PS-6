@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export const useAppStore = create((set, get) => ({
-  activeTab: "login", // login | landing | mission | globe
+  activeTab: "landing", // login | signup | landing | mission | globe
   setActiveTab: (tab) => set({ activeTab: tab }),
 
   // Global notification
@@ -14,4 +14,18 @@ export const useAppStore = create((set, get) => ({
   // Stats counters (tick up on load)
   statsReady: false,
   setStatsReady: () => set({ statsReady: true }),
+
+  // Global Auth Sync State
+  token: localStorage.getItem("hackx_auth_token") || null,
+  user: (() => {
+    try {
+      const storedUser = localStorage.getItem("hackx_user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      localStorage.removeItem("hackx_user");
+      return null;
+    }
+  })(),
+  setAuthData: (token, user) => set({ token, user }),
+  clearAuthData: () => set({ token: null, user: null }),
 }));

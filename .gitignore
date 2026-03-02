@@ -41,3 +41,4 @@ Thumbs.db
 # Misc
 .env
 _pycache_/
+mongo/__pycache__/

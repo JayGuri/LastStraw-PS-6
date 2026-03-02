@@ -27,6 +27,13 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class SignupRequest(BaseModel):
+    """Signup request schema."""
+    email: str
+    password: str
+    subscription_level: str = "free"
+
+
 class LoginResponse(BaseModel):
     """Login response schema."""
     token: str
@@ -75,6 +82,45 @@ def get_current_user(authorization: str = Header(None)):
 # ──────────────────────────────────────────────────────────────────────────────
 # EMAIL/PASSWORD AUTHENTICATION
 # ──────────────────────────────────────────────────────────────────────────────
+
+
+@router.post("/signup", response_model=LoginResponse)
+async def signup(credentials: SignupRequest):
+    """Create a new user.
+
+    Args:
+        credentials: Email and password
+
+    Returns:
+        JWT token and user info
+
+    Raises:
+        HTTPException: If user already exists
+    """
+    # Check if user already exists
+    existing_user = User.find_by_email(credentials.email)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Create user
+    user = User.create_user(
+        email=credentials.email,
+        password=credentials.password,
+        subscription_level=credentials.subscription_level,
+    )
+
+    # Create JWT token
+    token = create_jwt_token(
+        user["_id"],
+        user["email"],
+        user["subscription_level"],
+        user["auth_provider"],
+    )
+
+    return LoginResponse(
+        token=token,
+        user=User.user_to_dict(user),
+    )
 
 
 @router.post("/login", response_model=LoginResponse)
@@ -281,6 +327,10 @@ async def google_oauth_callback(code: str = None, error: str = None):
 
     # Redirect to frontend with token
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    # Ensure it redirects to the /login path so the Login component can catch it
+    if not frontend_url.endswith("/login"):
+        frontend_url = frontend_url.rstrip("/") + "/login"
+        
     redirect_url = f"{frontend_url}?token={token}"
 
     return RedirectResponse(url=redirect_url)

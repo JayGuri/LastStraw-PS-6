@@ -184,17 +184,18 @@ export default function SubscriptionSection() {
     setError(null);
     setSuccess(null);
 
+    // Check auth
+    if (!authUser) {
+      setError("You must be signed in to choose a plan. Redirecting...");
+      showNotification("Please sign in to continue", "info");
+      setTimeout(() => setActiveTab("login"), 1500);
+      return;
+    }
+
     // Free tier
     if (plan.name === "Free") {
       setSuccess("Free tier activated!");
       showNotification("Observer tier activated!", "success");
-      return;
-    }
-
-    // Check auth
-    if (!authUser) {
-      setError("You must be signed in to upgrade. Please log in first.");
-      setTimeout(() => setActiveTab("login"), 1500);
       return;
     }
 
