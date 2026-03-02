@@ -189,9 +189,11 @@ export default function Nav() {
                   </p>
                 </div>
                 <button
-                  onClick={() => {
-                    logout();
+                  onClick={async () => {
+                    await logout();
                     setProfileOpen(false);
+                    // Force navigation back to landing page to clear UI state
+                    setActiveTab("landing");
                   }}
                   className="w-full text-left px-4 py-3 tracking-widest uppercase transition-colors hover:bg-white/5"
                   style={{
@@ -219,10 +221,9 @@ export default function Nav() {
               style={{ background: "#f2d16d" }}
             />
             <span
-              className="relative z-10 tracking-[0.2em] uppercase transition-colors group-hover:text-[#060504]"
+              className="relative z-10 tracking-[0.2em] uppercase transition-colors text-[#f2d16d] group-hover:text-black"
               style={{
                 fontSize: "0.6rem",
-                color: "#f2d16d",
                 fontFamily: "monospace",
               }}
             >

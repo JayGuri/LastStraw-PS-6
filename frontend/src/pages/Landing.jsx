@@ -576,14 +576,13 @@ export default function Landing() {
                   <span
                     className="absolute inset-0 translate-x-full group-hover:translate-x-0 transition-transform duration-300"
                     style={{
-                      background: isAuthenticated ? "#f2d16d" : "#c0392b",
+                      background: "#c0392b",
                     }}
                   />
                   <span
-                    className="relative z-10 font-light tracking-[0.3em] uppercase"
+                    className="relative z-10 font-light tracking-[0.3em] uppercase text-[#ece8df] group-hover:text-white"
                     style={{
                       fontSize: "0.7rem",
-                      color: "#ece8df",
                       transition: "color 0.3s",
                     }}
                   >

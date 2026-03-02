@@ -4,9 +4,9 @@ import Spline from "@splinetool/react-spline";
 import { useAppStore } from "../stores/appStore.js";
 import { useAuth } from "../hooks/useAuth.js";
 
-export default function Login() {
+export default function Signup() {
   const { setActiveTab, showNotification } = useAppStore();
-  const { login, loginWithGoogle } = useAuth();
+  const { signup, loginWithGoogle } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +31,7 @@ export default function Login() {
     return () => clearInterval(int1);
   }, []);
 
-  const handleSignIn = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
       showNotification("Please enter email and password", "warning");
@@ -40,12 +40,15 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      await login(email, password);
-      showNotification(`Welcome back, ${email.split("@")[0]}`, "success");
+      await signup(email, password);
+      showNotification(
+        `Welcome to Ambrosia, ${email.split("@")[0]}`,
+        "success",
+      );
       setTimeout(() => setActiveTab("landing"), 300);
     } catch (error) {
       showNotification(
-        error.message || "Login failed. Please try again.",
+        error.message || "Signup failed. Please try again.",
         "error",
       );
     } finally {
@@ -57,7 +60,7 @@ export default function Login() {
     try {
       loginWithGoogle();
     } catch (error) {
-      showNotification("Failed to initiate Google Sign-In", "error");
+      showNotification("Failed to initiate Google Sign-Up", "error");
     }
   };
 
@@ -110,14 +113,14 @@ export default function Login() {
         >
           <div className="mb-10">
             <h1 className="text-3xl font-bold text-white mb-2 tracking-wide">
-              Sign In
+              Sign Up
             </h1>
             <p className="text-white/40 text-[13px] font-medium">
-              Enter your email and password to access the platform.
+              Create a new account to access the platform.
             </p>
           </div>
 
-          <form onSubmit={handleSignIn} className="w-full flex flex-col gap-6">
+          <form onSubmit={handleSignUp} className="w-full flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label className="text-[11px] uppercase tracking-widest font-semibold px-1 text-white/50">
                 Email
@@ -149,7 +152,7 @@ export default function Login() {
             </div>
 
             <button
-              id="login-form-submit"
+              id="signup-form-submit"
               disabled={isLoading}
               type="submit"
               className="group relative w-full mt-4 bg-white/10 text-white font-medium rounded-xl py-3.5 text-sm hover:bg-white/20 transition-all flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed border border-white/10 overflow-hidden"
@@ -178,7 +181,7 @@ export default function Login() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                : "Sign In"}
+                : "Sign Up"}
               </span>
             </button>
 
@@ -221,19 +224,19 @@ export default function Login() {
                     fill="#EA4335"
                   />
                 </svg>
-                Sign in with Google
+                Sign up with Google
               </span>
             </button>
             <div className="mt-4 text-center">
               <span className="text-white/40 text-[13px] font-medium">
-                Don't have an account?{" "}
+                Already have an account?{" "}
               </span>
               <button
                 type="button"
-                onClick={() => setActiveTab("signup")}
+                onClick={() => setActiveTab("login")}
                 className="text-white/70 text-[13px] font-medium hover:text-white transition-colors"
               >
-                Sign Up
+                Sign In
               </button>
             </div>
           </form>
